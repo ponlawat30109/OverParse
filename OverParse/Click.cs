@@ -103,7 +103,7 @@ namespace OverParse
         private void SetEncounterTimeout_Click(object sender, RoutedEventArgs e)
         {
             AlwaysOnTop.IsChecked = false;
-            Inputbox input = new Inputbox("Encounter Timeout", "何秒経過すればエンカウントを終了させますか？", Properties.Settings.Default.EncounterTimeout.ToString()) { Owner = this };
+            Inputbox input = new Inputbox("Encounter Timeout", "Please input the amount of seconds you would like for the Encounter Timeout", Properties.Settings.Default.EncounterTimeout.ToString()) { Owner = this };
             input.ShowDialog();
             if (Int32.TryParse(input.ResultText, out int x))
             {
@@ -112,7 +112,7 @@ namespace OverParse
             }
             else
             {
-                if (input.ResultText.Length > 0) { MessageBox.Show("Couldn't parse your input. Enter only a number."); }
+                if (input.ResultText.Length > 0) { MessageBox.Show("Could not read your input. Please use numbers only."); }
             }
 
             AlwaysOnTop.IsChecked = Properties.Settings.Default.AlwaysOnTop;
@@ -445,7 +445,7 @@ namespace OverParse
         {
             if (AutoHideWindow.IsChecked && Properties.Settings.Default.AutoHideWindowWarning)
             {
-                MessageBox.Show("これにより、PSO2またはOverParseがフォアグラウンドにない時は、OverParseのウィンドゥが非表示になります。\nウィンドゥを表示するには、Alt+TabでOverParseにするか、タスクバーのアイコンをクリックします。", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("When PSO2 or OverParse is not in the foreground, OverParse will be hidden. To display OverParse, use Alt + Tab to select OverParse, or click the taskbar icon.", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
                 Properties.Settings.Default.AutoHideWindowWarning = false;
             }
             Properties.Settings.Default.AutoHideWindow = AutoHideWindow.IsChecked;
@@ -459,7 +459,7 @@ namespace OverParse
         private void About_Click(object sender, RoutedEventArgs e)
         {
             var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            MessageBox.Show($"OverParse v{version} Debug\n簡易的な自己監視ツール。\n\nShoutouts to WaifuDfnseForce.\nAdditional shoutouts to Variant, AIDA, and everyone else who makes the Tweaker plugin possible.\n\nPlease use damage information responsibly.", "OverParse");
+            MessageBox.Show($"OverParse v3.X.X Debug\nSelf Monitoring tool. \n\nShoutouts to WaifuDfnseForce.\n\nAdditional shoutouts to Variant, AIDA, and everyone else who makes the Tweaker plugin possible.\n\nPlease use damage information responsibly.", "OverParse");
         }
 
         private void LowResources_Click(object sender, RoutedEventArgs e)
@@ -468,7 +468,7 @@ namespace OverParse
             if (Properties.Settings.Default.LowResources)
             {
                 thisProcess.PriorityClass = ProcessPriorityClass.Idle;
-                MessageBox.Show("OverParseの基本優先度を低に設定しました。\n殆どのCPUではあまり影響ありませんが、CPU使用率が100%になるようなPCスペックの場合にOverParseの動作を止め、PSO2や画面キャプチャ等の他のプログラムを優先させます。\nOverParseが応答不能になる可能性があることを覚えておいて下さい。","OverParse");
+                MessageBox.Show("Process priority of OverParse is now set to low. \n\nThis setting is only recommended if your CPU is a potato. Please remember that OverParse may become unresponsive due to this setting.", "OverParse");
             } else {
                 thisProcess.PriorityClass = ProcessPriorityClass.Normal;
             }
@@ -480,7 +480,7 @@ namespace OverParse
             if (Properties.Settings.Default.CPUdraw)
             {
                 RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
-                MessageBox.Show("OverParseの画面描画をCPU処理(ソフトウェアレンダリング)に変更しました。\nグラフィックボード搭載のPCでは逆効果ですが、CPUのみ高性能で内蔵GPUを使用する大部分の日本メーカー製ノートPCではある程度効果があります。\nIntel HD Graphicsを使用している場合や0.1%でもGPUの負荷を減らしたい場合これを有効にして下さい。", "OverParse");
+                MessageBox.Show("OverParse is now using CPU rendering. \n\nThis setting is only recommended if you do not have a discrete GPU. \n Please remember that this setting may increase CPU load.", "OverParse");
             } else {
                 RenderOptions.ProcessRenderMode = RenderMode.Default;
             }
@@ -509,7 +509,7 @@ namespace OverParse
         {
             if (Properties.Settings.Default.LaunchMethod == "Tweaker")
             {
-                MessageBox.Show("プラグインはPSO2 TweakerメニューのPluginsからインストール出来ます。\nPSO2 Tweakerを使用しない場合は、Help Reset OverParseを使用してセットアップして下さい。");
+                MessageBox.Show("Plugins can be installed via the plugins menu on the PSO2 Tweaker. \n\nIf you do not use PSO2 Tweaker, you can set up plugins via 'Help Reset OverParse'");
                 return;
             }
             encounterlog.UpdatePlugin(Properties.Settings.Default.Path);
@@ -518,7 +518,7 @@ namespace OverParse
 
         private void ResetOverParse(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("OverParseをリセットしますか？\n設定は消去されますが、ログは消去されません。", "OverParse Setup", MessageBoxButton.YesNo, MessageBoxImage.Information);
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to Reset OverParse? \n\nYour user settings will be deleted but your logs will remain in your log folder.", "OverParse Setup", MessageBoxButton.YesNo, MessageBoxImage.Information);
             if (result != MessageBoxResult.Yes)
                 return;
 
