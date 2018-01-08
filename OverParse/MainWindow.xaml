@@ -9,7 +9,7 @@
         ResizeMode="CanResizeWithGrip" StateChanged="Window_StateChanged"
         MouseDown="Window_MouseDown" Closing="Window_Closing"
         x:Name="TheWindow"
-        Title="OverParse" Height="275" Width="668">
+        Title="OverParse" Height="275" Width="670">
 
     <Window.Background>
         <SolidColorBrush x:Name="MainBack" Color="#FF0A0A0A" />
@@ -18,7 +18,7 @@
     <Window.Resources>
 
         <ContextMenu x:Key="Tabmenu">
-            <MenuItem Header="test" />
+            <MenuItem Header="Lap1を有効化?(未実装)" IsCheckable="True" />
         </ContextMenu>
 
         <Style TargetType="ListViewItem">
@@ -142,6 +142,7 @@
                     <MenuItem Style="{StaticResource submenu}" Header="自分以外全て無視" IsCheckable="True" IsChecked="False" x:Name="Onlyme" Click="Onlyme_Click" />
                     <MenuItem Style="{StaticResource submenu}" Header="DPS表示形式を変更" IsCheckable="True" IsChecked="False" x:Name="DPSFormat" Click="DPSFormat_Click" />
                     <MenuItem Style="{StaticResource submenu}" Header="JA / Criticalの小数点以下を削除" IsCheckable="True" IsChecked="False" x:Name="Nodecimal" Click="Nodecimal_Click" />
+                    <MenuItem Style="{StaticResource submenu}" Header=".csv更新間隔を変更" Click="ChangeInterval_Click" />
                 </MenuItem>
                 <MenuItem Style="{StaticResource topmenu}" Header="Window">
                     <MenuItem Style="{StaticResource submenu}" Header="デフォルトサイズに戻す" InputGestureText="Ctrl+Shift+D" Click="DefaultWindowSize_Click"/>
@@ -185,6 +186,7 @@
                     <MenuItem Style="{StaticResource submenu}" Header="dllの更新をスキップ" x:Name="Skipdll" Click="SkipPlugin_Click" />
                     <MenuItem Style="{StaticResource submenu}" Header="Reselect pso2bin..." x:Name="ResetLogFolder" Click="ResetLogFolder_Click"/>
                     <MenuItem Style="{StaticResource submenu}" Header="Force plugin update..." x:Name="PluginUpdate" Click="UpdatePlugin_Click"/>
+                    <MenuItem Style="{StaticResource submenu}" Header="skills.csvを更新" Click="Updateskills_Click" />
                     <MenuItem Style="{StaticResource submenu}" Header="Reset OverParse..." x:Name="Reset" Click="ResetOverParse"/>
                 </MenuItem>
                 <Label x:Name="Datetime" Foreground="#FFFFFFFF" Padding="0" Margin="-4" />
@@ -193,7 +195,7 @@
                 <MenuItem Header="____" Click="Minimize_Click" Style="{StaticResource topmenu}" />
                 <MenuItem Style="{StaticResource topmenu}" Header="Exit" Click="Exit_Click"/>
             </Menu>
-            <TabControl TabStripPlacement="Right" Grid.Row="1" BorderThickness="0" Padding="0" Margin="0" Background="Transparent" ContextMenu="{DynamicResource Tabmenu}">
+            <TabControl x:Name="SeparateTab" TabStripPlacement="Right" Grid.Row="1" BorderThickness="0" Padding="0" Margin="0" Background="Transparent" ContextMenu="{DynamicResource Tabmenu}">
                 <TabItem Header="All" Width="{Binding ElementName=TabH, Path=ActualWidth}"  Padding="0" Margin="0">
                     <ListView x:Name="CombatantData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True">
                         <ListView.Background>
@@ -230,7 +232,7 @@
                                 <GridViewColumn Header="%" x:Name="PercentColumn" Width="{Binding ElementName=PercentH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding PercentReadDPSReadout}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding RatioPercent}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -246,7 +248,7 @@
                                 <GridViewColumn Header="Damaged" x:Name="DamagedColumn" Width="{Binding ElementName=DmgdH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding ReadDamaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding Damaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -347,7 +349,7 @@
                                 <GridViewColumn Header="Damaged" x:Name="AllyDamagedColumn" Width="{Binding ElementName=DmgdH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding ReadDamaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding Damaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -447,7 +449,7 @@
                                 <GridViewColumn Header="Damaged" x:Name="DBDamagedColumn" Width="{Binding ElementName=DmgdH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding ReadDamaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding Damaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -546,7 +548,7 @@
                                 <GridViewColumn Header="Damaged" x:Name="LswDamagedColumn" Width="{Binding ElementName=DmgdH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding ReadDamaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding Damaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -645,7 +647,7 @@
                                 <GridViewColumn Header="Damaged" x:Name="PwpDamagedColumn" Width="{Binding ElementName=DmgdH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding ReadDamaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding Damaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -744,7 +746,7 @@
                                 <GridViewColumn Header="Damaged" x:Name="AisDamagedColumn" Width="{Binding ElementName=DmgdH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding ReadDamaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding Damaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -844,7 +846,7 @@
                                 <GridViewColumn Header="Damaged" x:Name="RideDamagedColumn" Width="{Binding ElementName=DmgdH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding ReadDamaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding Damaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -892,13 +894,13 @@
                         </ListView.View>
                     </ListView>
                 </TabItem>
-                <TabItem Header="Lap1" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
+                <TabItem Header="Lap1" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0" Visibility="Collapsed">
 
                 </TabItem>
-                <TabItem Header="Lap2" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
+                <TabItem Header="Lap2" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0" Visibility="Collapsed">
 
                 </TabItem>
-                <TabItem Header="Lap3" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
+                <TabItem Header="Lap3" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0" Visibility="Collapsed">
 
                 </TabItem>
                 <TabItem Header="Info" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">

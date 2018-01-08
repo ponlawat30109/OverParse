@@ -37,19 +37,7 @@ namespace OverParse.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Unknown")]
-        public string LaunchMethod {
-            get {
-                return ((string)(this["LaunchMethod"]));
-            }
-            set {
-                this["LaunchMethod"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
         public int InstalledPluginVersion {
             get {
                 return ((int)(this["InstalledPluginVersion"]));
@@ -85,7 +73,7 @@ namespace OverParse.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("620")]
+        [global::System.Configuration.DefaultSettingValueAttribute("670")]
         public double Width {
             get {
                 return ((double)(this["Width"]));
@@ -542,12 +530,12 @@ namespace OverParse.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool End3 {
+        public bool End5 {
             get {
-                return ((bool)(this["End3"]));
+                return ((bool)(this["End5"]));
             }
             set {
-                this["End3"] = value;
+                this["End5"] = value;
             }
         }
         
@@ -560,6 +548,18 @@ namespace OverParse.Properties {
             }
             set {
                 this["HideLsw"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public int Updateinv {
+            get {
+                return ((int)(this["Updateinv"]));
+            }
+            set {
+                this["Updateinv"] = value;
             }
         }
     }

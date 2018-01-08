@@ -3,19 +3,15 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
-using HotKeyFrame;
 
 namespace OverParse
 {
     public partial class MainWindow : Window
     {
-
 
         private void EndEncounter_Click(object sender, RoutedEventArgs e)
         {
@@ -88,11 +84,11 @@ namespace OverParse
             EndEncounterNoLog_Click(null, null);
         }
 
-        private void Questcheck_Click(object sender, RoutedEventArgs e)
+        /*private void Questcheck_Click(object sender, RoutedEventArgs e)
         {
             QuestName quest = new QuestName();
             quest.Show();
-        }
+        }*/
 
         private void AutoEndEncounters_Click(object sender, RoutedEventArgs e)
         {
@@ -251,6 +247,22 @@ namespace OverParse
             UpdateForm(null, null);
         }
 
+        private void ChangeInterval_Click(object sender, RoutedEventArgs e)
+        {
+            AlwaysOnTop.IsChecked = false;
+            Inputbox input = new Inputbox("OverParse", ".csvファイルの読み取り間隔を変更します... (単位:ms)", Properties.Settings.Default.Updateinv.ToString()) { Owner = this };
+            input.ShowDialog();
+            if (Int32.TryParse(input.ResultText, out int x))
+            {
+                if (x > 50) { damageTimer.Interval = new TimeSpan(0, 0, 0, 0, x); Properties.Settings.Default.Updateinv = x;}
+                else { MessageBox.Show("Error"); }
+            } else {
+                if (input.ResultText.Length > 0) { MessageBox.Show("Couldn't parse your input. Enter only a number."); }
+            }
+
+            AlwaysOnTop.IsChecked = Properties.Settings.Default.AlwaysOnTop;
+        }
+
         private void DefaultWindowSize_Click(object sender, RoutedEventArgs e)
         {
             Height = 275;
@@ -311,7 +323,7 @@ namespace OverParse
                 if (!Properties.Settings.Default.Criticalcfg) { CombatantView.Columns.Add(CriColumn); }
                 CombatantView.Columns.Add(HColumn);
                 CombatantView.Columns.Add(MaxHitColumn);
-                JAHC.Width = new GridLength(45);
+                JAHC.Width = new GridLength(39);
             }
             UpdateForm(null, null);
         }
@@ -333,7 +345,7 @@ namespace OverParse
                 CombatantView.Columns.Add(CriColumn);
                 CombatantView.Columns.Add(HColumn);
                 CombatantView.Columns.Add(MaxHitColumn);
-                CriHC.Width = new GridLength(45);
+                CriHC.Width = new GridLength(39);
             }
             UpdateForm(null, null);
         }
@@ -348,7 +360,7 @@ namespace OverParse
             }
             else
             {
-                AtkHC.Width = new GridLength(1.5, GridUnitType.Star);
+                AtkHC.Width = new GridLength(1.7, GridUnitType.Star);
             }
             UpdateForm(null, null);
         }
@@ -459,7 +471,7 @@ namespace OverParse
         private void About_Click(object sender, RoutedEventArgs e)
         {
             var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            MessageBox.Show($"OverParse v{version} Debug\n簡易的な自己監視ツール。\n\nShoutouts to WaifuDfnseForce.\nAdditional shoutouts to Variant, AIDA, and everyone else who makes the Tweaker plugin possible.\n\nPlease use damage information responsibly.", "OverParse");
+            MessageBox.Show($"OverParse v{version}\n簡易的な自己監視ツール。\n\nShoutouts to WaifuDfnseForce.\nAdditional shoutouts to Variant, AIDA, and everyone else who makes the Tweaker plugin possible.\n\nPlease use damage information responsibly.", "OverParse");
         }
 
         private void LowResources_Click(object sender, RoutedEventArgs e)
@@ -497,7 +509,7 @@ namespace OverParse
 
         private void Github_Click(object sender, RoutedEventArgs e) => Process.Start("https://github.com/Remon-7L/OverParse");
 
-        private void SkipPlugin_Click(object sender, RoutedEventArgs e) => Properties.Settings.Default.InstalledPluginVersion = 4;
+        private void SkipPlugin_Click(object sender, RoutedEventArgs e) => Properties.Settings.Default.InstalledPluginVersion = 5;
 
         private void ResetLogFolder_Click(object sender, RoutedEventArgs e)
         {
@@ -507,13 +519,24 @@ namespace OverParse
 
         private void UpdatePlugin_Click(object sender, RoutedEventArgs e)
         {
-            if (Properties.Settings.Default.LaunchMethod == "Tweaker")
-            {
-                MessageBox.Show("プラグインはPSO2 TweakerメニューのPluginsからインストール出来ます。\nPSO2 Tweakerを使用しない場合は、Help Reset OverParseを使用してセットアップして下さい。");
-                return;
-            }
             encounterlog.UpdatePlugin(Properties.Settings.Default.Path);
             EndEncounterNoLog_Click(this, null);
+        }
+
+        private void Updateskills_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (System.Net.WebClient client = new System.Net.WebClient())
+                {
+                    Stream stream = client.OpenRead("https://remon-7l.github.io/skills.csv");
+                    StreamReader streamReader = new StreamReader(stream);
+                    String content = streamReader.ReadToEnd();
+                    File.WriteAllText("skills.csv", content);
+                }
+                } catch {
+                MessageBox.Show("skills.csvの取得に失敗しました。");
+            }
         }
 
         private void ResetOverParse(object sender, RoutedEventArgs e)

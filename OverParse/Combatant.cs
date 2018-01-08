@@ -26,62 +26,82 @@ namespace OverParse
         public static string[] PhotonAttackIDs = new string[] { "2414748436", "1954812953", "2822784832", "3339644659", "2676260123", "224805109" };
         public static string[] LaconiumAttackIDs = { "1913897098", "2235773608", "2235773610", "2235773611", "2235773818", "2235773926", "2235773927", "2235773944", "2618804663", "2619614461", "3607718359" };
         public static string[] AISAttackIDs = new string[] { "119505187", "79965782", "79965783", "79965784", "80047171", "434705298", "79964675", "1460054769", "4081218683", "3298256598", "2826401717" };
-        public static string[] DBAttackIDs = new string[] { "267911699", "262346668", "265285249", "264996390" , "311089933" , "3988916155" , "265781051" , "3141577094" , "2289473436" , "517914866" , "517914869" , "1117313539" , "1611279117" , "3283361988" , "1117313602" , "395090797" , "2429416220" , "1697271546" , "1117313924" };
+        public static string[] DBAttackIDs = new string[] { "267911699", "262346668", "265285249", "264996390", "311089933", "3988916155", "265781051", "3141577094", "2289473436", "517914866", "517914869", "1117313539", "1611279117", "3283361988", "1117313602", "395090797", "2429416220", "1697271546", "1117313924" };
         public static string[] RideAttackIDs = new string[] { "3491866260", "2056025809", "2534881408", "2600476838", "1247666429", "3750571080", "3642240295", "651750924", "2452463220", "1732461796", "3809261131", "1876785244", "3765765641", "3642969286", "1258041436" };
 
-        public static float maxShare = 0;
-
-        public int Damage => Attacks.Sum(x => x.Damage);
-
-        public int Damaged => Attacks.Sum(x => x.Dmgd);
-
-        public string ReadDamaged => Attacks.Sum(x => x.Dmgd).ToString("N0");
-
-        public int GetZanverseDamage => Attacks.Where(a => a.ID == "2106601422").Sum(x => x.Damage);
-
-        public int GetFinishDamage => Attacks.Where(a => FinishAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
-
-        public string WJAPercent => ((Attacks.Average(a => a.JA)) * 100).ToString("00.00");
-
-        public string WCRIPercent => ((Attacks.Average(a => a.Cri)) * 100).ToString("00.00");
-
-        public double DPS => Damage / ActiveTime;
-
-        public double ReadDPS => Math.Round(ReadDamage / (double)ActiveTime);
-
-        public string StringDPS => ReadDPS.ToString("N0");
-
-        public bool IsAIS => (isTemporary == "AIS");
-
-        public bool IsRide => (isTemporary == "Ride");
-
-        public bool IsZanverse => (isTemporary == "Zanverse");
-
-        public bool IsPwp => (isTemporary == "Pwp");
-
-        public bool IsFinish => (isTemporary == "HTF Attacks");
-
-        public bool IsDB => (isTemporary == "DB");
-
-        public string MaxHitdmg => MaxHitAttack.Damage.ToString("N0");
 
         public bool IsYou => (ID == Hacks.currentPlayerID);
-
-        public int MaxHitNum => MaxHitAttack.Damage;
-
-        public string MaxHitID => MaxHitAttack.ID;
-
-        public string DPSReadout => PercentReadDPSReadout;
-
-        //Ally Data
-        public string AllyReadPct => AllyPct.ToString("N2");
-        public int AllyDamage
+        public string DisplayName
         {
             get
             {
-                int temp = Damage;
-                int temp2 = DBDamage + PwpDamage + AisDamage + RideDamage;
-                temp -= temp2;
+                if (Properties.Settings.Default.AnonymizeNames && IsAlly)
+                {
+                    if(IsYou)
+                    {
+                        return Name;
+                    } else {
+                        return "----";
+                    }
+                }
+                return Name;
+            }
+        }
+
+        public string RatioPercent => $"{PercentReadDPS:00.00}";
+
+        public string DamageReadout => ReadDamage.ToString("N0");
+        public Int64 Damage => Attacks.Sum(x => x.Damage);
+        public Int64 GetZanverseDamage => Attacks.Where(a => a.ID == "2106601422").Sum(x => x.Damage);
+        public Int64 GetFinishDamage => Attacks.Where(a => FinishAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
+
+        public string Damaged => Attacks.Sum(x => x.Dmgd).ToString("N0");
+
+        public double DPS => Damage / ActiveTime;
+        public double ReadDPS => Math.Round(ReadDamage / (double)ActiveTime);
+        public string StringDPS => ReadDPS.ToString("N0");
+        public string FDPSReadout
+        {
+            get
+            {
+                if (Properties.Settings.Default.DPSformat)
+                {
+                    return FormatNumber(ReadDPS);
+                } else {
+                    return StringDPS;
+                }
+            }
+        }
+
+        public static float maxShare = 0;
+
+        public string WJAPercent => ((Attacks.Where(a => !MainWindow.jaignoreskill.Contains(a.ID)).Average(x => x.JA)) * 100).ToString("N2");
+
+        public string WCRIPercent => ((Attacks.Average(a => a.Cri)) * 100).ToString("00.00");
+
+
+        public bool IsAlly => (int.Parse(ID) >= 10000000) && !IsZanverse && !IsFinish;
+        public bool IsZanverse => (isTemporary == "Zanverse");
+        public bool IsFinish => (isTemporary == "HTF Attacks");
+        public bool IsDB => (isTemporary == "DB");
+        public bool IsLsw => (isTemporary == "Lsw");
+        public bool IsPwp => (isTemporary == "Pwp");
+        public bool IsAIS => (isTemporary == "AIS");
+        public bool IsRide => (isTemporary == "Ride");
+
+        public string MaxHitdmg => MaxHitAttack.Damage.ToString("N0");
+
+        public Int64 MaxHitNum => MaxHitAttack.Damage;
+
+        public string MaxHitID => MaxHitAttack.ID;
+
+        //Ally Data
+        public string AllyReadPct => AllyPct.ToString("N2");
+        public Int64 AllyDamage
+        {
+            get
+            {
+                Int64 temp = Damage - DBDamage - LswDamage - PwpDamage - AisDamage - RideDamage; 
                 if (Properties.Settings.Default.SeparateZanverse)
                     temp -= GetZanverseDamage;
                 if (Properties.Settings.Default.SeparateFinish)
@@ -91,7 +111,7 @@ namespace OverParse
         }
         public string AllyReadDamage => AllyDamage.ToString("N0");
         public string AllyDPS => Math.Round(AllyDamage / (double)ActiveTime).ToString("N0");
-        public string AllyJAPct => (Attacks.Where(a => !DBAttackIDs.Contains(a.ID) && !PhotonAttackIDs.Contains(a.ID) && !AISAttackIDs.Contains(a.ID) && !RideAttackIDs.Contains(a.ID)).Average(x => x.JA) * 100).ToString("N2");
+        public string AllyJAPct => (Attacks.Where(a => !DBAttackIDs.Contains(a.ID) && !PhotonAttackIDs.Contains(a.ID) && !AISAttackIDs.Contains(a.ID) && !RideAttackIDs.Contains(a.ID) && !MainWindow.jaignoreskill.Contains(a.ID)).Average(x => x.JA) * 100).ToString("N2");
         public string AllyCriPct => (Attacks.Where(a => !DBAttackIDs.Contains(a.ID) && !PhotonAttackIDs.Contains(a.ID) && !AISAttackIDs.Contains(a.ID) && !RideAttackIDs.Contains(a.ID)).Average(x => x.Cri) * 100).ToString("N2");
         public string AllyMaxHitdmg => AllyMaxHit.Damage.ToString("N0");
         public string AllyAtkName
@@ -121,7 +141,7 @@ namespace OverParse
 
         //DarkBlast Data
         public string DBReadPct => DBPct.ToString("N2");
-        public int DBDamage => Attacks.Where(a => DBAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
+        public Int64 DBDamage => Attacks.Where(a => DBAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
         public string DBReadDamage => DBDamage.ToString("N0");
         public string DBDPS => Math.Round(DBDamage / (double)ActiveTime).ToString("N0");
         public string DBJAPct => (Attacks.Where(a => DBAttackIDs.Contains(a.ID)).Average(x => x.JA) * 100).ToString("N2");
@@ -154,7 +174,7 @@ namespace OverParse
 
         //Laconium sword Data
         public string LswReadPct => LswPct.ToString("N2");
-        public int LswDamage => Attacks.Where(a => LaconiumAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
+        public Int64 LswDamage => Attacks.Where(a => LaconiumAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
         public string LswReadDamage => LswDamage.ToString("N0");
         public string LswDPS => Math.Round(LswDamage / (double)ActiveTime).ToString("N0");
         public string LswJAPct => (Attacks.Where(a => LaconiumAttackIDs.Contains(a.ID)).Average(x => x.JA) * 100).ToString("N2");
@@ -187,7 +207,7 @@ namespace OverParse
 
         //PhotonWeapon Data
         public string PwpReadPct => PwpPct.ToString("N2");
-        public int PwpDamage => Attacks.Where(a => PhotonAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
+        public Int64 PwpDamage => Attacks.Where(a => PhotonAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
         public string PwpReadDamage => PwpDamage.ToString("N0");
         public string PwpDPS => Math.Round(PwpDamage / (double)ActiveTime).ToString("N0");
         public string PwpJAPct => (Attacks.Where(a => PhotonAttackIDs.Contains(a.ID)).Average(x => x.JA) * 100).ToString("N2");
@@ -220,7 +240,7 @@ namespace OverParse
 
         //AIS Data
         public string AisReadPct => AisPct.ToString("N2");
-        public int AisDamage => Attacks.Where(a => AISAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
+        public Int64 AisDamage => Attacks.Where(a => AISAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
         public string AisReadDamage => PwpDamage.ToString("N0");
         public string AisDPS => Math.Round(PwpDamage / (double)ActiveTime).ToString("N0");
         public string AisJAPct => (Attacks.Where(a => PhotonAttackIDs.Contains(a.ID)).Average(x => x.JA) * 100).ToString("N2");
@@ -253,7 +273,7 @@ namespace OverParse
 
         //Ridroid Data
         public string RideReadPct => RidePct.ToString("N2");
-        public int RideDamage => Attacks.Where(a => RideAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
+        public Int64 RideDamage => Attacks.Where(a => RideAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
         public string RideReadDamage => RideDamage.ToString("N0");
         public string RideDPS => Math.Round(RideDamage / (double)ActiveTime).ToString("N0");
         public string RideJAPct => (Attacks.Where(a => RideAttackIDs.Contains(a.ID)).Average(x => x.JA) * 100).ToString("N2");
@@ -285,19 +305,6 @@ namespace OverParse
         }
 
 
-        public string FDPSReadout
-        {
-            get
-            {
-                if (Properties.Settings.Default.DPSformat)
-                {
-                    return FormatNumber(ReadDPS);
-                } else {
-                    return StringDPS;
-                }
-            }
-        }
-
         public string JAPercent
         {
             get {
@@ -305,9 +312,9 @@ namespace OverParse
                 {
                     if (Properties.Settings.Default.Nodecimal)
                     {
-                        return ((Attacks.Average(a => a.JA)) * 100).ToString("N0");
+                        return ((Attacks.Where(a => !MainWindow.jaignoreskill.Contains(a.ID)).Average(x => x.JA)) * 100).ToString("N0");
                     } else {
-                        return ((Attacks.Where(a => !MainWindow.ignoreskill.Contains(a.ID)).Average(x => x.JA)) * 100).ToString("N2");
+                        return ((Attacks.Where(a => !MainWindow.jaignoreskill.Contains(a.ID)).Average(x => x.JA)) * 100).ToString("N2");
                     }
                 }
                 catch { return "Error"; }
@@ -330,16 +337,14 @@ namespace OverParse
             }
         }
 
-        public string DamageReadout => ReadDamage.ToString("N0");
-
-        public int ReadDamage
+        public Int64 ReadDamage
         {
             get
             {
                 if (IsZanverse || IsFinish || IsAIS || IsPwp || IsDB || IsRide)
                     return Damage;
 
-                int temp = Damage;
+                Int64 temp = Damage;
                 if (Properties.Settings.Default.SeparateZanverse)
                     temp -= GetZanverseDamage;
                 if (Properties.Settings.Default.SeparateFinish)
@@ -369,23 +374,6 @@ namespace OverParse
             if (value >= 1000)
                 return (value / 1000D).ToString("0.0") + "K";
             return value.ToString("#,0");
-        }
-
-        public string AnonymousName()
-        {
-            if (IsYou)
-                return Name;
-            else
-                return "----";
-        }
-
-        public string DisplayName
-        {
-            get
-            {
-                if (Properties.Settings.Default.AnonymizeNames && IsAlly) { return AnonymousName(); }
-                return Name;
-            }
         }
 
         public Brush Brush
@@ -439,16 +427,6 @@ namespace OverParse
             return lgb;
         }
 
-        public bool IsAlly
-        {
-            get
-            {
-                if (int.Parse(ID) >= 10000000 && !IsZanverse && !IsFinish)
-                    return true;
-                return false;
-            }
-        }
-
         public Attack MaxHitAttack
         {
             get
@@ -470,21 +448,6 @@ namespace OverParse
                     attack = MainWindow.skillDict[MaxHitID];
                 }
                 return MaxHitAttack.Damage.ToString(attack);
-            }
-        }
-
-        public string PercentReadDPSReadout
-        {
-            get
-            {
-                if (PercentReadDPS < -.5)
-                {
-                    return "--";
-                }
-                else
-                {
-                    return $"{PercentReadDPS:0.00}";
-                }
             }
         }
 
@@ -515,20 +478,19 @@ namespace OverParse
     static class Hacks
     {
         public static string currentPlayerID;
-        public static bool DontAsk = false;
-        public static string targetID = "";
+        //public static string currentPlayerName;
     }
 
     public class Attack
     {
         public string ID;
-        public int Damage;
+        public Int64 Damage;
         public int Timestamp;
         public int JA;
         public int Cri;
-        public int Dmgd;
+        public Int64 Dmgd;
 
-        public Attack(string initID, int initDamage, int initTimestamp, int justAttack, int critical, int damaged)
+        public Attack(string initID, Int64 initDamage, int initTimestamp, int justAttack, int critical, Int64 damaged)
         {
             ID = initID;
             Damage = initDamage;
@@ -538,6 +500,5 @@ namespace OverParse
             Dmgd = damaged;
         }
     }
-
 
 }

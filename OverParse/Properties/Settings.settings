@@ -5,11 +5,8 @@
     <Setting Name="Path" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\Program Files (x86)\SEGA\PHANTASYSTARONLINE2\pso2_bin</Value>
     </Setting>
-    <Setting Name="LaunchMethod" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Unknown</Value>
-    </Setting>
     <Setting Name="InstalledPluginVersion" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">-1</Value>
+      <Value Profile="(Default)">5</Value>
     </Setting>
     <Setting Name="EncounterTimeout" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">60</Value>
@@ -18,7 +15,7 @@
       <Value Profile="(Default)">50</Value>
     </Setting>
     <Setting Name="Width" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">620</Value>
+      <Value Profile="(Default)">670</Value>
     </Setting>
     <Setting Name="WindowOpacity" Type="System.Double" Scope="User">
       <Value Profile="(Default)">1</Value>
@@ -131,11 +128,14 @@
     <Setting Name="SeparateLsw" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="End3" Type="System.Boolean" Scope="User">
+    <Setting Name="End5" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="HideLsw" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Updateinv" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">200</Value>
     </Setting>
   </Settings>
 </SettingsFile>
