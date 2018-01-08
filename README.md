@@ -16,8 +16,9 @@ MainWindow.xaml.cs / MainWindow.MainWindow() - 起動時読み込み
   ↓  
  Log.cs / Log.Log() - MainWindow()から呼ばれる、インストール関連  
   ↓  
- UpdateForm - 500ms毎に情報・画面更新のループ処理  
- HideIfInactive - 1s毎にアクティブウィンドゥのタイトルを取得するループ処理  
+ UpdateForm - 設定したms毎に情報・画面更新のループ処理
+ Log.cs / Log.UpdateLog() - UpdateForm()から呼ばれるログ更新
+ HideIfInactive - 1s毎にアクティブウィンドゥのタイトルを取得するループ処理
  CheckForNewLog - 1s毎に新しい.csvファイルが無いかどうかを確認するループ処理  
    
 イベントハンドラまみれだったMainWindow.xaml.csをClick.csに分けたので大分見やすくなったと思いますがまだまだ見通しが悪いと言えば悪いです  
