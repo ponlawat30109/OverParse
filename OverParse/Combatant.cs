@@ -26,7 +26,7 @@ namespace OverParse
         public static string[] PhotonAttackIDs = new string[] { "2414748436", "1954812953", "2822784832", "3339644659", "2676260123", "224805109" };
         public static string[] LaconiumAttackIDs = { "1913897098", "2235773608", "2235773610", "2235773611", "2235773818", "2235773926", "2235773927", "2235773944", "2618804663", "2619614461", "3607718359" };
         public static string[] AISAttackIDs = new string[] { "119505187", "79965782", "79965783", "79965784", "80047171", "434705298", "79964675", "1460054769", "4081218683", "3298256598", "2826401717" };
-        public static string[] DBAttackIDs = new string[] { "267911699", "262346668", "265285249", "264996390" , "311089933" , "3988916155" , "265781051" , "3141577094" , "2289473436" , "517914866" , "517914869" , "1117313539" , "1611279117" , "3283361988" , "1117313602" , "395090797" , "2429416220" , "1697271546" , "1117313924" };
+        public static string[] DBAttackIDs = new string[] { "267911699", "262346668", "265285249", "264996390", "311089933", "3988916155", "265781051", "3141577094", "2289473436", "517914866", "517914869", "1117313539", "1611279117", "3283361988", "1117313602", "395090797", "2429416220", "1697271546", "1117313924" };
         public static string[] RideAttackIDs = new string[] { "3491866260", "2056025809", "2534881408", "2600476838", "1247666429", "3750571080", "3642240295", "651750924", "2452463220", "1732461796", "3809261131", "1876785244", "3765765641", "3642969286", "1258041436" };
 
         public static float maxShare = 0;
@@ -51,6 +51,10 @@ namespace OverParse
 
         public string StringDPS => ReadDPS.ToString("N0");
 
+        public bool IsYou => (ID == Hacks.currentPlayerID);
+
+        public bool IsAlly => (int.Parse(ID) >= 10000000) && !IsZanverse && !IsFinish;
+
         public bool IsAIS => (isTemporary == "AIS");
 
         public bool IsRide => (isTemporary == "Ride");
@@ -63,15 +67,34 @@ namespace OverParse
 
         public bool IsDB => (isTemporary == "DB");
 
-        public string MaxHitdmg => MaxHitAttack.Damage.ToString("N0");
-
-        public bool IsYou => (ID == Hacks.currentPlayerID);
+        public bool IsLsw => (isTemporary == "Lsw");
 
         public int MaxHitNum => MaxHitAttack.Damage;
+
+        public string MaxHitdmg => MaxHitAttack.Damage.ToString("N0");
 
         public string MaxHitID => MaxHitAttack.ID;
 
         public string DPSReadout => PercentReadDPSReadout;
+
+        public string DisplayName
+        {
+            get
+            {
+                if (Properties.Settings.Default.AnonymizeNames && IsAlly)
+                {
+                    if (IsYou)
+                    {
+                        return Name;
+                    }
+                    else
+                    {
+                        return "----";
+                    }
+                }
+                return Name;
+            }
+        }
 
         //Ally Data
         public string AllyReadPct => AllyPct.ToString("N2");
@@ -79,9 +102,7 @@ namespace OverParse
         {
             get
             {
-                int temp = Damage;
-                int temp2 = DBDamage + PwpDamage + AisDamage + RideDamage;
-                temp -= temp2;
+                int temp = Damage - DBDamage - LswDamage - PwpDamage - AisDamage - RideDamage;
                 if (Properties.Settings.Default.SeparateZanverse)
                     temp -= GetZanverseDamage;
                 if (Properties.Settings.Default.SeparateFinish)
@@ -379,15 +400,6 @@ namespace OverParse
                 return "----";
         }
 
-        public string DisplayName
-        {
-            get
-            {
-                if (Properties.Settings.Default.AnonymizeNames && IsAlly) { return AnonymousName(); }
-                return Name;
-            }
-        }
-
         public Brush Brush
         {
             get
@@ -437,16 +449,6 @@ namespace OverParse
             lgb.GradientStops.Add(new GradientStop(c2, 1));
             lgb.SpreadMethod = GradientSpreadMethod.Repeat;
             return lgb;
-        }
-
-        public bool IsAlly
-        {
-            get
-            {
-                if (int.Parse(ID) >= 10000000 && !IsZanverse && !IsFinish)
-                    return true;
-                return false;
-            }
         }
 
         public Attack MaxHitAttack

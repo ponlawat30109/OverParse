@@ -102,8 +102,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Click.cs" />
-    <Compile Include="Detalis.xaml.cs">
-      <DependentUpon>Detalis.xaml</DependentUpon>
     </Compile>
     <Compile Include="FontDialogEx.xaml.cs">
       <DependentUpon>FontDialogEx.xaml</DependentUpon>
@@ -112,11 +110,7 @@
     <Compile Include="inputbox.xaml.cs">
       <DependentUpon>inputbox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="QuestName.xaml.cs">
-      <DependentUpon>QuestName.xaml</DependentUpon>
-    </Compile>
     <Compile Include="WindowsServices.cs" />
-    <Page Include="Detalis.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -142,10 +136,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="QuestName.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

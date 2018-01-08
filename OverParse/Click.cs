@@ -88,11 +88,11 @@ namespace OverParse
             EndEncounterNoLog_Click(null, null);
         }
 
-        private void Questcheck_Click(object sender, RoutedEventArgs e)
+        /* private void Questcheck_Click(object sender, RoutedEventArgs e)
         {
             QuestName quest = new QuestName();
             quest.Show();
-        }
+        } */
 
         private void AutoEndEncounters_Click(object sender, RoutedEventArgs e)
         {
@@ -305,11 +305,9 @@ namespace OverParse
             {
                 CombatantView.Columns.Remove(JAColumn);
                 CombatantView.Columns.Remove(CriColumn);
-                //CombatantView.Columns.Remove(HColumn);
                 CombatantView.Columns.Remove(MaxHitColumn);
                 CombatantView.Columns.Add(JAColumn);
                 if (!Properties.Settings.Default.Criticalcfg) { CombatantView.Columns.Add(CriColumn); }
-                //CombatantView.Columns.Add(HColumn);
                 CombatantView.Columns.Add(MaxHitColumn);
                 JAHC.Width = new GridLength(45);
             }
@@ -358,7 +356,6 @@ namespace OverParse
             DPSHC.Width = new GridLength(0.6, GridUnitType.Star);
             JAHC.Width = new GridLength(0.4, GridUnitType.Star);
             CriHC.Width = new GridLength(0.4, GridUnitType.Star);
-            //MdmgHC.Width = new GridLength(0.6, GridUnitType.Star);
         }
 
         private void ShowDamageGraph_Click(object sender, RoutedEventArgs e)
@@ -457,7 +454,7 @@ namespace OverParse
         private void About_Click(object sender, RoutedEventArgs e)
         {
             var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            MessageBox.Show($"OverParse v3.X.X Debug\nSelf Monitoring tool. \n\nShoutouts to WaifuDfnseForce.\n\nAdditional shoutouts to Variant, AIDA, and everyone else who makes the Tweaker plugin possible.\n\nPlease use damage information responsibly.", "OverParse");
+            MessageBox.Show($"OverParse v3\nSelf Monitoring tool. \n\nShoutouts to Variant, AIDA, and everyone else who makes the Tweaker plugin possible.\n\nPlease use damage information responsibly.", "OverParse");
         }
 
         private void LowResources_Click(object sender, RoutedEventArgs e)
@@ -493,7 +490,7 @@ namespace OverParse
 
         private void Github_Click(object sender, RoutedEventArgs e) => Process.Start("https://github.com/SkrubZer0/OverParse");
 
-        private void SkipPlugin_Click(object sender, RoutedEventArgs e) => Properties.Settings.Default.InstalledPluginVersion = 4;
+        private void SkipPlugin_Click(object sender, RoutedEventArgs e) => Properties.Settings.Default.InstalledPluginVersion = 5;
 
         private void ResetLogFolder_Click(object sender, RoutedEventArgs e)
         {
@@ -503,11 +500,6 @@ namespace OverParse
 
         private void UpdatePlugin_Click(object sender, RoutedEventArgs e)
         {
-            if (Properties.Settings.Default.LaunchMethod == "Tweaker")
-            {
-                MessageBox.Show("Plugins can be installed via the plugins menu on the PSO2 Tweaker. \n\nIf you do not use PSO2 Tweaker, you can set up plugins via 'Help Reset OverParse'");
-                return;
-            }
             encounterlog.UpdatePlugin(Properties.Settings.Default.Path);
             EndEncounterNoLog_Click(this, null);
         }
@@ -527,5 +519,23 @@ namespace OverParse
             Application.Current.Shutdown();
         }
 
+        private void Updateskills_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (System.Net.WebClient client = new System.Net.WebClient())
+                {
+                    Stream stream = client.OpenRead("https://raw.githubusercontent.com/VariantXYZ/PSO2ACT/master/PSO2ACT/skills.csv");
+                    StreamReader webreader = new StreamReader(stream);
+                    String content = webreader.ReadToEnd();
+                    File.WriteAllText("skills.csv", content);
+                    MessageBox.Show("skills.csv has been successfully updated");
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Failed to update skills.csv");
+            }
+        }
     }
 }

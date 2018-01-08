@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Threading;
 using HotKeyFrame;
 
 namespace OverParse
@@ -42,7 +43,7 @@ namespace OverParse
             InitializeComponent();
 
             Dispatcher.UnhandledException += Panic;
-            Abouttext.Text = "OverParse v3.0.4 EN";
+            Abouttext.Text = "OverParse v3 EN";
             LowResources.IsChecked = Properties.Settings.Default.LowResources;
             CPUdraw.IsChecked = Properties.Settings.Default.CPUdraw;
             if (Properties.Settings.Default.LowResources) { thisProcess.PriorityClass = ProcessPriorityClass.Idle; }
@@ -55,17 +56,6 @@ namespace OverParse
                 Application.Current.Shutdown();
             }
 
-            //Directory.CreateDirectory("Debug");
-
-            //FileStream filestream = new FileStream("Debug\\log_" + string.Format("{0:yyyy-MM-dd_hh-mm-ss-tt}", DateTime.Now) + ".txt", FileMode.Create);
-            //var streamwriter = new StreamWriter(filestream)
-            //{
-            //    AutoFlush = true
-            //};
-            //Console.SetOut(streamwriter);
-            //Console.SetError(streamwriter);
-
-            //Console.WriteLine("OVERPARSE V." + Assembly.GetExecutingAssembly().GetName().Version);
 
             if (Properties.Settings.Default.UpgradeRequired && !Properties.Settings.Default.ResetInvoked)
             {
@@ -128,6 +118,7 @@ namespace OverParse
             HandleWindowOpacity(); HandleListOpacity(); SeparateDB_Click(null, null);
             HandleWindowOpacity(); HandleListOpacity(); SeparateRide_Click(null, null);
             HandleWindowOpacity(); HandleListOpacity(); SeparatePwp_Click(null, null);
+            HandleWindowOpacity(); HandleListOpacity(); SeparateLsw_Click(null, null);
 
             //Console.WriteLine($"Launch method: {Properties.Settings.Default.LaunchMethod}");
 
@@ -403,7 +394,7 @@ namespace OverParse
             if (stealActiveTimeDummy != null)
                 elapsed = stealActiveTimeDummy.ActiveTime;
 
-            // create and sort dummy AIS combatants
+            // Seperation...
             if (Properties.Settings.Default.SeparateAIS)
             {
                 List<Combatant> pendingCombatants = new List<Combatant>();
@@ -625,9 +616,10 @@ namespace OverParse
                 if (c.DBDamage > 0) { workingList.Sort((x, y) => y.DBDamage.CompareTo(x.DBDamage)); DBData.Items.Add(c); }
                 if (c.LswDamage > 0) { workingList.Sort((x, y) => y.LswDamage.CompareTo(x.LswDamage)); LswData.Items.Add(c); }
                 if (c.PwpDamage > 0) { workingList.Sort((x, y) => y.PwpDamage.CompareTo(x.PwpDamage)); PwpData.Items.Add(c); }
-                if(c.AisDamage > 0) { workingList.Sort((x, y) => y.AisDamage.CompareTo(x.AisDamage)); AisData.Items.Add(c); }
+                if (c.AisDamage > 0) { workingList.Sort((x, y) => y.AisDamage.CompareTo(x.AisDamage)); AisData.Items.Add(c); }
                 if (c.RideDamage > 0) { workingList.Sort((x, y) => y.RideDamage.CompareTo(x.RideDamage)); RideData.Items.Add(c); }
                 workingList.Sort((x, y) => y.ReadDamage.CompareTo(x.ReadDamage));
+
             }
 
 
@@ -664,11 +656,6 @@ namespace OverParse
                 if (totalDPS > 0)
                     EncounterStatus.Content += $" - Total : {totalReadDamage.ToString("N0")}" + $" - {totalDPS.ToString("N0")} DPS";
 
-                //if (Properties.Settings.Default.CompactMode)
-                    //foreach (Combatant c in workingList)
-                        //if (c.IsYou)
-                            //EncounterStatus.Content += $" - MAX: {c.MaxHitNum.ToString("N0")}";
-
                 if (!Properties.Settings.Default.SeparateZanverse)
                     EncounterStatus.Content += $" - Zanverse : {totalZanverse.ToString("N0")}";
 
@@ -676,16 +663,13 @@ namespace OverParse
             }
 
             // autoend
-            if (encounterlog.running)
+            if (encounterlog.running && Properties.Settings.Default.AutoEndEncounters)
             {
-                if (Properties.Settings.Default.AutoEndEncounters)
+                int unixTimestamp = (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+                if ((unixTimestamp - encounterlog.newTimestamp) >= Properties.Settings.Default.EncounterTimeout)
                 {
-                    int unixTimestamp = (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-                    if ((unixTimestamp - encounterlog.newTimestamp) >= Properties.Settings.Default.EncounterTimeout)
-                    {
-                        //Automatically ending an encounter
-                        EndEncounter_Click(null, null);
-                    }
+                    //Automatically ending an encounter
+                    EndEncounter_Click(null, null);
                 }
             }
         }
@@ -760,9 +744,8 @@ namespace OverParse
 
         private void ListViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            ListViewItem targetItem = (ListViewItem)sender;
-            string data = targetItem.Content.ToString();
-            Detalis f = new Detalis(data, "value") { Owner = this };
+            var data = (ListViewItem)sender;
+            var item = CombatantData.ContainerFromElement((DependencyObject)e.OriginalSource) as ListViewItem;
             f.Show();
         }
     }
