@@ -101,7 +101,7 @@ namespace OverParse
                 if (AllyMaxHit == null) { return "--"; }
                 string attack = "Unknown";
                 if (MainWindow.skillDict.ContainsKey(AllyMaxHit.ID)) { attack = MainWindow.skillDict[AllyMaxHit.ID]; }
-                return MaxHitAttack.Damage.ToString(attack);
+                return MaxHitAttack.Damage.ToString("N0") + $" ({attack})";
             }
         }
         public Attack AllyMaxHit
@@ -134,7 +134,7 @@ namespace OverParse
                 if (DBMaxHit == null) { return "--"; }
                 string attack = "Unknown";
                 if (MainWindow.skillDict.ContainsKey(DBMaxHit.ID)) { attack = MainWindow.skillDict[DBMaxHit.ID]; }
-                return MaxHitAttack.Damage.ToString(attack);
+                return MaxHitAttack.Damage.ToString("N0") + $" ({attack})";
             }
         }
         public Attack DBMaxHit
@@ -167,7 +167,7 @@ namespace OverParse
                 if (LswMaxHit == null) { return "--"; }
                 string attack = "Unknown";
                 if (MainWindow.skillDict.ContainsKey(LswMaxHit.ID)) { attack = MainWindow.skillDict[LswMaxHit.ID]; }
-                return MaxHitAttack.Damage.ToString(attack);
+                return MaxHitAttack.Damage.ToString("N0") + $" ({attack})";
             }
         }
         public Attack LswMaxHit
@@ -200,7 +200,7 @@ namespace OverParse
                 if (PwpMaxHit == null) { return "--"; }
                 string attack = "Unknown";
                 if (MainWindow.skillDict.ContainsKey(PwpMaxHit.ID)) { attack = MainWindow.skillDict[PwpMaxHit.ID]; }
-                return MaxHitAttack.Damage.ToString(attack);
+                return MaxHitAttack.Damage.ToString("N0") + $" ({attack})";
             }
         }
         public Attack PwpMaxHit
@@ -233,7 +233,7 @@ namespace OverParse
                 if (AisMaxHit == null) { return "--"; }
                 string attack = "Unknown";
                 if (MainWindow.skillDict.ContainsKey(AisMaxHit.ID)) { attack = MainWindow.skillDict[AisMaxHit.ID]; }
-                return MaxHitAttack.Damage.ToString(attack);
+                return MaxHitAttack.Damage.ToString("N0") + $" ({attack})";
             }
         }
         public Attack AisMaxHit
@@ -266,7 +266,7 @@ namespace OverParse
                 if (RideMaxHit == null) { return "--"; }
                 string attack = "Unknown";
                 if (MainWindow.skillDict.ContainsKey(RideMaxHit.ID)) { attack = MainWindow.skillDict[RideMaxHit.ID]; }
-                return MaxHitAttack.Damage.ToString(attack);
+                return MaxHitAttack.Damage.ToString("N0") + $" ({attack})";
             }
         }
         public Attack RideMaxHit
@@ -307,7 +307,7 @@ namespace OverParse
                     {
                         return ((Attacks.Average(a => a.JA)) * 100).ToString("N0");
                     } else {
-                        return ((Attacks.Where(a => !MainWindow.ignoreskill.Contains(a.ID)).Average(x => x.JA)) * 100).ToString("N2");
+                        return ((Attacks.Average(a => a.JA)) * 100).ToString("N2"); //used to to be: 'Attacks.Where(a => !MainWindow.ignoreskill.Contains(a.ID)).Average(x => x.JA))' for some reason...
                     }
                 }
                 catch { return "Error"; }
@@ -469,7 +469,7 @@ namespace OverParse
                 {
                     attack = MainWindow.skillDict[MaxHitID];
                 }
-                return MaxHitAttack.Damage.ToString(attack);
+                return MaxHitAttack.Damage.ToString("N0") + $" ({attack})";
             }
         }
 

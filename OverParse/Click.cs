@@ -305,11 +305,11 @@ namespace OverParse
             {
                 CombatantView.Columns.Remove(JAColumn);
                 CombatantView.Columns.Remove(CriColumn);
-                CombatantView.Columns.Remove(HColumn);
+                //CombatantView.Columns.Remove(HColumn);
                 CombatantView.Columns.Remove(MaxHitColumn);
                 CombatantView.Columns.Add(JAColumn);
                 if (!Properties.Settings.Default.Criticalcfg) { CombatantView.Columns.Add(CriColumn); }
-                CombatantView.Columns.Add(HColumn);
+                //CombatantView.Columns.Add(HColumn);
                 CombatantView.Columns.Add(MaxHitColumn);
                 JAHC.Width = new GridLength(45);
             }
@@ -328,10 +328,8 @@ namespace OverParse
             else
             {
                 CombatantView.Columns.Remove(CriColumn);
-                CombatantView.Columns.Remove(HColumn);
                 CombatantView.Columns.Remove(MaxHitColumn);
                 CombatantView.Columns.Add(CriColumn);
-                CombatantView.Columns.Add(HColumn);
                 CombatantView.Columns.Add(MaxHitColumn);
                 CriHC.Width = new GridLength(45);
             }
@@ -360,7 +358,7 @@ namespace OverParse
             DPSHC.Width = new GridLength(0.6, GridUnitType.Star);
             JAHC.Width = new GridLength(0.4, GridUnitType.Star);
             CriHC.Width = new GridLength(0.4, GridUnitType.Star);
-            MdmgHC.Width = new GridLength(0.6, GridUnitType.Star);
+            //MdmgHC.Width = new GridLength(0.6, GridUnitType.Star);
         }
 
         private void ShowDamageGraph_Click(object sender, RoutedEventArgs e)
@@ -493,9 +491,7 @@ namespace OverParse
             else { Datetime.Visibility = Visibility.Collapsed; }
         }
 
-        private void Discord_Click(object sender, RoutedEventArgs e) => Process.Start("https://discord.gg/pTCq443");
-
-        private void Github_Click(object sender, RoutedEventArgs e) => Process.Start("https://github.com/Remon-7L/OverParse");
+        private void Github_Click(object sender, RoutedEventArgs e) => Process.Start("https://github.com/SkrubZer0/OverParse");
 
         private void SkipPlugin_Click(object sender, RoutedEventArgs e) => Properties.Settings.Default.InstalledPluginVersion = 4;
 
