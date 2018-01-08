@@ -102,6 +102,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Click.cs" />
+    <Compile Include="Details.xaml.cs">
+      <DependentUpon>Details.xaml</DependentUpon>
     </Compile>
     <Compile Include="FontDialogEx.xaml.cs">
       <DependentUpon>FontDialogEx.xaml</DependentUpon>
@@ -111,6 +113,7 @@
       <DependentUpon>inputbox.xaml</DependentUpon>
     </Compile>
     <Compile Include="WindowsServices.cs" />
+    <Page Include="Details.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
