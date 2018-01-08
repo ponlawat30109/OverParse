@@ -75,6 +75,30 @@ namespace OverParse
 
         public static float maxShare = 0;
 
+        public string JAPercent
+        {
+            get
+            {
+                try {
+                    if (Properties.Settings.Default.Nodecimal) { return ((Attacks.Where(a => !MainWindow.jaignoreskill.Contains(a.ID)).Average(x => x.JA)) * 100).ToString("N0"); }
+                    else { return ((Attacks.Where(a => !MainWindow.jaignoreskill.Contains(a.ID)).Average(x => x.JA)) * 100).ToString("N2"); }
+                }
+                catch { return "Error"; }
+            }
+        }
+
+        public string CRIPercent
+        {
+            get
+            {
+                try {
+                    if (Properties.Settings.Default.Nodecimal) { return ((Attacks.Where(a => !MainWindow.critignoreskill.Contains(a.ID)).Average(x => x.Cri)) * 100).ToString("N0"); }
+                    else { return ((Attacks.Where(a => !MainWindow.critignoreskill.Contains(a.ID)).Average(x => x.Cri)) * 100).ToString("N2"); }
+                }
+                catch { return "Error"; }
+            }
+        }
+
         public string WJAPercent => ((Attacks.Where(a => !MainWindow.jaignoreskill.Contains(a.ID)).Average(x => x.JA)) * 100).ToString("N2");
 
         public string WCRIPercent => ((Attacks.Average(a => a.Cri)) * 100).ToString("00.00");
@@ -304,38 +328,6 @@ namespace OverParse
             }
         }
 
-
-        public string JAPercent
-        {
-            get {
-                try
-                {
-                    if (Properties.Settings.Default.Nodecimal)
-                    {
-                        return ((Attacks.Where(a => !MainWindow.jaignoreskill.Contains(a.ID)).Average(x => x.JA)) * 100).ToString("N0");
-                    } else {
-                        return ((Attacks.Where(a => !MainWindow.jaignoreskill.Contains(a.ID)).Average(x => x.JA)) * 100).ToString("N2");
-                    }
-                }
-                catch { return "Error"; }
-            }
-        }
-
-        public string CRIPercent
-        {
-            get {
-                try
-                {
-                    if (Properties.Settings.Default.Nodecimal)
-                    {
-                        return ((Attacks.Average(a => a.Cri)) * 100).ToString("N0");
-                    } else {
-                        return ((Attacks.Average(a => a.Cri)) * 100).ToString("N2");
-                    }
-                }
-                catch { return "Error"; }
-            }
-        }
 
         public Int64 ReadDamage
         {

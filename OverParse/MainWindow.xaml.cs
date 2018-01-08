@@ -19,6 +19,7 @@ namespace OverParse
     {
         public static Dictionary<string, string> skillDict = new Dictionary<string, string>();
         public static string[] jaignoreskill;
+        public static string[] critignoreskill;
         public DispatcherTimer damageTimer = new DispatcherTimer();
         private Log encounterlog;
         private List<Combatant> lastCombatants = new List<Combatant>();
@@ -45,7 +46,7 @@ namespace OverParse
             InitializeComponent();
 
             Dispatcher.UnhandledException += Panic;
-            Abouttext.Text = "OverParse v3.0.2";
+            Abouttext.Text = "OverParse v3.0.3";
             LowResources.IsChecked = Properties.Settings.Default.LowResources;
             CPUdraw.IsChecked = Properties.Settings.Default.CPUdraw;
             if (Properties.Settings.Default.LowResources) { thisProcess.PriorityClass = ProcessPriorityClass.Idle; }
@@ -155,7 +156,7 @@ namespace OverParse
                         var m = Regex.Match(content, @"tag_name.........");
                         var v = Regex.Match(m.Value, @"\d.\d.\d");
                         var newVersion = Version.Parse(v.ToString());
-                        var nowVersion = Version.Parse("3.0.2");
+                        var nowVersion = Version.Parse("3.0.3");
                         if (newVersion <= nowVersion) { updatemsg = ""; }
                         if (nowVersion < newVersion) { updatemsg = " - New version available(" + v.ToString() + ")"; }
                     }
@@ -179,6 +180,13 @@ namespace OverParse
             } catch (Exception e) {
                 MessageBox.Show(e.ToString());
                 jaignoreskill = new string[] { "12345678900" }; //nullだとエラーが出るので適当な値
+            }
+
+            try {
+                critignoreskill = File.ReadAllLines("critignoreskills.csv");
+            } catch (Exception e) {
+                MessageBox.Show(e.ToString());
+                critignoreskill = new string[] { "12345678900" }; //nullだとエラーが出るので適当な値
             }
 
             foreach (string s in skills)

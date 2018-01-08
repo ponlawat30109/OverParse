@@ -365,15 +365,16 @@ namespace OverParse
             UpdateForm(null, null);
         }
 
-        private void VariableColumn_Click(object sender, RoutedEventArgs e)
+        /*private void VariableColumn_Click(object sender, RoutedEventArgs e)
         {
             PercentHC.Width = new GridLength(0.4, GridUnitType.Star);
             DmgHC.Width = new GridLength(0.8, GridUnitType.Star);
+            DmgDHC.Width = new GridLength(0.6, GridUnitType.Star);
             DPSHC.Width = new GridLength(0.6, GridUnitType.Star);
             JAHC.Width = new GridLength(0.4, GridUnitType.Star);
             CriHC.Width = new GridLength(0.4, GridUnitType.Star);
             MdmgHC.Width = new GridLength(0.6, GridUnitType.Star);
-        }
+        }*/
 
         private void ShowDamageGraph_Click(object sender, RoutedEventArgs e)
         {
