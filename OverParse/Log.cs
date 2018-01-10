@@ -240,22 +240,6 @@ namespace OverParse
         public string WriteLog()
         {
 
-            /*
-            foreach (Combatant c in combatants) // Debug for ID mapping
-            {
-                if (c.IsAlly)
-                {
-                    foreach (Attack a in c.Attacks)
-                    {
-                        if (!MainWindow.skillDict.ContainsKey(a.ID))
-                        {
-                            TimeSpan t = TimeSpan.FromSeconds(a.Timestamp);
-                            //Console.WriteLine($"{t.ToString(@"dd\.hh\:mm\:ss")} unmapped: {a.ID} ({a.Damage} dmg from {c.Name})");
-                        }
-                    }
-                }
-            } */
-
             if (combatants.Count != 0)
             {
                 int elapsed = newTimestamp - startTimestamp;
@@ -268,7 +252,7 @@ namespace OverParse
                     try
                     {
                         if (c.IsAlly || c.IsZanverse || c.IsFinish)
-                            log += $"{c.Name} | {c.PercentReadDPSReadout}% | {c.ReadDamage.ToString("N0")} dmg | {c.Damaged} dmgd | {c.DPS} DPS | JA : {c.WJAPercent}% | Critical : {c.WCRIPercent}% | Max:{c.MaxHitdmg} ({c.MaxHit})" + Environment.NewLine;
+                            log += $"{c.Name} | {c.PercentReadDPSReadout}% | {c.ReadDamage.ToString("N0")} dmg | {c.Damaged} dmgd | {c.DPS} DPS | JA : {c.WJAPercent}% | Critical : {c.WCRIPercent}% | Max : {c.MaxHitdmg} ({c.MaxHit})" + Environment.NewLine;
                     }
                     catch{/* 今の所何もしないっぽい */}
                 }
