@@ -375,6 +375,7 @@ namespace OverParse
 
             // clear out the list
             CombatantData.Items.Clear();
+            AllyData.Items.Clear();
             DBData.Items.Clear();
             LswData.Items.Clear();
             PwpData.Items.Clear();
@@ -551,6 +552,7 @@ namespace OverParse
             foreach (Combatant c in workingList)
             {
                 c.PercentReadDPS = c.ReadDamage / (float)totalReadDamage * 100;
+                c.AllyPct = c.AllyDamage / (float)totalAllyDamage * 100;
                 c.DBPct = c.DBDamage / (float)totalDBDamage * 100;
                 c.LswPct = c.LswDamage / (float)totalLswDamage * 100;
                 c.PwpPct = c.PwpDamage / (float)totalPwpDamage * 100;
@@ -593,6 +595,7 @@ namespace OverParse
                 }
 
                 if (!filtered && (c.Damage > 0) && (SeparateTab.SelectedIndex == 0)) { CombatantData.Items.Add(c); }
+                if ((c.AllyDamage > 0) && (SeparateTab.SelectedIndex == 1)) { workingList.Sort((x, y) => y.AllyDamage.CompareTo(x.AllyDamage)); AllyData.Items.Add(c); }
                 if ((c.DBDamage > 0) && (SeparateTab.SelectedIndex == 2)) { workingList.Sort((x, y) => y.DBDamage.CompareTo(x.DBDamage)); DBData.Items.Add(c); }
                 if ((c.LswDamage > 0) && (SeparateTab.SelectedIndex == 3)) { workingList.Sort((x, y) => y.LswDamage.CompareTo(x.LswDamage)); LswData.Items.Add(c); }
                 if ((c.PwpDamage > 0) && (SeparateTab.SelectedIndex == 4)) { workingList.Sort((x, y) => y.PwpDamage.CompareTo(x.PwpDamage)); PwpData.Items.Add(c); }
@@ -614,6 +617,7 @@ namespace OverParse
                     EncounterStatus.Content = "Waiting... - " + encounterlog.filename;
 
                 CombatantData.Items.Refresh();
+                AllyData.Items.Refresh();
                 DBData.Items.Refresh();
                 LswData.Items.Refresh();
                 PwpData.Items.Refresh();

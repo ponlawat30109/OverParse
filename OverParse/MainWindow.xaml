@@ -283,6 +283,99 @@
                         </ListView.View>
                     </ListView>
                 </TabItem>
+                <TabItem Header="Ally" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
+                    <ListView x:Name="AllyData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True">
+                        <ListView.Background>
+                            <SolidColorBrush Opacity="0"/>
+                        </ListView.Background>
+
+                        <ListView.View>
+                            <GridView x:Name="AllyView">
+                                <GridView.ColumnHeaderContainerStyle>
+                                    <Style TargetType="{x:Type GridViewColumnHeader}">
+                                        <Setter Property="Background">
+                                            <Setter.Value>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                    <GradientStop Offset="0.0" Color="#000A0A0A" />
+                                                    <GradientStop Offset="1.0" Color="#0000FFFF" />
+                                                </LinearGradientBrush>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="Foreground" Value="#FFFFFFFF" />
+                                        <Setter Property="Padding" Value="0,0,0,0"/>
+                                        <Setter Property="MinHeight" Value="17"/>
+                                        <Setter Property="IsHitTestVisible" Value="False" />
+                                    </Style>
+                                </GridView.ColumnHeaderContainerStyle>
+
+                                <GridViewColumn Header="Name" x:Name="AllyNameColumn" Width="{Binding ElementName=NameH, Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-2,0" Padding="0" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn Header="%" x:Name="AllyPercentColumn" Width="{Binding ElementName=PercentH, Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding AllyReadPct}" TextAlignment="Right" Margin="-2,0" Padding="0" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn Header="Damage" x:Name="AllyDamageColumn" Width="{Binding ElementName=DmgH, Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding AllyReadDamage}" TextAlignment="Right" Margin="-2,0" Padding="0" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn Header="Damage Taken" x:Name="AllyDamagedColumn" Width="{Binding ElementName=DmgdH, Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding ReadDamaged}" TextAlignment="Right" Margin="-2,0" Padding="0" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn Header="DPS" x:Name="AllyDPSColumn" Width="{Binding ElementName=DPSH, Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding AllyDPS}" TextAlignment="Right" Margin="-2,0" Padding="0" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn Header="JA" x:Name="AllyJAColumn" Width="{Binding ElementName=JAH, Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding AllyJAPct}" TextAlignment="Right" Margin="-2,0" Padding="0" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn Header="Critical" x:Name="AllyCriColumn" Width="{Binding ElementName=CriH, Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding AllyCriPct}" TextAlignment="Right" Margin="-2,0" Padding="0" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn Header="Max Hit" x:Name="AllyMaxHitColumn" Width="{Binding ElementName=AtkH, Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding AllyAtkName}" TextAlignment="Center" Margin="-2,0" Padding="0" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </TabItem>
                 <TabItem Header="DB" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
                     <ListView x:Name="DBData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True">
                         <ListView.Background>

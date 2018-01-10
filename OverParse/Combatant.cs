@@ -77,6 +77,235 @@ namespace OverParse
 
         public string DPSReadout => PercentReadDPSReadout;
 
+        public string DisplayName
+        {
+            get
+            {
+                if (Properties.Settings.Default.AnonymizeNames && IsAlly)
+                {
+                    if (IsYou)
+                    {
+                        return Name;
+                    }
+                    else
+                    {
+                        return "----";
+                    }
+                }
+                return Name;
+            }
+        }
+
+        //Ally Data
+        public string AllyReadPct => AllyPct.ToString("N2");
+        public int AllyDamage
+        {
+            get
+            {
+                int temp = Damage - DBDamage - LswDamage - PwpDamage - AisDamage - RideDamage;
+                if (Properties.Settings.Default.SeparateZanverse)
+                    temp -= GetZanverseDamage;
+                if (Properties.Settings.Default.SeparateFinish)
+                    temp -= GetFinishDamage;
+                return temp;
+            }
+        }
+        public string AllyReadDamage => AllyDamage.ToString("N0");
+        public string AllyDPS => Math.Round(AllyDamage / (double)ActiveTime).ToString("N0");
+        public string AllyJAPct => (Attacks.Where(a => !DBAttackIDs.Contains(a.ID) && !PhotonAttackIDs.Contains(a.ID) && !AISAttackIDs.Contains(a.ID) && !RideAttackIDs.Contains(a.ID)).Average(x => x.JA) * 100).ToString("N2");
+        public string AllyCriPct => (Attacks.Where(a => !DBAttackIDs.Contains(a.ID) && !PhotonAttackIDs.Contains(a.ID) && !AISAttackIDs.Contains(a.ID) && !RideAttackIDs.Contains(a.ID)).Average(x => x.Cri) * 100).ToString("N2");
+        public string AllyMaxHitdmg => AllyMaxHit.Damage.ToString("N0");
+        public string AllyAtkName
+        {
+            get
+            {
+                if (AllyMaxHit == null) { return "--"; }
+                string attack = "Unknown";
+                if (MainWindow.skillDict.ContainsKey(AllyMaxHit.ID)) { attack = MainWindow.skillDict[AllyMaxHit.ID]; }
+                return MaxHitAttack.Damage.ToString("N0") + $" ({attack})";
+            }
+        }
+        public Attack AllyMaxHit
+        {
+            get
+            {
+                Attacks.RemoveAll(a => (DBAttackIDs.Contains(a.ID) || PhotonAttackIDs.Contains(a.ID) || AISAttackIDs.Contains(a.ID) || RideAttackIDs.Contains(a.ID)));
+                Attacks.Sort((x, y) => y.Damage.CompareTo(x.Damage));
+                if (Attacks != null)
+                {
+                    return Attacks.FirstOrDefault();
+                } else {
+                    return null;
+                }
+            }
+        }
+
+        //DarkBlast Data
+        public string DBReadPct => DBPct.ToString("N2");
+        public int DBDamage => Attacks.Where(a => DBAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
+        public string DBReadDamage => DBDamage.ToString("N0");
+        public string DBDPS => Math.Round(DBDamage / (double)ActiveTime).ToString("N0");
+        public string DBJAPct => (Attacks.Where(a => DBAttackIDs.Contains(a.ID)).Average(x => x.JA) * 100).ToString("N2");
+        public string DBCriPct => (Attacks.Where(a => DBAttackIDs.Contains(a.ID)).Average(x => x.Cri) * 100).ToString("N2");
+        public string DBMaxHitdmg => DBMaxHit.Damage.ToString("N0");
+        public string DBAtkName
+        {
+            get
+            {
+                if (DBMaxHit == null) { return "--"; }
+                string attack = "Unknown";
+                if (MainWindow.skillDict.ContainsKey(DBMaxHit.ID)) { attack = MainWindow.skillDict[DBMaxHit.ID]; }
+                return MaxHitAttack.Damage.ToString("N0") + $" ({attack})";
+            }
+        }
+        public Attack DBMaxHit
+        {
+            get
+            {
+                Attacks.RemoveAll(a => !DBAttackIDs.Contains(a.ID));
+                Attacks.Sort((x, y) => y.Damage.CompareTo(x.Damage));
+                if (Attacks != null)
+                {
+                    return Attacks.FirstOrDefault();
+                } else {
+                    return null;
+                }
+            }
+        }
+
+        //Laconium sword Data
+        public string LswReadPct => LswPct.ToString("N2");
+        public int LswDamage => Attacks.Where(a => LaconiumAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
+        public string LswReadDamage => LswDamage.ToString("N0");
+        public string LswDPS => Math.Round(LswDamage / (double)ActiveTime).ToString("N0");
+        public string LswJAPct => (Attacks.Where(a => LaconiumAttackIDs.Contains(a.ID)).Average(x => x.JA) * 100).ToString("N2");
+        public string LswCriPct => (Attacks.Where(a => LaconiumAttackIDs.Contains(a.ID)).Average(x => x.Cri) * 100).ToString("N2");
+        public string LswMaxHitdmg => LswMaxHit.Damage.ToString("N0");
+        public string LswAtkName
+        {
+            get
+            {
+                if (LswMaxHit == null) { return "--"; }
+                string attack = "Unknown";
+                if (MainWindow.skillDict.ContainsKey(LswMaxHit.ID)) { attack = MainWindow.skillDict[LswMaxHit.ID]; }
+                return MaxHitAttack.Damage.ToString("N0") + $" ({attack})";
+            }
+        }
+        public Attack LswMaxHit
+        {
+            get
+            {
+                Attacks.RemoveAll(a => !LaconiumAttackIDs.Contains(a.ID));
+                Attacks.Sort((x, y) => y.Damage.CompareTo(x.Damage));
+                if (Attacks != null)
+                {
+                    return Attacks.FirstOrDefault();
+                } else {
+                    return null;
+                }
+            }
+        }
+
+        //PhotonWeapon Data
+        public string PwpReadPct => PwpPct.ToString("N2");
+        public int PwpDamage => Attacks.Where(a => PhotonAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
+        public string PwpReadDamage => PwpDamage.ToString("N0");
+        public string PwpDPS => Math.Round(PwpDamage / (double)ActiveTime).ToString("N0");
+        public string PwpJAPct => (Attacks.Where(a => PhotonAttackIDs.Contains(a.ID)).Average(x => x.JA) * 100).ToString("N2");
+        public string PwpCriPct => (Attacks.Where(a => PhotonAttackIDs.Contains(a.ID)).Average(x => x.Cri) * 100).ToString("N2");
+        public string PwpMaxHitdmg => PwpMaxHit.Damage.ToString("N0");
+        public string PwpAtkName
+        {
+            get
+            {
+                if (PwpMaxHit == null) { return "--"; }
+                string attack = "Unknown";
+                if (MainWindow.skillDict.ContainsKey(PwpMaxHit.ID)) { attack = MainWindow.skillDict[PwpMaxHit.ID]; }
+                return MaxHitAttack.Damage.ToString("N0") + $" ({attack})";
+            }
+        }
+        public Attack PwpMaxHit
+        {
+            get
+            {
+                Attacks.RemoveAll(a => !PhotonAttackIDs.Contains(a.ID));
+                Attacks.Sort((x, y) => y.Damage.CompareTo(x.Damage));
+                if (Attacks != null)
+                {
+                    return Attacks.FirstOrDefault();
+                } else {
+                    return null;
+                }
+            }
+        }
+
+        //AIS Data
+        public string AisReadPct => AisPct.ToString("N2");
+        public int AisDamage => Attacks.Where(a => AISAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
+        public string AisReadDamage => PwpDamage.ToString("N0");
+        public string AisDPS => Math.Round(PwpDamage / (double)ActiveTime).ToString("N0");
+        public string AisJAPct => (Attacks.Where(a => PhotonAttackIDs.Contains(a.ID)).Average(x => x.JA) * 100).ToString("N2");
+        public string AisCriPct => (Attacks.Where(a => PhotonAttackIDs.Contains(a.ID)).Average(x => x.Cri) * 100).ToString("N2");
+        public string AisMaxHitdmg => AisMaxHit.Damage.ToString("N0");
+        public string AisAtkName
+        {
+            get
+            {
+                if (AisMaxHit == null) { return "--"; }
+                string attack = "Unknown";
+                if (MainWindow.skillDict.ContainsKey(AisMaxHit.ID)) { attack = MainWindow.skillDict[AisMaxHit.ID]; }
+                return MaxHitAttack.Damage.ToString("N0") + $" ({attack})";
+            }
+        }
+        public Attack AisMaxHit
+        {
+            get
+            {
+                Attacks.RemoveAll(a => !PhotonAttackIDs.Contains(a.ID));
+                Attacks.Sort((x, y) => y.Damage.CompareTo(x.Damage));
+                if (Attacks != null)
+                {
+                    return Attacks.FirstOrDefault();
+                } else {
+                    return null;
+                }
+            }
+        }
+
+        //Ridroid Data
+        public string RideReadPct => RidePct.ToString("N2");
+        public int RideDamage => Attacks.Where(a => RideAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
+        public string RideReadDamage => RideDamage.ToString("N0");
+        public string RideDPS => Math.Round(RideDamage / (double)ActiveTime).ToString("N0");
+        public string RideJAPct => (Attacks.Where(a => RideAttackIDs.Contains(a.ID)).Average(x => x.JA) * 100).ToString("N2");
+        public string RideCriPct => (Attacks.Where(a => RideAttackIDs.Contains(a.ID)).Average(x => x.Cri) * 100).ToString("N2");
+        public string RideMaxHitdmg => RideMaxHit.Damage.ToString("N0");
+        public string RideAtkName
+        {
+            get
+            {
+                if (RideMaxHit == null) { return "--"; }
+                string attack = "Unknown";
+                if (MainWindow.skillDict.ContainsKey(RideMaxHit.ID)) { attack = MainWindow.skillDict[RideMaxHit.ID]; }
+                return MaxHitAttack.Damage.ToString("N0") + $" ({attack})";
+            }
+        }
+        public Attack RideMaxHit
+        {
+            get
+            {
+                Attacks.RemoveAll(a => !RideAttackIDs.Contains(a.ID));
+                Attacks.Sort((x, y) => y.Damage.CompareTo(x.Damage));
+                if (Attacks != null)
+                {
+                    return Attacks.FirstOrDefault();
+                } else {
+                    return null;
+                }
+            }
+        }
+
+
         public string FDPSReadout
         {
             get
@@ -99,7 +328,7 @@ namespace OverParse
                     {
                         return ((Attacks.Average(a => a.JA)) * 100).ToString("N0");
                     } else {
-                        return ((Attacks.Average(a => a.JA)) * 100).ToString("N2");
+                        return ((Attacks.Average(a => a.JA)) * 100).ToString("N2"); //used to to be: 'Attacks.Where(a => !MainWindow.ignoreskill.Contains(a.ID)).Average(x => x.JA))' for some reason...
                     }
                 }
                 catch { return "Error"; }
@@ -145,181 +374,6 @@ namespace OverParse
                 if (Properties.Settings.Default.SeparateRide)
                     temp -= RideDamage;
                 return temp;
-            }
-        }
-
-        //DarkBlast Data
-        public string DBReadPct => DBPct.ToString("N2");
-        public int DBDamage => Attacks.Where(a => DBAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
-        public string DBReadDamage => DBDamage.ToString("N0");
-        public string DBDPS => Math.Round(DBDamage / (double)ActiveTime).ToString("N0");
-        public string DBJAPct => (Attacks.Where(a => DBAttackIDs.Contains(a.ID)).Average(x => x.JA) * 100).ToString("N2");
-        public string DBCriPct => (Attacks.Where(a => DBAttackIDs.Contains(a.ID)).Average(x => x.Cri) * 100).ToString("N2");
-        public string DBMaxHitdmg => DBMaxHit.Damage.ToString("N0");
-        public string DBAtkName
-        {
-            get
-            {
-                if (DBMaxHit == null) { return "--"; }
-                string attack = "Unknown";
-                if (MainWindow.skillDict.ContainsKey(DBMaxHit.ID)) { attack = MainWindow.skillDict[DBMaxHit.ID]; }
-                return MaxHitAttack.Damage.ToString("N0") + $" ({attack})";
-            }
-        }
-        public Attack DBMaxHit
-        {
-            get
-            {
-                Attacks.RemoveAll(a => !DBAttackIDs.Contains(a.ID));
-                Attacks.Sort((x, y) => y.Damage.CompareTo(x.Damage));
-                if (Attacks != null)
-                {
-                    return Attacks.FirstOrDefault();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-
-        //Laconium sword Data
-        public string LswReadPct => LswPct.ToString("N2");
-        public int LswDamage => Attacks.Where(a => LaconiumAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
-        public string LswReadDamage => LswDamage.ToString("N0");
-        public string LswDPS => Math.Round(LswDamage / (double)ActiveTime).ToString("N0");
-        public string LswJAPct => (Attacks.Where(a => LaconiumAttackIDs.Contains(a.ID)).Average(x => x.JA) * 100).ToString("N2");
-        public string LswCriPct => (Attacks.Where(a => LaconiumAttackIDs.Contains(a.ID)).Average(x => x.Cri) * 100).ToString("N2");
-        public string LswMaxHitdmg => LswMaxHit.Damage.ToString("N0");
-        public string LswAtkName
-        {
-            get
-            {
-                if (LswMaxHit == null) { return "--"; }
-                string attack = "Unknown";
-                if (MainWindow.skillDict.ContainsKey(LswMaxHit.ID)) { attack = MainWindow.skillDict[LswMaxHit.ID]; }
-                return MaxHitAttack.Damage.ToString("N0") + $" ({attack})";
-            }
-        }
-        public Attack LswMaxHit
-        {
-            get
-            {
-                Attacks.RemoveAll(a => !LaconiumAttackIDs.Contains(a.ID));
-                Attacks.Sort((x, y) => y.Damage.CompareTo(x.Damage));
-                if (Attacks != null)
-                {
-                    return Attacks.FirstOrDefault();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-
-        //PhotonWeapon Data
-        public string PwpReadPct => PwpPct.ToString("N2");
-        public int PwpDamage => Attacks.Where(a => PhotonAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
-        public string PwpReadDamage => PwpDamage.ToString("N0");
-        public string PwpDPS => Math.Round(PwpDamage / (double)ActiveTime).ToString("N0");
-        public string PwpJAPct => (Attacks.Where(a => PhotonAttackIDs.Contains(a.ID)).Average(x => x.JA) * 100).ToString("N2");
-        public string PwpCriPct => (Attacks.Where(a => PhotonAttackIDs.Contains(a.ID)).Average(x => x.Cri) * 100).ToString("N2");
-        public string PwpMaxHitdmg => PwpMaxHit.Damage.ToString("N0");
-        public string PwpAtkName
-        {
-            get
-            {
-                if (PwpMaxHit == null) { return "--"; }
-                string attack = "Unknown";
-                if (MainWindow.skillDict.ContainsKey(PwpMaxHit.ID)) { attack = MainWindow.skillDict[PwpMaxHit.ID]; }
-                return MaxHitAttack.Damage.ToString("N0") + $" ({attack})";
-            }
-        }
-        public Attack PwpMaxHit
-        {
-            get
-            {
-                Attacks.RemoveAll(a => !PhotonAttackIDs.Contains(a.ID));
-                Attacks.Sort((x, y) => y.Damage.CompareTo(x.Damage));
-                if (Attacks != null)
-                {
-                    return Attacks.FirstOrDefault();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-
-        //AIS Data
-        public string AisReadPct => AisPct.ToString("N2");
-        public int AisDamage => Attacks.Where(a => AISAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
-        public string AisReadDamage => PwpDamage.ToString("N0");
-        public string AisDPS => Math.Round(PwpDamage / (double)ActiveTime).ToString("N0");
-        public string AisJAPct => (Attacks.Where(a => PhotonAttackIDs.Contains(a.ID)).Average(x => x.JA) * 100).ToString("N2");
-        public string AisCriPct => (Attacks.Where(a => PhotonAttackIDs.Contains(a.ID)).Average(x => x.Cri) * 100).ToString("N2");
-        public string AisMaxHitdmg => AisMaxHit.Damage.ToString("N0");
-        public string AisAtkName
-        {
-            get
-            {
-                if (AisMaxHit == null) { return "--"; }
-                string attack = "Unknown";
-                if (MainWindow.skillDict.ContainsKey(AisMaxHit.ID)) { attack = MainWindow.skillDict[AisMaxHit.ID]; }
-                return MaxHitAttack.Damage.ToString("N0") + $" ({attack})";
-            }
-        }
-        public Attack AisMaxHit
-        {
-            get
-            {
-                Attacks.RemoveAll(a => !PhotonAttackIDs.Contains(a.ID));
-                Attacks.Sort((x, y) => y.Damage.CompareTo(x.Damage));
-                if (Attacks != null)
-                {
-                    return Attacks.FirstOrDefault();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-
-        //Ridroid Data
-        public string RideReadPct => RidePct.ToString("N2");
-        public int RideDamage => Attacks.Where(a => RideAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
-        public string RideReadDamage => RideDamage.ToString("N0");
-        public string RideDPS => Math.Round(RideDamage / (double)ActiveTime).ToString("N0");
-        public string RideJAPct => (Attacks.Where(a => RideAttackIDs.Contains(a.ID)).Average(x => x.JA) * 100).ToString("N2");
-        public string RideCriPct => (Attacks.Where(a => RideAttackIDs.Contains(a.ID)).Average(x => x.Cri) * 100).ToString("N2");
-        public string RideMaxHitdmg => RideMaxHit.Damage.ToString("N0");
-        public string RideAtkName
-        {
-            get
-            {
-                if (RideMaxHit == null) { return "--"; }
-                string attack = "Unknown";
-                if (MainWindow.skillDict.ContainsKey(RideMaxHit.ID)) { attack = MainWindow.skillDict[RideMaxHit.ID]; }
-                return MaxHitAttack.Damage.ToString("N0") + $" ({attack})";
-            }
-        }
-        public Attack RideMaxHit
-        {
-            get
-            {
-                Attacks.RemoveAll(a => !RideAttackIDs.Contains(a.ID));
-                Attacks.Sort((x, y) => y.Damage.CompareTo(x.Damage));
-                if (Attacks != null)
-                {
-                    return Attacks.FirstOrDefault();
-                }
-                else
-                {
-                    return null;
-                }
             }
         }
 
