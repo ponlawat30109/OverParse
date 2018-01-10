@@ -79,6 +79,12 @@
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NHotkey, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NHotkey.1.2.1\lib\net20\NHotkey.dll</HintPath>
+    </Reference>
+    <Reference Include="NHotkey.Wpf, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NHotkey.Wpf.1.2.1\lib\net35\NHotkey.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationFramework" />
     <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
@@ -108,7 +114,6 @@
     <Compile Include="FontDialogEx.xaml.cs">
       <DependentUpon>FontDialogEx.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Hotkey.cs" />
     <Compile Include="inputbox.xaml.cs">
       <DependentUpon>inputbox.xaml</DependentUpon>
     </Compile>
@@ -158,6 +163,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

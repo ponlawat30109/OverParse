@@ -11,7 +11,8 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
-using HotKeyFrame;
+using NHotkey;
+using NHotkey.Wpf;
 
 namespace OverParse
 {
@@ -23,9 +24,6 @@ namespace OverParse
         public static string[] ignoreskill;
         private List<string> sessionLogFilenames = new List<string>();
         private string lastStatus = "";
-        private HotKey hotkey1;
-        private HotKey hotkey2;
-        private HotKey hotkey3;
         private IntPtr hwndcontainer;
         List<Combatant> workingList;
         Process thisProcess = Process.GetCurrentProcess();
@@ -129,12 +127,9 @@ namespace OverParse
 
             try
             {
-                hotkey1 = new HotKey(this);
-                hotkey2 = new HotKey(this);
-                hotkey3 = new HotKey(this);
-                hotkey1.Regist(ModifierKeys.Control | ModifierKeys.Shift, Key.E, new EventHandler(EndEncounter_Key),0x0071);
-                hotkey2.Regist(ModifierKeys.Control | ModifierKeys.Shift, Key.R, new EventHandler(EndEncounterNoLog_Key),0x0072);
-                hotkey3.Regist(ModifierKeys.Control | ModifierKeys.Shift, Key.D, new EventHandler(DefaultWindowSize_Key),0x0073);
+                HotkeyManager.Current.AddOrReplace("End Encounter", Key.E, ModifierKeys.Control | ModifierKeys.Shift, EndEncounter_Key);
+                HotkeyManager.Current.AddOrReplace("End Encounter (No log)", Key.R, ModifierKeys.Control | ModifierKeys.Shift, EndEncounterNoLog_Key);
+                HotkeyManager.Current.AddOrReplace("Default Window Size", Key.D, ModifierKeys.Control | ModifierKeys.Shift, DefaultWindowSize_Key);
             } catch {
                 MessageBox.Show("Hot keys are currently not working for this instance of Overparse. \n\nPlease check that you are not running multiple instances of Overparse", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
             }
@@ -386,7 +381,6 @@ namespace OverParse
             PwpData.Items.Clear();
             AisData.Items.Clear();
             RideData.Items.Clear();
-            //workingList.RemoveAll(c => c.isTemporary != "no");
 
             // for zanverse dummy and status bar because WHAT IS GOOD STRUCTURE
             int elapsed = 0;
@@ -500,8 +494,7 @@ namespace OverParse
                 workingList.AddRange(pendingLswCombatants);
             }
 
-            // force resort here to neatly shuffle AIS parses back into place
-            workingList.Sort((x, y) => y.ReadDamage.CompareTo(x.ReadDamage));
+            if (SeparateTab.SelectedIndex == 0) { workingList.Sort((x, y) => y.ReadDamage.CompareTo(x.ReadDamage)); }
 
             // make dummy zanverse combatant if necessary
             int totalZanverse = workingList.Where(c => c.IsAlly == true).Sum(x => x.GetZanverseDamage);
@@ -607,18 +600,13 @@ namespace OverParse
                         filtered = false;
                 }
 
-                if (!filtered && c.Damage > 0)
-                {
-                    CombatantData.Items.Add(c);
-                    AllyData.Items.Add(c);
-                }
-
-                if (c.DBDamage > 0) { workingList.Sort((x, y) => y.DBDamage.CompareTo(x.DBDamage)); DBData.Items.Add(c); }
-                if (c.LswDamage > 0) { workingList.Sort((x, y) => y.LswDamage.CompareTo(x.LswDamage)); LswData.Items.Add(c); }
-                if (c.PwpDamage > 0) { workingList.Sort((x, y) => y.PwpDamage.CompareTo(x.PwpDamage)); PwpData.Items.Add(c); }
-                if (c.AisDamage > 0) { workingList.Sort((x, y) => y.AisDamage.CompareTo(x.AisDamage)); AisData.Items.Add(c); }
-                if (c.RideDamage > 0) { workingList.Sort((x, y) => y.RideDamage.CompareTo(x.RideDamage)); RideData.Items.Add(c); }
-                workingList.Sort((x, y) => y.ReadDamage.CompareTo(x.ReadDamage));
+                if (!filtered && (c.Damage > 0) && (SeparateTab.SelectedIndex == 0)) { CombatantData.Items.Add(c); }
+                if ((c.AllyDamage > 0) && (SeparateTab.SelectedIndex == 1)) { workingList.Sort((x, y) => y.AllyDamage.CompareTo(x.AllyDamage)); AllyData.Items.Add(c); }
+                if ((c.DBDamage > 0) && (SeparateTab.SelectedIndex == 2)) { workingList.Sort((x, y) => y.DBDamage.CompareTo(x.DBDamage)); DBData.Items.Add(c); }
+                if ((c.LswDamage > 0) && (SeparateTab.SelectedIndex == 3)) { workingList.Sort((x, y) => y.LswDamage.CompareTo(x.LswDamage)); LswData.Items.Add(c); }
+                if ((c.PwpDamage > 0) && (SeparateTab.SelectedIndex == 4)) { workingList.Sort((x, y) => y.PwpDamage.CompareTo(x.PwpDamage)); PwpData.Items.Add(c); }
+                if ((c.AisDamage > 0) && (SeparateTab.SelectedIndex == 5)) { workingList.Sort((x, y) => y.AisDamage.CompareTo(x.AisDamage)); AisData.Items.Add(c); }
+                if ((c.RideDamage > 0) && (SeparateTab.SelectedIndex == 6)) { workingList.Sort((x, y) => y.RideDamage.CompareTo(x.RideDamage)); RideData.Items.Add(c); }
 
             }
 
@@ -654,10 +642,7 @@ namespace OverParse
                 float totalDPS = totalReadDamage / (float)elapsed;
 
                 if (totalDPS > 0)
-                    EncounterStatus.Content += $" - Total : {totalReadDamage.ToString("N0")}" + $" - {totalDPS.ToString("N0")} DPS";
-
-                if (!Properties.Settings.Default.SeparateZanverse)
-                    EncounterStatus.Content += $" - Zanverse : {totalZanverse.ToString("N0")}";
+                    EncounterStatus.Content += $" - {totalDPS.ToString("N2")} DPS";
 
                 lastStatus = EncounterStatus.Content.ToString();
             }
@@ -703,14 +688,6 @@ namespace OverParse
             Properties.Settings.Default.Save();
         }
 
-
-        private void OpenRecentLog_Click(object sender, RoutedEventArgs e)
-        {
-            string filename = sessionLogFilenames[SessionLogs.Items.IndexOf((e.OriginalSource as MenuItem))];
-            //attempting to open
-            Process.Start(Directory.GetCurrentDirectory() + "\\" + filename);
-        }
-
         private void Minimize_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
 
         private void Exit_Click(object sender, RoutedEventArgs e)
@@ -719,20 +696,25 @@ namespace OverParse
             Application.Current.Shutdown();
         }
 
-        /*private void WindowStats_Click(object sender, RoutedEventArgs e)
+        public void EndEncounter_Key(object sender, HotkeyEventArgs e)
         {
-            AisData.Items.Add(workingList);
-            string result = "";
-            result += $"Name: {AisNameColumn.Width.ToString()}  Percent: {AisPercentColumn.Width.ToString()}";
-            result += $"Name: {DmgHC.ActualWidth.ToString()}  Percent: {DPSHC.ActualWidth.ToString()}";
-            result += $"Name: {JAHC.ActualWidth.ToString()}  Percent: {CriHC.ActualWidth.ToString()}";
-            result += $"maxdmg: {MdmgHC.ActualWidth.ToString()}  Atk: {AtkHC.ActualWidth.ToString()}";
-            result += $"Tab: {TabHC.ActualWidth.ToString()}  Percent: {PercentHC.ActualWidth.ToString()}";
-            result += $"menu bar: {MenuBar.Width.ToString()} width {MenuBar.Height.ToString()} height\n";
-            result += $"menu bar: {MenuBar.Padding} padding {MenuBar.Margin} margin\n";
-            result += $"menu item: {AutoEndEncounters.Foreground} fg {AutoEndEncounters.Background} bg\n";
-            MessageBox.Show(result);
-        }*/
+            //Encounter hotkey pressed
+            EndEncounter_Click(null, null);
+            e.Handled = true;
+        }
+
+        public void EndEncounterNoLog_Key(object sender, HotkeyEventArgs e)
+        {
+            //Encounter hotkey (no log) pressed
+            EndEncounterNoLog_Click(null, null);
+            e.Handled = true;
+        }
+
+        public void DefaultWindowSize_Key(object sender, HotkeyEventArgs e)
+        {
+            DefaultWindowSize_Click(null, null);
+            e.Handled = true;
+        }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {

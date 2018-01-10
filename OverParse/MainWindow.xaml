@@ -193,7 +193,7 @@
                 <MenuItem Header="____" Click="Minimize_Click" Style="{StaticResource topmenu}" />
                 <MenuItem Style="{StaticResource topmenu}" Header=" X " Click="Exit_Click"/>
             </Menu>
-            <TabControl TabStripPlacement="Right" Grid.Row="1" BorderThickness="0" Padding="0" Margin="0" Background="Transparent" ContextMenu="{DynamicResource Tabmenu}">
+            <TabControl x:Name="SeparateTab" TabStripPlacement="Right" Grid.Row="1" BorderThickness="0" Padding="0" Margin="0" Background="Transparent" ContextMenu="{DynamicResource Tabmenu}">
                 <TabItem Header="All" Width="{Binding ElementName=TabH, Path=ActualWidth}"  Padding="0" Margin="0">
                     <ListView x:Name="CombatantData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True">
                         <ListView.Background>

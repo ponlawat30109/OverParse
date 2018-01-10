@@ -9,7 +9,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
-using HotKeyFrame;
 
 namespace OverParse
 {
@@ -64,11 +63,6 @@ namespace OverParse
             UpdateForm(null, null);
         }
 
-        public void EndEncounter_Key(object sender, EventArgs e)
-        {
-            //Encounter hotkey pressed
-            EndEncounter_Click(null, null);
-        }
 
         private void EndEncounterNoLog_Click(object sender, RoutedEventArgs e)
         {
@@ -81,18 +75,6 @@ namespace OverParse
             encounterlog = new Log(Properties.Settings.Default.Path);
             UpdateForm(null, null);
         }
-
-        private void EndEncounterNoLog_Key(object sender, EventArgs e)
-        {
-            //Encounter hotkey (no log) pressed
-            EndEncounterNoLog_Click(null, null);
-        }
-
-        /* private void Questcheck_Click(object sender, RoutedEventArgs e)
-        {
-            QuestName quest = new QuestName();
-            quest.Show();
-        } */
 
         private void AutoEndEncounters_Click(object sender, RoutedEventArgs e)
         {
@@ -126,6 +108,13 @@ namespace OverParse
         private void OpenLogsFolder_Click(object sender, RoutedEventArgs e)
         {
             Process.Start(Directory.GetCurrentDirectory() + "\\Logs");
+        }
+
+        private void OpenRecentLog_Click(object sender, RoutedEventArgs e)
+        {
+            string filename = sessionLogFilenames[SessionLogs.Items.IndexOf((e.OriginalSource as MenuItem))];
+            //attempting to open
+            Process.Start(Directory.GetCurrentDirectory() + "\\" + filename);
         }
 
         private void FilterPlayers_Click(object sender, RoutedEventArgs e)
@@ -252,12 +241,6 @@ namespace OverParse
         }
 
         private void DefaultWindowSize_Click(object sender, RoutedEventArgs e)
-        {
-            Height = 275;
-            Width = 670;
-        }
-
-        private void DefaultWindowSize_Key(object sender, EventArgs e)
         {
             Height = 275;
             Width = 670;
