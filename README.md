@@ -10,3 +10,6 @@ This tool and any other damage parser currently violates PSO2's Terms of Service
 -Need .NET Framework 4.7.1 in order to build.
 
 -There's a lot of spaghetti that I may or may not be bothered to fix.
+
+### Dependencies
+-NHotkey and NHotkey.Wpf
