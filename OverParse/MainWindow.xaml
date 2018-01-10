@@ -17,10 +17,6 @@
 
     <Window.Resources>
 
-        <ContextMenu x:Key="Tabmenu">
-            <MenuItem Header="test" />
-        </ContextMenu>
-
         <Style TargetType="ListViewItem">
             <Setter Property="Height" Value="Auto"/>
             <Setter Property="FontSize" Value="12"/>
@@ -874,7 +870,7 @@
             </Grid>
 
             <Rectangle x:Name="EncounterIndicator" Grid.Row="2" Height="2" VerticalAlignment="Top"  Fill="White" IsHitTestVisible="False" />
-            <Label x:Name="EncounterStatus" Grid.Row="2" MinHeight="10" Foreground="White" Padding="2,0,0,0" FontSize="12" FontFamily="Noto Sans CJK JP DemiLight" IsHitTestVisible="False" />
+            <Label x:Name="EncounterStatus" Grid.Row="2" MinHeight="16" Foreground="White" Padding="2,2,0,0" FontSize="12" FontFamily="Noto Sans CJK JP DemiLight" IsHitTestVisible="False" />
         </Grid>
     </Border>
 </Window>
