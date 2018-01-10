@@ -412,9 +412,7 @@ namespace OverParse
                         int hitDamage = int.Parse(parts[7]);
                         int justAttack =int.Parse(parts[8]);
                         int critical = int.Parse(parts[9]);
-                        //string isMultiHit = parts[10];
-                        //string isMisc = parts[11];
-                        //string isMisc2 = parts[12];
+
                         int index = -1;
 
                         if (lineTimestamp == 0 && parts[3] == "YOU")

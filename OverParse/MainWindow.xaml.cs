@@ -41,7 +41,6 @@ namespace OverParse
             InitializeComponent();
 
             Dispatcher.UnhandledException += Panic;
-            Abouttext.Text = "OverParse v3 EN";
             LowResources.IsChecked = Properties.Settings.Default.LowResources;
             CPUdraw.IsChecked = Properties.Settings.Default.CPUdraw;
             if (Properties.Settings.Default.LowResources) { thisProcess.PriorityClass = ProcessPriorityClass.Idle; }
@@ -69,12 +68,6 @@ namespace OverParse
             Height = Properties.Settings.Default.Height;
             Width = Properties.Settings.Default.Width;
 
-            //Console.WriteLine("Applying UI settings");
-            //Console.WriteLine(this.Top = Properties.Settings.Default.Top);
-            //Console.WriteLine(this.Left = Properties.Settings.Default.Left);
-            //Console.WriteLine(this.Height = Properties.Settings.Default.Height);
-            //Console.WriteLine(this.Width = Properties.Settings.Default.Width);
-
             bool outOfBounds = (Left <= SystemParameters.VirtualScreenLeft - Width) ||
                 (Top <= SystemParameters.VirtualScreenTop - Height) ||
                 (SystemParameters.VirtualScreenLeft + SystemParameters.VirtualScreenWidth <= Left) ||
@@ -82,7 +75,6 @@ namespace OverParse
 
             if (outOfBounds)
             {
-                //Console.WriteLine("Window's off-screen, resetting");
                 Top = 50;
                 Left = 50;
             }
@@ -375,11 +367,6 @@ namespace OverParse
 
             // clear out the list
             CombatantData.Items.Clear();
-            DBData.Items.Clear();
-            LswData.Items.Clear();
-            PwpData.Items.Clear();
-            AisData.Items.Clear();
-            RideData.Items.Clear();
 
             // for zanverse dummy and status bar because WHAT IS GOOD STRUCTURE
             int elapsed = 0;
@@ -387,7 +374,7 @@ namespace OverParse
             if (stealActiveTimeDummy != null)
                 elapsed = stealActiveTimeDummy.ActiveTime;
 
-            // Seperation...
+            // Separation...
             if (Properties.Settings.Default.SeparateAIS)
             {
                 List<Combatant> pendingCombatants = new List<Combatant>();
@@ -493,7 +480,8 @@ namespace OverParse
                 workingList.AddRange(pendingLswCombatants);
             }
 
-            if (SeparateTab.SelectedIndex == 0) { workingList.Sort((x, y) => y.ReadDamage.CompareTo(x.ReadDamage)); }
+            // Re-sort everything
+            workingList.Sort((x, y) => y.ReadDamage.CompareTo(x.ReadDamage));
 
             // make dummy zanverse combatant if necessary
             int totalZanverse = workingList.Where(c => c.IsAlly == true).Sum(x => x.GetZanverseDamage);
@@ -591,12 +579,7 @@ namespace OverParse
                         filtered = false;
                 }
 
-                if (!filtered && (c.Damage > 0) && (SeparateTab.SelectedIndex == 0)) { CombatantData.Items.Add(c); }
-                if ((c.DBDamage > 0) && (SeparateTab.SelectedIndex == 1)) { workingList.Sort((x, y) => y.DBDamage.CompareTo(x.DBDamage)); DBData.Items.Add(c); }
-                if ((c.LswDamage > 0) && (SeparateTab.SelectedIndex == 2)) { workingList.Sort((x, y) => y.LswDamage.CompareTo(x.LswDamage)); LswData.Items.Add(c); }
-                if ((c.PwpDamage > 0) && (SeparateTab.SelectedIndex == 3)) { workingList.Sort((x, y) => y.PwpDamage.CompareTo(x.PwpDamage)); PwpData.Items.Add(c); }
-                if ((c.AisDamage > 0) && (SeparateTab.SelectedIndex == 4)) { workingList.Sort((x, y) => y.AisDamage.CompareTo(x.AisDamage)); AisData.Items.Add(c); }
-                if ((c.RideDamage > 0) && (SeparateTab.SelectedIndex == 5)) { workingList.Sort((x, y) => y.RideDamage.CompareTo(x.RideDamage)); RideData.Items.Add(c); }
+                if (!filtered && c.Damage > 0) CombatantData.Items.Add(c);
 
             }
 
@@ -613,11 +596,6 @@ namespace OverParse
                     EncounterStatus.Content = "Waiting... - " + encounterlog.filename;
 
                 CombatantData.Items.Refresh();
-                DBData.Items.Refresh();
-                LswData.Items.Refresh();
-                PwpData.Items.Refresh();
-                AisData.Items.Refresh();
-                RideData.Items.Refresh();
             }
 
             if (encounterlog.running)

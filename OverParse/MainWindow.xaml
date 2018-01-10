@@ -62,8 +62,6 @@
 
         <Style x:Key="submenu" TargetType="MenuItem">
             <Setter Property="Foreground" Value="Black"/>
-            <!--<Setter Property="BorderThickness" Value="0"/>-->
-            <!--<Setter Property="Padding" Value="0,0,0,0"/>-->
         </Style>
 
         <Style TargetType="{x:Type TabItem}">
@@ -102,7 +100,6 @@
                 <MenuItem Style="{StaticResource topmenu}" Header="Logging">
                     <MenuItem Style="{StaticResource submenu}" Header="End Encounter" x:Name="EndEncounter" InputGestureText="Ctrl+Shift+E" Click="EndEncounter_Click"/>
                     <MenuItem Style="{StaticResource submenu}" Header="Discard Encounter (No Log)" x:Name="EndEncounterNoLog" InputGestureText="Ctrl+Shift+R" Click="EndEncounterNoLog_Click"/>
-                    <!--<MenuItem Style="{StaticResource submenu}" Header="Quest Selection" Click="Questcheck_Click" />-->
                     <Separator />
                     <MenuItem Style="{StaticResource submenu}" Header="Auto-End Encounters" x:Name="AutoEndEncounters" IsCheckable="True" IsChecked="False" Click="AutoEndEncounters_Click"/>
                     <MenuItem Style="{StaticResource submenu}" Header="Set Encounter Timeout" x:Name="SetEncounterTimeout" Click="SetEncounterTimeout_Click"/>
@@ -116,15 +113,15 @@
                 <MenuItem Style="{StaticResource topmenu}" Header="Parsing">
                     <MenuItem Style="{StaticResource submenu}" Header="Hide Enemy/NPCs" IsCheckable="True" IsChecked="True" x:Name="FilterPlayers" Click="FilterPlayers_Click"/>
                     <MenuItem Style="{StaticResource submenu}" Header="Zanverse/HTF Options">
-                        <MenuItem Style="{StaticResource submenu}" Header="Seperate Zanverse" x:Name="SeparateZanverse" IsCheckable="True" IsChecked="False" Click="SeparateZanverse_Click"/>
-                        <MenuItem Style="{StaticResource submenu}" Header="Seperate Hero Time Finish (HTF)" x:Name="SeparateFinish" IsCheckable="True" IsChecked="False" Click="SeparateFinish_Click"/>
+                        <MenuItem Style="{StaticResource submenu}" Header="Separate Zanverse" x:Name="SeparateZanverse" IsCheckable="True" IsChecked="False" Click="SeparateZanverse_Click"/>
+                        <MenuItem Style="{StaticResource submenu}" Header="Separate Hero Time Finish (HTF)" x:Name="SeparateFinish" IsCheckable="True" IsChecked="False" Click="SeparateFinish_Click"/>
                     </MenuItem>
                     <MenuItem Style="{StaticResource submenu}" Header="Special Weapon Options">
-                        <MenuItem Style="{StaticResource submenu}" Header="Seperate AIS" x:Name="SeparateAIS" IsCheckable="True" IsChecked="False" Click="SeparateAIS_Click"/>
-                        <MenuItem Style="{StaticResource submenu}" Header="Seperate Dark Blast" x:Name="SeparateDB" IsCheckable="True" IsChecked="False" Click="SeparateDB_Click"/>
-                        <MenuItem Style="{StaticResource submenu}" Header="Seperate Rideroid" x:Name="SeparateRide" IsCheckable="True" IsChecked="False" Click="SeparateRide_Click" />
-                        <MenuItem Style="{StaticResource submenu}" Header="Seperate Photon Weapons" x:Name="SeparatePwp" IsCheckable="True" IsChecked="False" Click="SeparatePwp_Click" />
-                        <MenuItem Style="{StaticResource submenu}" Header="Seperate Laconium Sword" x:Name="SeparateLsw" IsCheckable="True" IsChecked="False" Click="SeparateLsw_Click" />
+                        <MenuItem Style="{StaticResource submenu}" Header="Separate AIS" x:Name="SeparateAIS" IsCheckable="True" IsChecked="False" Click="SeparateAIS_Click"/>
+                        <MenuItem Style="{StaticResource submenu}" Header="Separate Dark Blast" x:Name="SeparateDB" IsCheckable="True" IsChecked="False" Click="SeparateDB_Click"/>
+                        <MenuItem Style="{StaticResource submenu}" Header="Separate Rideroid" x:Name="SeparateRide" IsCheckable="True" IsChecked="False" Click="SeparateRide_Click" />
+                        <MenuItem Style="{StaticResource submenu}" Header="Separate Photon Weapons" x:Name="SeparatePwp" IsCheckable="True" IsChecked="False" Click="SeparatePwp_Click" />
+                        <MenuItem Style="{StaticResource submenu}" Header="Separate Laconium Sword" x:Name="SeparateLsw" IsCheckable="True" IsChecked="False" Click="SeparateLsw_Click" />
                         <Separator />
                         <MenuItem Style="{StaticResource submenu}" Header="Hide Players" x:Name="HidePlayers" IsCheckable="True" IsChecked="False" Click="HidePlayers_Click"/>
                         <MenuItem Style="{StaticResource submenu}" Header="Hide AIS" x:Name="HideAIS" IsCheckable="True" IsChecked="False" Click="HideAIS_Click"/>
@@ -189,569 +186,97 @@
                 <MenuItem Header="____" Click="Minimize_Click" Style="{StaticResource topmenu}" />
                 <MenuItem Style="{StaticResource topmenu}" Header=" X " Click="Exit_Click"/>
             </Menu>
-            <TabControl x:Name="SeparateTab" TabStripPlacement="Right" Grid.Row="1" BorderThickness="0" Padding="0" Margin="0" Background="Transparent" ContextMenu="{DynamicResource Tabmenu}">
-                <TabItem Header="All" Width="{Binding ElementName=TabH, Path=ActualWidth}"  Padding="0" Margin="0">
-                    <ListView x:Name="CombatantData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True">
-                        <ListView.Background>
-                            <SolidColorBrush Opacity="0"/>
-                        </ListView.Background>
+            <ListView x:Name="CombatantData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True">
+                <ListView.Background>
+                    <SolidColorBrush Opacity="0"/>
+                </ListView.Background>
 
-                        <ListView.View>
-                            <GridView x:Name="CombatantView">
-                                <GridView.ColumnHeaderContainerStyle>
-                                    <Style TargetType="{x:Type GridViewColumnHeader}">
-                                        <Setter Property="Background">
-                                            <Setter.Value>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                                    <GradientStop Offset="0.0" Color="#000A0A0A" />
-                                                    <GradientStop Offset="1.0" Color="#0000FFFF" />
-                                                </LinearGradientBrush>
-                                            </Setter.Value>
-                                        </Setter>
-                                        <Setter Property="Foreground" Value="#FFFFFFFF" />
-                                        <Setter Property="Padding" Value="0,0,0,0"/>
-                                        <Setter Property="MinHeight" Value="17"/>
-                                        <Setter Property="IsHitTestVisible" Value="False" />
-                                    </Style>
-                                </GridView.ColumnHeaderContainerStyle>
+                <ListView.View>
+                    <GridView x:Name="CombatantView">
+                        <GridView.ColumnHeaderContainerStyle>
+                            <Style TargetType="{x:Type GridViewColumnHeader}">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                            <GradientStop Offset="0.0" Color="#000A0A0A" />
+                                            <GradientStop Offset="1.0" Color="#0000FFFF" />
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Foreground" Value="#FFFFFFFF" />
+                                <Setter Property="Padding" Value="0,0,0,0"/>
+                                <Setter Property="MinHeight" Value="17"/>
+                                <Setter Property="IsHitTestVisible" Value="False" />
+                            </Style>
+                        </GridView.ColumnHeaderContainerStyle>
 
-                                <GridViewColumn Header="Name" x:Name="NameColumn" Width="{Binding ElementName=NameH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
+                        <GridViewColumn Header="Name" x:Name="NameColumn" Width="{Binding ElementName=NameH, Path=ActualWidth}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-2,0" Padding="0" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
 
-                                <GridViewColumn Header="%" x:Name="PercentColumn" Width="{Binding ElementName=PercentH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding PercentReadDPSReadout}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
+                        <GridViewColumn Header="%" x:Name="PercentColumn" Width="{Binding ElementName=PercentH, Path=ActualWidth}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding PercentReadDPSReadout}" TextAlignment="Right" Margin="-2,0" Padding="0" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
 
-                                <GridViewColumn Header="Damage" x:Name="DamageColumn" Width="{Binding ElementName=DmgH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding DamageReadout}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
+                        <GridViewColumn Header="Damage" x:Name="DamageColumn" Width="{Binding ElementName=DmgH, Path=ActualWidth}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding DamageReadout}" TextAlignment="Right" Margin="-2,0" Padding="0" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
 
-                                <GridViewColumn Header="Damage Taken" x:Name="DamagedColumn" Width="{Binding ElementName=DmgdH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding ReadDamaged}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
+                        <GridViewColumn Header="Damage Taken" x:Name="DamagedColumn" Width="{Binding ElementName=DmgdH, Path=ActualWidth}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ReadDamaged}" TextAlignment="Right" Margin="-2,0" Padding="0" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
 
-                                <GridViewColumn Header="DPS" x:Name="DPSColumn" Width="{Binding ElementName=DPSH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding FDPSReadout}" TextAlignment="Right" Margin="-2,00" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
+                        <GridViewColumn Header="DPS" x:Name="DPSColumn" Width="{Binding ElementName=DPSH, Path=ActualWidth}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding FDPSReadout}" TextAlignment="Right" Margin="-2,00" Padding="0" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
 
-                                <GridViewColumn Header="JA" x:Name="JAColumn" Width="{Binding ElementName=JAH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding JAPercent}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
+                        <GridViewColumn Header="JA" x:Name="JAColumn" Width="{Binding ElementName=JAH, Path=ActualWidth}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding JAPercent}" TextAlignment="Right" Margin="-2,0" Padding="0" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
 
-                                <GridViewColumn Header="Critical" x:Name="CriColumn" Width="{Binding ElementName=CriH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding CRIPercent}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
+                        <GridViewColumn Header="Critical" x:Name="CriColumn" Width="{Binding ElementName=CriH, Path=ActualWidth}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding CRIPercent}" TextAlignment="Right" Margin="-2,0" Padding="0" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
 
-                                <GridViewColumn Header="Max Hit" x:Name="MaxHitColumn" Width="{Binding ElementName=AtkH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding MaxHit}" TextAlignment="Center" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
+                        <GridViewColumn Header="Max Hit" x:Name="MaxHitColumn" Width="{Binding ElementName=AtkH, Path=ActualWidth}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding MaxHit}" TextAlignment="Center" Margin="-2,0" Padding="0" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
 
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </TabItem>
-                <TabItem Header="DB" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
-                    <ListView x:Name="DBData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True">
-                        <ListView.Background>
-                            <SolidColorBrush Opacity="0"/>
-                        </ListView.Background>
-                        <ListView.View>
-                            <GridView x:Name="DBView">
-                                <GridView.ColumnHeaderContainerStyle>
-                                    <Style TargetType="{x:Type GridViewColumnHeader}">
-                                        <Setter Property="Background">
-                                            <Setter.Value>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                                    <GradientStop Offset="0.0" Color="#000A0A0A" />
-                                                    <GradientStop Offset="1.0" Color="#0000FFFF" />
-                                                </LinearGradientBrush>
-                                            </Setter.Value>
-                                        </Setter>
-                                        <Setter Property="Foreground" Value="#FFFFFFFF" />
-                                        <Setter Property="Padding" Value="0,0,0,0"/>
-                                        <Setter Property="MinHeight" Value="17"/>
-                                        <Setter Property="IsHitTestVisible" Value="False" />
-                                    </Style>
-                                </GridView.ColumnHeaderContainerStyle>
-
-                                <GridViewColumn Header="Name" x:Name="DBNameColumn" Width="{Binding ElementName=NameH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="%" x:Name="DBPercentColumn" Width="{Binding ElementName=PercentH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding DBReadPct}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Damage" x:Name="DBDamageColumn" Width="{Binding ElementName=DmgH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding DBReadDamage}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Damage Taken" x:Name="DBDamagedColumn" Width="{Binding ElementName=DmgdH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding ReadDamaged}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="DPS" x:Name="DBDPSColumn" Width="{Binding ElementName=DPSH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding DBDPS}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="JA" x:Name="DBJAColumn" Width="{Binding ElementName=JAH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding DBJAPct}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Critical" x:Name="DBCriColumn" Width="{Binding ElementName=CriH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding DBCriPct}" TextAlignment="Right" Margin="-2,00" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Max Hit" x:Name="DBMaxHitColumn" Width="{Binding ElementName=AtkH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding DBAtkName}" TextAlignment="Center" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </TabItem>
-                <TabItem Header="Lsw" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
-                    <ListView x:Name="LswData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True">
-                        <ListView.Background>
-                            <SolidColorBrush Opacity="0"/>
-                        </ListView.Background>
-                        <ListView.View>
-                            <GridView x:Name="LswView">
-                                <GridView.ColumnHeaderContainerStyle>
-                                    <Style TargetType="{x:Type GridViewColumnHeader}">
-                                        <Setter Property="Background">
-                                            <Setter.Value>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                                    <GradientStop Offset="0.0" Color="#000A0A0A" />
-                                                    <GradientStop Offset="1.0" Color="#0000FFFF" />
-                                                </LinearGradientBrush>
-                                            </Setter.Value>
-                                        </Setter>
-                                        <Setter Property="Foreground" Value="#FFFFFFFF" />
-                                        <Setter Property="Padding" Value="0,0,0,0"/>
-                                        <Setter Property="MinHeight" Value="17"/>
-                                        <Setter Property="IsHitTestVisible" Value="False" />
-                                    </Style>
-                                </GridView.ColumnHeaderContainerStyle>
-
-                                <GridViewColumn Header="Name" x:Name="LswNameColumn" Width="{Binding ElementName=NameH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="%" x:Name="LswPercentColumn" Width="{Binding ElementName=PercentH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding LswReadPct}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Damage" x:Name="LswDamageColumn" Width="{Binding ElementName=DmgH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding LswReadDamage}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Damage Taken" x:Name="LswDamagedColumn" Width="{Binding ElementName=DmgdH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding ReadDamaged}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="DPS" x:Name="LswDPSColumn" Width="{Binding ElementName=DPSH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding LswDPS}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="JA" x:Name="LswJAColumn" Width="{Binding ElementName=JAH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding LswJAPct}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Critical" x:Name="LswCriColumn" Width="{Binding ElementName=CriH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding LswCriPct}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Max Hit" x:Name="LswMaxHitColumn" Width="{Binding ElementName=AtkH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding LswAtkName}" TextAlignment="Center" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </TabItem>
-                <TabItem Header="Pwp" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
-                    <ListView x:Name="PwpData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True">
-                        <ListView.Background>
-                            <SolidColorBrush Opacity="0"/>
-                        </ListView.Background>
-                        <ListView.View>
-                            <GridView x:Name="PwpView">
-                                <GridView.ColumnHeaderContainerStyle>
-                                    <Style TargetType="{x:Type GridViewColumnHeader}">
-                                        <Setter Property="Background">
-                                            <Setter.Value>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                                    <GradientStop Offset="0.0" Color="#000A0A0A" />
-                                                    <GradientStop Offset="1.0" Color="#0000FFFF" />
-                                                </LinearGradientBrush>
-                                            </Setter.Value>
-                                        </Setter>
-                                        <Setter Property="Foreground" Value="#FFFFFFFF" />
-                                        <Setter Property="Padding" Value="0,0,0,0"/>
-                                        <Setter Property="MinHeight" Value="17"/>
-                                        <Setter Property="IsHitTestVisible" Value="False" />
-                                    </Style>
-                                </GridView.ColumnHeaderContainerStyle>
-
-                                <GridViewColumn Header="Name" x:Name="PwpNameColumn" Width="{Binding ElementName=NameH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="%" x:Name="PwpPercentColumn" Width="{Binding ElementName=PercentH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding PwpReadPct}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Damage" x:Name="PwpDamageColumn" Width="{Binding ElementName=DmgH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding PwpReadDamage}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Damage Taken" x:Name="PwpDamagedColumn" Width="{Binding ElementName=DmgdH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding ReadDamaged}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="DPS" x:Name="PwpDPSColumn" Width="{Binding ElementName=DPSH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding PwpDPS}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="JA" x:Name="PwpJAColumn" Width="{Binding ElementName=JAH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding PwpJAPct}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Critical" x:Name="PwpCriColumn" Width="{Binding ElementName=CriH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding PwpCriPct}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Max Hit" x:Name="PwpMaxHitColumn" Width="{Binding ElementName=AtkH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding PwpAtkName}" TextAlignment="Center" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </TabItem>
-                <TabItem Header="A.I.S." Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
-                    <ListView x:Name="AisData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True">
-                        <ListView.Background>
-                            <SolidColorBrush Opacity="0"/>
-                        </ListView.Background>
-                        <ListView.View>
-                            <GridView x:Name="AisView">
-                                <GridView.ColumnHeaderContainerStyle>
-                                    <Style TargetType="{x:Type GridViewColumnHeader}">
-                                        <Setter Property="Background">
-                                            <Setter.Value>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                                    <GradientStop Offset="0.0" Color="#000A0A0A" />
-                                                    <GradientStop Offset="1.0" Color="#0000FFFF" />
-                                                </LinearGradientBrush>
-                                            </Setter.Value>
-                                        </Setter>
-                                        <Setter Property="Foreground" Value="#FFFFFFFF" />
-                                        <Setter Property="Padding" Value="0,0,0,0"/>
-                                        <Setter Property="MinHeight" Value="17"/>
-                                        <Setter Property="IsHitTestVisible" Value="False" />
-                                    </Style>
-                                </GridView.ColumnHeaderContainerStyle>
-
-                                <GridViewColumn Header="Name" x:Name="AisNameColumn" Width="{Binding ElementName=NameH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="%" x:Name="AisPercentColumn" Width="{Binding ElementName=PercentH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding AisReadPct}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Damage" x:Name="AisDamageColumn" Width="{Binding ElementName=DmgH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding AisReadDamage}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Damage Taken" x:Name="AisDamagedColumn" Width="{Binding ElementName=DmgdH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding ReadDamaged}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="DPS" x:Name="AisDPSColumn" Width="{Binding ElementName=DPSH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding AisDPS}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="JA" x:Name="AisJAColumn" Width="{Binding ElementName=JAH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding AisJAPct}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Critical" x:Name="AisCriColumn" Width="{Binding ElementName=CriH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding AisCriPct}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Max Hit" x:Name="AisMaxHitColumn" Width="{Binding ElementName=AtkH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding AisAtkName}" TextAlignment="Center" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </TabItem>
-                <TabItem Header="Ride" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
-                    <ListView x:Name="RideData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True">
-                        <ListView.Background>
-                            <SolidColorBrush Opacity="0"/>
-                        </ListView.Background>
-
-                        <ListView.View>
-                            <GridView x:Name="RideView">
-                                <GridView.ColumnHeaderContainerStyle>
-                                    <Style TargetType="{x:Type GridViewColumnHeader}">
-                                        <Setter Property="Background">
-                                            <Setter.Value>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                                    <GradientStop Offset="0.0" Color="#000A0A0A" />
-                                                    <GradientStop Offset="1.0" Color="#0000FFFF" />
-                                                </LinearGradientBrush>
-                                            </Setter.Value>
-                                        </Setter>
-                                        <Setter Property="Foreground" Value="#FFFFFFFF" />
-                                        <Setter Property="Padding" Value="0,0,0,0"/>
-                                        <Setter Property="MinHeight" Value="17"/>
-                                        <Setter Property="IsHitTestVisible" Value="False" />
-                                    </Style>
-                                </GridView.ColumnHeaderContainerStyle>
-
-                                <GridViewColumn Header="Name" x:Name="RideNameColumn" Width="{Binding ElementName=NameH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="%" x:Name="RidePercentColumn" Width="{Binding ElementName=PercentH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding RideReadPct}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Damage" x:Name="RideDamageColumn" Width="{Binding ElementName=DmgH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding RideDamage}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Damage Taken" x:Name="RideDamagedColumn" Width="{Binding ElementName=DmgdH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding ReadDamaged}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="DPS" x:Name="RideDPSColumn" Width="{Binding ElementName=DPSH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding RideDPS}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="JA" x:Name="RideJAColumn" Width="{Binding ElementName=JAH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding RideJAPct}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Critical" x:Name="RideCriColumn" Width="{Binding ElementName=CriH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding RideCriPct}" TextAlignment="Right" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Max Hit" x:Name="RideMaxHitColumn" Width="{Binding ElementName=AtkH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding RideAtkName}" TextAlignment="Center" Margin="-2,0" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </TabItem>
-                <TabItem Header="Lap1" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
-
-                </TabItem>
-                <TabItem Header="Lap2" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
-
-                </TabItem>
-                <TabItem Header="Lap3" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
-
-                </TabItem>
-                <TabItem Header="Info" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
-                    <TextBox x:Name="Abouttext" Background="Transparent" Foreground="White" FontSize="16" FontFamily="Noto Sans CJK JP DemiLight" IsHitTestVisible="False" BorderThickness="0" />
-                </TabItem>
-            </TabControl>
+                    </GridView>
+                </ListView.View>
+            </ListView>
 
             <Grid Visibility="Hidden" Grid.Row="1" Margin="0" Grid.RowSpan="2">
                 <Grid.ColumnDefinitions>
@@ -763,7 +288,6 @@
                     <ColumnDefinition x:Name="JAHC" Width="52"/>
                     <ColumnDefinition x:Name="CriHC" Width="52"/>
                     <ColumnDefinition x:Name="AtkHC" Width="1.5*"/>
-                    <ColumnDefinition x:Name="TabHC" Width="28" />
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0" x:Name="NameH" />
                 <Grid Grid.Column="1" x:Name="PercentH" />
@@ -773,7 +297,6 @@
                 <Grid Grid.Column="5" x:Name="JAH" />
                 <Grid Grid.Column="6" x:Name="CriH" />
                 <Grid Grid.Column="7" x:Name="AtkH" />
-                <Grid Grid.Column="8" x:Name="TabH" />
             </Grid>
 
             <Rectangle x:Name="EncounterIndicator" Grid.Row="2" Height="2" VerticalAlignment="Top"  Fill="White" IsHitTestVisible="False" />
