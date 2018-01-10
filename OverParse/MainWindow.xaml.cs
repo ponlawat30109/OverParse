@@ -540,30 +540,24 @@ namespace OverParse
 
 
             // get group damage totals
-            int totalReadDamage = workingList.Where(c => (c.IsAlly || c.IsZanverse || c.IsFinish || c.IsAIS || c.IsPwp || c.IsDB || c.IsRide)).Sum(x => x.ReadDamage);
+            int totalReadDamage = workingList.Sum(x => x.Damage);
+            int totalAllyDamage = workingList.Where(c => c.IsAlly).Sum(x => x.Damage);
+            int totalDBDamage = workingList.Sum(x => x.DBDamage);
+            int totalLswDamage = workingList.Sum(x => x.LswDamage);
+            int totalPwpDamage = workingList.Sum(x => x.PwpDamage);
+            int totalAisDamage = workingList.Sum(x => x.AisDamage);
+            int totalRideDamage = workingList.Sum(x => x.RideDamage);
 
             // dps calcs!
             foreach (Combatant c in workingList)
             {
-                if (c.IsAlly || c.IsZanverse || c.IsFinish)
-                {
-                    c.PercentReadDPS = c.ReadDamage / (float)totalReadDamage * 100;
-                    c.AllyPct = c.AllyDamage / (float)totalReadDamage * 100;
-                    c.DBPct = c.DBDamage / (float)totalReadDamage * 100;
-                    c.LswPct = c.LswDamage / (float)totalReadDamage * 100;
-                    c.PwpPct = c.PwpDamage / (float)totalReadDamage * 100;
-                    c.AisPct = c.AisDamage / (float)totalReadDamage * 100;
-                    c.RidePct = c.RideDamage / (float)totalReadDamage * 100;
-                } else {
-                    c.PercentDPS = -1;
-                    c.PercentReadDPS = -1;
-                    c.AllyPct = -1;
-                    c.DBPct = -1;
-                    c.LswPct = -1;
-                    c.PwpPct = -1;
-                    c.AisPct = -1;
-                    c.RidePct = -1;
-                }
+                c.PercentReadDPS = c.ReadDamage / (float)totalReadDamage * 100;
+                c.AllyPct = c.AllyDamage / (float)totalAllyDamage * 100;
+                c.DBPct = c.DBDamage / (float)totalDBDamage * 100;
+                c.LswPct = c.LswDamage / (float)totalLswDamage * 100;
+                c.PwpPct = c.PwpDamage / (float)totalPwpDamage * 100;
+                c.AisPct = c.AisDamage / (float)totalAisDamage * 100;
+                c.RidePct = c.RideDamage / (float)totalRideDamage * 100;
             }
 
 
