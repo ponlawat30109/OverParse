@@ -540,7 +540,6 @@ namespace OverParse
 
             // get group damage totals
             int totalReadDamage = workingList.Sum(x => x.Damage);
-            int totalAllyDamage = workingList.Where(c => c.IsAlly).Sum(x => x.Damage);
             int totalDBDamage = workingList.Sum(x => x.DBDamage);
             int totalLswDamage = workingList.Sum(x => x.LswDamage);
             int totalPwpDamage = workingList.Sum(x => x.PwpDamage);
@@ -593,11 +592,11 @@ namespace OverParse
                 }
 
                 if (!filtered && (c.Damage > 0) && (SeparateTab.SelectedIndex == 0)) { CombatantData.Items.Add(c); }
-                if ((c.DBDamage > 0) && (SeparateTab.SelectedIndex == 2)) { workingList.Sort((x, y) => y.DBDamage.CompareTo(x.DBDamage)); DBData.Items.Add(c); }
-                if ((c.LswDamage > 0) && (SeparateTab.SelectedIndex == 3)) { workingList.Sort((x, y) => y.LswDamage.CompareTo(x.LswDamage)); LswData.Items.Add(c); }
-                if ((c.PwpDamage > 0) && (SeparateTab.SelectedIndex == 4)) { workingList.Sort((x, y) => y.PwpDamage.CompareTo(x.PwpDamage)); PwpData.Items.Add(c); }
-                if ((c.AisDamage > 0) && (SeparateTab.SelectedIndex == 5)) { workingList.Sort((x, y) => y.AisDamage.CompareTo(x.AisDamage)); AisData.Items.Add(c); }
-                if ((c.RideDamage > 0) && (SeparateTab.SelectedIndex == 6)) { workingList.Sort((x, y) => y.RideDamage.CompareTo(x.RideDamage)); RideData.Items.Add(c); }
+                if ((c.DBDamage > 0) && (SeparateTab.SelectedIndex == 1)) { workingList.Sort((x, y) => y.DBDamage.CompareTo(x.DBDamage)); DBData.Items.Add(c); }
+                if ((c.LswDamage > 0) && (SeparateTab.SelectedIndex == 2)) { workingList.Sort((x, y) => y.LswDamage.CompareTo(x.LswDamage)); LswData.Items.Add(c); }
+                if ((c.PwpDamage > 0) && (SeparateTab.SelectedIndex == 3)) { workingList.Sort((x, y) => y.PwpDamage.CompareTo(x.PwpDamage)); PwpData.Items.Add(c); }
+                if ((c.AisDamage > 0) && (SeparateTab.SelectedIndex == 4)) { workingList.Sort((x, y) => y.AisDamage.CompareTo(x.AisDamage)); AisData.Items.Add(c); }
+                if ((c.RideDamage > 0) && (SeparateTab.SelectedIndex == 5)) { workingList.Sort((x, y) => y.RideDamage.CompareTo(x.RideDamage)); RideData.Items.Add(c); }
 
             }
 
