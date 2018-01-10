@@ -30,6 +30,7 @@ namespace OverParse
         public static string[] RideAttackIDs = new string[] { "3491866260", "2056025809", "2534881408", "2600476838", "1247666429", "3750571080", "3642240295", "651750924", "2452463220", "1732461796", "3809261131", "1876785244", "3765765641", "3642969286", "1258041436" };
 
         public static float maxShare = 0;
+        private bool isAlly;
 
         public int Damage => Attacks.Sum(x => x.Damage);
 
@@ -76,6 +77,16 @@ namespace OverParse
         public string MaxHitID => MaxHitAttack.ID;
 
         public string DPSReadout => PercentReadDPSReadout;
+
+        public string DisplayName
+        {
+            get
+            {
+                if (Properties.Settings.Default.AnonymizeNames && isAlly)
+                    return AnonymousName();
+                return Name;
+            }
+        }
 
         public string FDPSReadout
         {
