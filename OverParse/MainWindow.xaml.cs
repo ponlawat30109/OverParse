@@ -609,7 +609,7 @@ namespace OverParse
                 float totalDPS = totalReadDamage / (float)elapsed;
 
                 if (totalDPS > 0)
-                    EncounterStatus.Content += $" - {totalDPS.ToString("N2")} DPS";
+                    EncounterStatus.Content += $" - {totalDPS.ToString("N2")} DPS - {totalReadDamage.ToString("N0")} Total Damage";
 
                 lastStatus = EncounterStatus.Content.ToString();
             }
