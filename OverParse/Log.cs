@@ -249,12 +249,8 @@ namespace OverParse
 
                 foreach (Combatant c in combatants)
                 {
-                    try
-                    {
-                        if (c.IsAlly || c.IsZanverse || c.IsFinish)
-                            log += $"{c.Name} | {c.PercentReadDPSReadout}% | {c.ReadDamage.ToString("N0")} dmg | {c.Damaged} dmgd | {c.DPS} DPS | JA : {c.WJAPercent}% | Critical : {c.WCRIPercent}% | Max : {c.MaxHitdmg} ({c.MaxHit})" + Environment.NewLine;
-                    }
-                    catch{/* 今の所何もしないっぽい */}
+                    if (c.IsAlly || c.IsZanverse || c.IsFinish)
+                        log += $"{c.Name} | {c.PercentReadDPSReadout}% | {c.ReadDamage.ToString("N0")} dmg | {c.Damaged} dmgd | {c.DPS} DPS | JA : {c.WJAPercent}% | Critical : {c.WCRIPercent}% | Max : {c.MaxHitdmg} ({c.MaxHit})" + Environment.NewLine;
                 }
 
                 log += Environment.NewLine + Environment.NewLine;
@@ -282,8 +278,6 @@ namespace OverParse
                             {
                                 Combatant targetCombatant = backupCombatants.First(x => x.ID == s);
                                 List<int> matchingAttacks = targetCombatant.Attacks.Where(a => a.ID == "2106601422").Select(a => a.Damage).ToList();
-                                //List<int> jaPercents = c.Attacks.Where(a => a.ID == s).Select(a => a.JA).ToList();
-                                //List<int> criPercents = c.Attacks.Where(a => a.ID == s).Select(a => a.Cri).ToList();
                                 attackData.Add(new Tuple<string, List<int>>(targetCombatant.Name, matchingAttacks));
                             }
                         }
@@ -309,7 +303,7 @@ namespace OverParse
                             foreach (Attack a in c.Attacks)
                             {
                                 if ((a.ID == "2106601422" && Properties.Settings.Default.SeparateZanverse) || (Combatant.FinishAttackIDs.Contains(a.ID) && Properties.Settings.Default.SeparateFinish))
-                                    continue; //ザンバースの場合に何もしない
+                                    continue;
                                 if (MainWindow.skillDict.ContainsKey(a.ID))
                                     a.ID = MainWindow.skillDict[a.ID]; // these are getting disposed anyway, no 1 cur
                                 if (!attackNames.Contains(a.ID))
@@ -318,10 +312,7 @@ namespace OverParse
 
                             foreach (string s in attackNames)
                             {
-                                //マッチングアタックからダメージを選択するだけ
                                 List<int> matchingAttacks = c.Attacks.Where(a => a.ID == s).Select(a => a.Damage).ToList();
-                                //List<int> jaPercents = c.Attacks.Where(a => a.ID == s).Select(a => a.JA).ToList();
-                                //List<int> criPercents = c.Attacks.Where(a => a.ID == s).Select(a => a.Cri).ToList();
                                 attackData.Add(new Tuple<string, List<int>>(s, matchingAttacks));
                             }
                         }
@@ -333,17 +324,13 @@ namespace OverParse
                             double percent = i.Item2.Sum() * 100d / c.ReadDamage;
                             string spacer = (percent >= 9) ? "" : " ";
 
-                            string paddedPercent = percent.ToString("00.00").Substring(0, 5);
+                            string paddedPercent = percent.ToString("00.00");
                             string hits = i.Item2.Count().ToString("N0");
                             string sum = i.Item2.Sum().ToString("N0");
                             string min = i.Item2.Min().ToString("N0");
                             string max = i.Item2.Max().ToString("N0");
                             string avg = i.Item2.Average().ToString("N0");
-                            //string ja = (i.Item3.Average() * 100).ToString("N2") ?? "null";
-                            //string cri = (i.Item4.Average() * 100).ToString("N2") ?? "null" ;
-                            log += $"{paddedPercent}%	| {i.Item1} - {sum} dmg";
-                            //log += $" - JA : {ja}% - Critical : {cri}%";
-                            log += Environment.NewLine;
+                            log += $"{paddedPercent}%	| {i.Item1} - {sum} dmg" + Environment.NewLine;
                             log += $"	|   {hits} hits - {min} min, {avg} avg, {max} max" + Environment.NewLine;
                         }
 
