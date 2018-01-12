@@ -131,7 +131,6 @@ namespace OverParse
             string[] tmp;
             try
             {
-
                 WebClient client = new WebClient();
                 Stream stream = client.OpenRead("https://raw.githubusercontent.com/VariantXYZ/PSO2ACT/master/PSO2ACT/skills.csv");
                 StreamReader webreader = new StreamReader(stream);
@@ -145,14 +144,23 @@ namespace OverParse
                 Console.WriteLine($"skills.csv update failed: {ex.ToString()}");
                 if (File.Exists("skills.csv"))
                 {
-                    MessageBox.Show("OverParse failed to update its skill mappings. This usually means your connection hiccuped for a moment.\n\nA local copy will be used instead. If you'd like to try and update again, just relaunch OverParse.", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("OverParse failed to update its skill mappings. This usually means your connection hiccuped for a moment.\n\nA local copy will be used instead. If you'd like to try and update again, please use the 'Force update of skills.csv' option within the 'Other' menu.", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
                     tmp = File.ReadAllLines("skills.csv");
                 }
                 else
                 {
-                    MessageBox.Show("OverParse failed to update its skill mappings. This usually means your connection hiccuped for a moment.\n\nSince you have no skill mappings downloaded, all attacks will be marked as \"Unknown\". If you'd like to try and update again, please relaunch OverParse.", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("OverParse failed to update its skill mappings. This usually means your connection hiccuped for a moment.\n\nSince you have no skill mappings downloaded, all attacks will be marked as \"Unknown\". If you'd like to try and update again, please use the 'Force update of skills.csv' option within the 'Other' menu.", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
                     tmp = new string[0];
                 }
+            }
+
+            try
+            {
+                ignoreskill = File.ReadAllLines("ignoreskills.csv");
+            }
+            catch
+            {
+                MessageBox.Show("ignoreskills.csv is missing. Please be warned that this will make JA information inaccurate if data isn't separated...", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
             }
 
             Console.WriteLine("Parsing skills.csv");
