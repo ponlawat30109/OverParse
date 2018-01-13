@@ -1,6 +1,8 @@
 ### OverParse Zer0 Edition
 Credit to Variant for keeping the damage logs up to date
+
 Credit to TyroneSama for making the original version of OverParse
+
 Credit to Remon-7L for his original JA + Crit additions
 
 ### PLEASE NOTE
