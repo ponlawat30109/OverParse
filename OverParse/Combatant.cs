@@ -51,7 +51,7 @@ namespace OverParse
 
         public int GetFinishDamage => Attacks.Where(a => FinishAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
 
-        public string WJAPercent => ((Attacks.Average(a => a.JA)) * 100).ToString("00.00");
+        public string WJAPercent => ((Attacks.Where(a => !MainWindow.ignoreskill.Contains(a.ID)).Average(x => x.JA)) * 100).ToString("00.00");
 
         public string WCRIPercent => ((Attacks.Average(a => a.Cri)) * 100).ToString("00.00");
 
