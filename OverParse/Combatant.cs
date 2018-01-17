@@ -151,16 +151,19 @@ namespace OverParse
 
         private double GetDPS()
         {
+            if (ActiveTime == 0)
             {
                 return Damage;
             }
             else
             {
+                return Damage / ActiveTime;
             }
         }
 
         private double GetMPADPS()
         {
+            if (ActiveTime == 0)
             {
                 return ReadDamage;
             }
