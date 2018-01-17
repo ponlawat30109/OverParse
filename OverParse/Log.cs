@@ -250,7 +250,7 @@ namespace OverParse
                 foreach (Combatant c in combatants)
                 {
                     if (c.IsAlly || c.IsZanverse || c.IsFinish)
-                        log += $"{c.Name} | {c.PercentReadDPSReadout}% | {c.ReadDamage.ToString("N0")} dmg | {c.Damaged} dmgd | {c.DPS} DPS | JA : {c.WJAPercent}% | Critical : {c.WCRIPercent}% | Max : {c.MaxHitdmg} ({c.MaxHit})" + Environment.NewLine;
+                        log += $"{c.Name} | {c.PercentReadDPSReadout}% | {c.ReadDamage.ToString("N0")} Damage | {c.Damaged} Damage Taken | {c.DPS} DPS | JA : {c.WJAPercent}% | Critical : {c.WCRIPercent}% | Max : {c.MaxHitdmg} ({c.MaxHit})" + Environment.NewLine;
                 }
 
                 log += Environment.NewLine + Environment.NewLine;
@@ -259,12 +259,12 @@ namespace OverParse
                 {
                     if (c.IsAlly || c.IsZanverse || c.IsFinish)
                     {
-                        string header = $"[ {c.Name} - {c.PercentReadDPSReadout}% - {c.ReadDamage.ToString("N0")} dmg ]";
+                        string header = $"[ {c.Name} - {c.PercentReadDPSReadout}% - {c.ReadDamage.ToString("N0")} Damage ]";
                         log += header + Environment.NewLine + Environment.NewLine;
 
                         List<string> attackNames = new List<string>();
                         List<string> finishNames = new List<string>();
-                        List<Tuple<string, List<int>>> attackData = new List<Tuple<string, List<int>>>();
+                        List<Tuple<string, List<int>, List<int>, List<int>>> attackData = new List<Tuple<string, List<int>, List<int>, List<int>>>();
 
                         if (c.IsZanverse && Properties.Settings.Default.SeparateZanverse)
                         {
@@ -278,7 +278,9 @@ namespace OverParse
                             {
                                 Combatant targetCombatant = backupCombatants.First(x => x.ID == s);
                                 List<int> matchingAttacks = targetCombatant.Attacks.Where(a => a.ID == "2106601422").Select(a => a.Damage).ToList();
-                                attackData.Add(new Tuple<string, List<int>>(targetCombatant.Name, matchingAttacks));
+                                List<int> jaPercents = targetCombatant.Attacks.Where(a => a.ID == "2106601422").Select(a => a.JA).ToList();
+                                List<int> criPercents = targetCombatant.Attacks.Where(a => a.ID == "2106601422").Select(a => a.Cri).ToList();
+                                attackData.Add(new Tuple<string, List<int>, List<int>, List<int>>(targetCombatant.Name, matchingAttacks, jaPercents, criPercents));
                             }
                         }
 
@@ -294,7 +296,9 @@ namespace OverParse
                             {
                                 Combatant tCombatant = backupCombatants.First(x => x.ID == htf);
                                 List<int> fmatchingAttacks = tCombatant.Attacks.Where(a => Combatant.FinishAttackIDs.Contains(a.ID)).Select(a => a.Damage).ToList();
-                                attackData.Add(new Tuple<string, List<int>>(tCombatant.Name, fmatchingAttacks));
+                                List<int> jaPercents = tCombatant.Attacks.Where(a => Combatant.FinishAttackIDs.Contains(a.ID)).Select(a => a.JA).ToList();
+                                List<int> criPercents = tCombatant.Attacks.Where(a => Combatant.FinishAttackIDs.Contains(a.ID)).Select(a => a.Cri).ToList();
+                                attackData.Add(new Tuple<string, List<int>, List<int>, List<int>>(tCombatant.Name, fmatchingAttacks, jaPercents, criPercents));
                             }
 
                         }
@@ -313,7 +317,9 @@ namespace OverParse
                             foreach (string s in attackNames)
                             {
                                 List<int> matchingAttacks = c.Attacks.Where(a => a.ID == s).Select(a => a.Damage).ToList();
-                                attackData.Add(new Tuple<string, List<int>>(s, matchingAttacks));
+                                List<int> jaPercents = c.Attacks.Where(a => a.ID == s).Select(a => a.JA).ToList();
+                                List<int> criPercents = c.Attacks.Where(a => a.ID == s).Select(a => a.Cri).ToList();
+                                attackData.Add(new Tuple<string, List<int>, List<int>, List<int>>(s, matchingAttacks, jaPercents, criPercents));
                             }
                         }
 
@@ -321,17 +327,22 @@ namespace OverParse
 
                         foreach (var i in attackData)
                         {
-                            double percent = i.Item2.Sum() * 100d / c.ReadDamage;
-                            string spacer = (percent >= 9) ? "" : " ";
+                            if (i.Item1 != "Damage Taken")
+                            {
+                                double percent = i.Item2.Sum() * 100d / c.ReadDamage;
+                                string spacer = (percent >= 9) ? "" : " ";
 
-                            string paddedPercent = percent.ToString("00.00");
-                            string hits = i.Item2.Count().ToString("N0");
-                            string sum = i.Item2.Sum().ToString("N0");
-                            string min = i.Item2.Min().ToString("N0");
-                            string max = i.Item2.Max().ToString("N0");
-                            string avg = i.Item2.Average().ToString("N0");
-                            log += $"{paddedPercent}%	| {i.Item1} - {sum} dmg" + Environment.NewLine;
-                            log += $"	|   {hits} hits - {min} min, {avg} avg, {max} max" + Environment.NewLine;
+                                string paddedPercent = percent.ToString("00.00");
+                                string hits = i.Item2.Count().ToString("N0");
+                                string sum = i.Item2.Sum().ToString("N0");
+                                string min = i.Item2.Min().ToString("N0");
+                                string max = i.Item2.Max().ToString("N0");
+                                string avg = i.Item2.Average().ToString("N0");
+                                string ja = (i.Item3.Average() * 100).ToString("N2") ?? "null";
+                                string cri = (i.Item4.Average() * 100).ToString("N2") ?? "null";
+                                log += $" - JA : {ja}% - Critical : {cri}%" + Environment.NewLine;
+                                log += $"       |   {hits} hits - {min} min, {avg} avg, {max} max" + Environment.NewLine;
+                            }
                         }
 
                         log += Environment.NewLine;
@@ -423,8 +434,7 @@ namespace OverParse
                         if (sourceID == "0" || attackID == "0")
                             continue;
 
-                        //処理スタート
-
+                        //Add damage taken to a combatant if they take damage
                         if (10000000 < int.Parse(sourceID))
                         {
                             foreach (Combatant x in combatants)
@@ -446,13 +456,14 @@ namespace OverParse
                             newTimestamp = lineTimestamp;
                             if (startTimestamp == 0)
                             {
-                                //Console.WriteLine($"FIRST ATTACK RECORDED: {hitDamage} dmg from {sourceID} ({sourceName}) with {attackID}, to {targetID} ({targetName})");
                                 startTimestamp = newTimestamp;
                             }
 
                             source.Attacks.Add(new Attack(attackID, hitDamage, newTimestamp - startTimestamp, justAttack, critical, 0));
                             running = true;
-                        } else {
+                        }
+                        else
+                        {
                             foreach (Combatant x in combatants)
                             {
                                 if (x.ID == targetID && x.isTemporary == "no")
@@ -476,11 +487,9 @@ namespace OverParse
                                 startTimestamp = newTimestamp;
                             }
 
-                            source.Attacks.Add(new Attack("0", 0, newTimestamp - startTimestamp, 0, 0, hitDamage));
+                            source.Attacks.Add(new Attack("Damage Taken", 0, newTimestamp - startTimestamp, 0, 0, hitDamage));
                             running = true;
                         }
-
-
                     }
                 }
 

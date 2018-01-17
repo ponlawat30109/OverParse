@@ -10,17 +10,10 @@ namespace OverParse
         private const float maxBGopacity = 0.6f;
         public string ID;
         public string Name { get; set; }
-        public float PercentDPS;
-        public float PercentReadDPS;
-        public float AllyPct;
-        public float DBPct;
-        public float LswPct;
-        public float PwpPct;
-        public float AisPct;
-        public float RidePct;
-        public int ActiveTime;
         public string isTemporary;
-        public static string Log;
+        public int ActiveTime;
+        public float PercentDPS, PercentReadDPS, AllyPct, DBPct, LswPct, PwpPct, AisPct, RidePct;
+        
         public List<Attack> Attacks;
         public static string[] FinishAttackIDs = new string[] { "2268332858", "170999070", "2268332813", "1266101764", "11556353", "1233721870", "1233722348", "3480338695" };
         public static string[] PhotonAttackIDs = new string[] { "2414748436", "1954812953", "2822784832", "3339644659", "2676260123", "224805109" };
@@ -30,62 +23,45 @@ namespace OverParse
         public static string[] RideAttackIDs = new string[] { "3491866260", "2056025809", "2534881408", "2600476838", "1247666429", "3750571080", "3642240295", "651750924", "2452463220", "1732461796", "3809261131", "1876785244", "3765765641", "3642969286", "1258041436" };
 
         public static float maxShare = 0;
+        public static string Log;
 
         public int Damage => Attacks.Sum(x => x.Damage);
-
-        public int DBDamage => Attacks.Where(a => DBAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
-
+        public int ReadDamage => GetMPADamage();
+        public int DBDamage => Attacks.Where(a => DBAttackIDs.Contains(a.ID)).Sum(x => x.Damage);   
         public int LswDamage => Attacks.Where(a => LaconiumAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
-
         public int PwpDamage => Attacks.Where(a => PhotonAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
-
         public int AisDamage => Attacks.Where(a => AISAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
-
         public int RideDamage => Attacks.Where(a => RideAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
 
         public int Damaged => Attacks.Sum(x => x.Dmgd);
-
         public string ReadDamaged => Attacks.Sum(x => x.Dmgd).ToString("N0");
 
         public int GetZanverseDamage => Attacks.Where(a => a.ID == "2106601422").Sum(x => x.Damage);
-
         public int GetFinishDamage => Attacks.Where(a => FinishAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
 
         public string WJAPercent => ((Attacks.Where(a => !MainWindow.ignoreskill.Contains(a.ID)).Average(x => x.JA)) * 100).ToString("00.00");
-
         public string WCRIPercent => ((Attacks.Average(a => a.Cri)) * 100).ToString("00.00");
 
-        public double DPS => Damage / ActiveTime;
-
-        public double ReadDPS => Math.Round(ReadDamage / (double)ActiveTime);
-
-        public string StringDPS => ReadDPS.ToString("N0");
-
         public bool IsYou => (ID == Hacks.currentPlayerID);
-
         public bool IsAlly => (int.Parse(ID) >= 10000000) && !IsZanverse && !IsFinish;
-
         public bool IsAIS => (isTemporary == "AIS");
-
         public bool IsRide => (isTemporary == "Ride");
-
         public bool IsZanverse => (isTemporary == "Zanverse");
-
         public bool IsPwp => (isTemporary == "Pwp");
-
         public bool IsFinish => (isTemporary == "HTF Attacks");
-
         public bool IsDB => (isTemporary == "DB");
-
         public bool IsLsw => (isTemporary == "Lsw");
 
         public int MaxHitNum => MaxHitAttack.Damage;
-
         public string MaxHitdmg => MaxHitAttack.Damage.ToString("N0");
-
         public string MaxHitID => MaxHitAttack.ID;
 
         public string DPSReadout => PercentReadDPSReadout;
+        public string DamageReadout => ReadDamage.ToString("N0");
+
+        public double DPS => GetDPS();
+        public double ReadDPS => GetMPADPS();
+        public string StringDPS => ReadDPS.ToString("N0");
 
         public string DisplayName
         {
@@ -151,30 +127,68 @@ namespace OverParse
             }
         }
 
-        public string DamageReadout => ReadDamage.ToString("N0");
-
-        public int ReadDamage
+        public Combatant(string id, string name)
         {
-            get
-            {
-                if (IsZanverse || IsFinish || IsAIS || IsPwp || IsDB || IsRide)
-                    return Damage;
+            ID = id;
+            Name = name;
+            PercentDPS = -1;
+            Attacks = new List<Attack>();
+            isTemporary = "no";
+            PercentReadDPS = 0;
+            ActiveTime = 0;
+        }
 
-                int temp = Damage;
-                if (Properties.Settings.Default.SeparateZanverse)
-                    temp -= GetZanverseDamage;
-                if (Properties.Settings.Default.SeparateFinish)
-                    temp -= GetFinishDamage;
-                if (Properties.Settings.Default.SeparatePwp)
-                    temp -= PwpDamage;
-                if (Properties.Settings.Default.SeparateAIS)
-                    temp -= AisDamage;
-                if (Properties.Settings.Default.SeparateDB)
-                    temp -= DBDamage;
-                if (Properties.Settings.Default.SeparateRide)
-                    temp -= RideDamage;
-                return temp;
+        public Combatant(string id, string name, string temp)
+        {
+            ID = id;
+            Name = name;
+            PercentDPS = -1;
+            Attacks = new List<Attack>();
+            isTemporary = temp;
+            PercentReadDPS = 0;
+            ActiveTime = 0;
+        }
+
+        private double GetDPS()
+        {
+            {
+                return Damage;
             }
+            else
+            {
+            }
+        }
+
+        private double GetMPADPS()
+        {
+            {
+                return ReadDamage;
+            }
+            else
+            {
+                return Math.Round(ReadDamage / (double)ActiveTime);
+            }
+        }
+
+        private int GetMPADamage()
+        {
+            if (IsZanverse || IsFinish || IsAIS || IsPwp || IsDB || IsRide)
+                return Damage;
+
+            int temp = Damage;
+            if (Properties.Settings.Default.SeparateZanverse)
+                temp -= GetZanverseDamage;
+            if (Properties.Settings.Default.SeparateFinish)
+                temp -= GetFinishDamage;
+            if (Properties.Settings.Default.SeparatePwp)
+                temp -= PwpDamage;
+            if (Properties.Settings.Default.SeparateAIS)
+                temp -= AisDamage;
+            if (Properties.Settings.Default.SeparateDB)
+                temp -= DBDamage;
+            if (Properties.Settings.Default.SeparateRide)
+                temp -= RideDamage;
+            return temp;
         }
 
         private String FormatNumber(double value)
@@ -288,28 +302,6 @@ namespace OverParse
                     return $"{PercentReadDPS:0.00}";
                 }
             }
-        }
-
-        public Combatant(string id, string name)
-        {
-            ID = id;
-            Name = name;
-            PercentDPS = -1;
-            Attacks = new List<Attack>();
-            isTemporary = "no";
-            PercentReadDPS = 0;
-            ActiveTime = 0;
-        }
-
-        public Combatant(string id, string name, string temp)
-        {
-            ID = id;
-            Name = name;
-            PercentDPS = -1;
-            Attacks = new List<Attack>();
-            isTemporary = temp;
-            PercentReadDPS = 0;
-            ActiveTime = 0;
         }
 
     }
