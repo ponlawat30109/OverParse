@@ -250,7 +250,7 @@ namespace OverParse
                 foreach (Combatant c in combatants)
                 {
                     if (c.IsAlly || c.IsZanverse || c.IsFinish)
-                        log += $"{c.Name} | {c.PercentReadDPSReadout}% | {c.ReadDamage.ToString("N0")} Damage | {c.Damaged} Damage Taken | {c.DPS} DPS | JA : {c.WJAPercent}% | Critical : {c.WCRIPercent}% | Max : {c.MaxHitdmg} ({c.MaxHit})" + Environment.NewLine;
+                        log += $"{c.Name} | {c.PercentReadDPSReadout}% | {c.ReadDamage.ToString("N0")} Damage | {c.Damaged} Damage Taken | {c.DPS} DPS | JA : {c.WJAPercent}% | Critical : {c.WCRIPercent}% | Max : {c.MaxHit}" + Environment.NewLine;
                 }
 
                 log += Environment.NewLine + Environment.NewLine;
