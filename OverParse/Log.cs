@@ -342,7 +342,7 @@ namespace OverParse
                                 string cri = (i.Item4.Average() * 100).ToString("N2") ?? "null";
                                 log += $"{paddedPercent}%	| {i.Item1} ({sum}) Damage";
                                 log += $" - JA : {ja}% - Critical : {cri}%" + Environment.NewLine;
-                                log += $"        |   {hits} hits - {min} min, {avg} avg, {max} max" + Environment.NewLine;
+                                log += $"      	|   {hits} hits - {min} min, {avg} avg, {max} max" + Environment.NewLine;
                             }
                         }
 
