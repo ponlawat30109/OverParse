@@ -90,7 +90,7 @@
     </Window.Resources>
 
     <Border BorderBrush="#FF888888" BorderThickness="1">
-        <Grid HorizontalAlignment="Stretch" Margin="0,0,0,0">
+        <Grid HorizontalAlignment="Stretch" Margin="0,0,0,0" VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
@@ -186,7 +186,9 @@
                 <MenuItem Header="____" Click="Minimize_Click" Style="{StaticResource topmenu}" />
                 <MenuItem Style="{StaticResource topmenu}" Header=" X " Click="Exit_Click"/>
             </Menu>
-            <ListView x:Name="CombatantData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True">
+            <ListView x:Name="CombatantData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" 
+                      ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" 
+                      FontSize="11" ClipToBounds="True">
                 <ListView.Background>
                     <SolidColorBrush Opacity="0"/>
                 </ListView.Background>

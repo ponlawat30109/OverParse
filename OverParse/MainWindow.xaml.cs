@@ -535,22 +535,12 @@ namespace OverParse
 
 
             // get group damage totals
-            int totalReadDamage = workingList.Sum(x => x.Damage);
-            int totalDBDamage = workingList.Sum(x => x.DBDamage);
-            int totalLswDamage = workingList.Sum(x => x.LswDamage);
-            int totalPwpDamage = workingList.Sum(x => x.PwpDamage);
-            int totalAisDamage = workingList.Sum(x => x.AisDamage);
-            int totalRideDamage = workingList.Sum(x => x.RideDamage);
+            int totalReadDamage = workingList.Where(c => c.IsAlly).Sum(x => x.Damage);
 
             // dps calcs!
             foreach (Combatant c in workingList)
             {
                 c.PercentReadDPS = c.ReadDamage / (float)totalReadDamage * 100;
-                c.DBPct = c.DBDamage / (float)totalDBDamage * 100;
-                c.LswPct = c.LswDamage / (float)totalLswDamage * 100;
-                c.PwpPct = c.PwpDamage / (float)totalPwpDamage * 100;
-                c.AisPct = c.AisDamage / (float)totalAisDamage * 100;
-                c.RidePct = c.RideDamage / (float)totalRideDamage * 100;
             }
 
 

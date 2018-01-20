@@ -12,7 +12,7 @@ namespace OverParse
         public string Name { get; set; }
         public string isTemporary;
         public int ActiveTime;
-        public float PercentDPS, PercentReadDPS, AllyPct, DBPct, LswPct, PwpPct, AisPct, RidePct;
+        public float PercentDPS, PercentReadDPS;
         
         public List<Attack> Attacks;
         public static string[] FinishAttackIDs = new string[] { "2268332858", "170999070", "2268332813", "1266101764", "11556353", "1233721870", "1233722348", "3480338695" };
