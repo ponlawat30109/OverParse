@@ -562,5 +562,29 @@ namespace OverParse.Properties {
                 this["HideLsw"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DTcfg {
+            get {
+                return ((bool)(this["DTcfg"]));
+            }
+            set {
+                this["DTcfg"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Pctcfg {
+            get {
+                return ((bool)(this["Pctcfg"]));
+            }
+            set {
+                this["Pctcfg"] = value;
+            }
+        }
     }
 }

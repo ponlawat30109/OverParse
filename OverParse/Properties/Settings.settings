@@ -137,5 +137,11 @@
     <Setting Name="HideLsw" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="DTcfg" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Pctcfg" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

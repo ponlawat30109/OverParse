@@ -275,24 +275,47 @@ namespace OverParse
             }
         }
 
+        private void DamageTaken_Click(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.DTcfg = DTcfg.IsChecked;
+            if (DTcfg.IsChecked)
+            {
+                DmgDHC.Width = new GridLength(0, GridUnitType.Star);
+
+            }
+            else
+            {
+                DmgDHC.Width = new GridLength(0.9, GridUnitType.Star);
+            }
+            UpdateForm(null, null);
+        }
+
+        private void Percent_Click(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.Pctcfg = Pctcfg.IsChecked;
+            if (Pctcfg.IsChecked)
+            {
+                PercentHC.Width = new GridLength(0, GridUnitType.Star);
+
+            }
+            else
+            {
+                PercentHC.Width = new GridLength(52);
+            }
+            UpdateForm(null, null);
+        }
+
         private void JA_Click(object sender, RoutedEventArgs e)
         {
             Properties.Settings.Default.JAcfg = JAcfg.IsChecked;
             if (JAcfg.IsChecked)
             {
-                CombatantView.Columns.Remove(JAColumn);
-                JAHC.Width = new GridLength(0);
+                JAHC.Width = new GridLength(0, GridUnitType.Star);
 
             }
             else
             {
-                CombatantView.Columns.Remove(JAColumn);
-                CombatantView.Columns.Remove(CriColumn);
-                CombatantView.Columns.Remove(MaxHitColumn);
-                CombatantView.Columns.Add(JAColumn);
-                if (!Properties.Settings.Default.Criticalcfg) { CombatantView.Columns.Add(CriColumn); }
-                CombatantView.Columns.Add(MaxHitColumn);
-                JAHC.Width = new GridLength(45);
+                JAHC.Width = new GridLength(52);
             }
             UpdateForm(null, null);
         }
@@ -302,17 +325,12 @@ namespace OverParse
             Properties.Settings.Default.Criticalcfg = Cricfg.IsChecked;
             if (Cricfg.IsChecked)
             {
-                CombatantView.Columns.Remove(CriColumn);
-                CriHC.Width = new GridLength(0);
+                CriHC.Width = new GridLength(0, GridUnitType.Star);
 
             }
             else
             {
-                CombatantView.Columns.Remove(CriColumn);
-                CombatantView.Columns.Remove(MaxHitColumn);
-                CombatantView.Columns.Add(CriColumn);
-                CombatantView.Columns.Add(MaxHitColumn);
-                CriHC.Width = new GridLength(45);
+                CriHC.Width = new GridLength(52);
             }
             UpdateForm(null, null);
         }
@@ -327,7 +345,7 @@ namespace OverParse
             }
             else
             {
-                AtkHC.Width = new GridLength(1.5, GridUnitType.Star);
+                AtkHC.Width = new GridLength(1.7, GridUnitType.Star);
             }
             UpdateForm(null, null);
         }

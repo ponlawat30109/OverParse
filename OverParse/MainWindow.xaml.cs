@@ -98,6 +98,8 @@ namespace OverParse
             AutoHideWindow.IsChecked = Properties.Settings.Default.AutoHideWindow;
 
             ShowDamageGraph.IsChecked = Properties.Settings.Default.ShowDamageGraph; ShowDamageGraph_Click(null, null);
+            DTcfg.IsChecked = Properties.Settings.Default.DTcfg; DamageTaken_Click(null, null);
+            Pctcfg.IsChecked = Properties.Settings.Default.Pctcfg; Percent_Click(null, null);
             JAcfg.IsChecked = Properties.Settings.Default.JAcfg; JA_Click(null, null);
             Cricfg.IsChecked = Properties.Settings.Default.Criticalcfg; Critical_Click(null, null);
             CompactMode.IsChecked = Properties.Settings.Default.CompactMode; CompactMode_Click(null, null);

@@ -159,6 +159,8 @@
                 </MenuItem>
                 <MenuItem Style="{StaticResource topmenu}" Header="List">
                     <MenuItem Style="{StaticResource submenu}" Header="Change Font (WIP)" Click="ChangeFont_Click" />
+                    <MenuItem Style="{StaticResource submenu}" Header="Hide Percent Contribution" Click="Percent_Click" x:Name="Pctcfg" IsCheckable="True" IsChecked="False"/>
+                    <MenuItem Style="{StaticResource submenu}" Header="Hide Damage Taken" Click="DamageTaken_Click" x:Name="DTcfg" IsCheckable="True" IsChecked="False"/>
                     <MenuItem Style="{StaticResource submenu}" Header="Hide JA" Click="JA_Click" x:Name="JAcfg" IsCheckable="True" IsChecked="False"/>
                     <MenuItem Style="{StaticResource submenu}" Header="Hide Critical" Click="Critical_Click" x:Name="Cricfg" IsCheckable="True" IsChecked="False"/>
                     <MenuItem Style="{StaticResource submenu}" Header="Hide Max Hit" IsCheckable="True" IsChecked="False" x:Name="CompactMode" Click="CompactMode_Click"/>
