@@ -140,13 +140,16 @@ namespace OverParse
 
                 tmp = content.Split('\n');
                 File.WriteAllText("skills.csv", content);
+
+                webreader.Close();
+                stream.Close();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"skills.csv update failed: {ex.ToString()}");
                 if (File.Exists("skills.csv"))
                 {
-                    MessageBox.Show("OverParse failed to update its skill mappings. This usually means your connection hiccuped for a moment.\n\nA local copy will be used instead. If you'd like to try and update again, please use the 'Force update of skills.csv' option within the 'Other' menu.", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("OverParse failed to update its skill mappings. This usually means your connection hiccuped for a moment.\n\nA local copy will be used instead. If you'd like to try and update again, please use the 'Force Update Skills' option within the 'Other' menu.", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
                     tmp = File.ReadAllLines("skills.csv");
                 }
                 else
@@ -155,15 +158,18 @@ namespace OverParse
                     tmp = new string[0];
                 }
             }
-
+            //ignoreskills.csv
             try
             {
-                ignoreskill = File.ReadAllLines("ignoreskills.csv");
+                WebClient client = new WebClient();
+                client.DownloadFile("https://raw.githubusercontent.com/SkrubZer0/OverParse/master/OverParse/Other_Files/ignoreskills.csv", "ignoreskills.csv");
             }
             catch
             {
-                MessageBox.Show("ignoreskills.csv is missing. Please be warned that this will make JA information inaccurate if data isn't separated...", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Cannot update your local ignoreskills.csv please be warned that JA data might be wrong.\n\nA local copy will be used instead. If you'd like to try and update again, please use the 'Force Update Skills' option within the 'Other' menu.", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
             }
+
+            ignoreskill = File.ReadAllLines("ignoreskills.csv");
 
             Console.WriteLine("Parsing skills.csv");
 

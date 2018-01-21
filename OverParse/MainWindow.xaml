@@ -180,7 +180,7 @@
                     <MenuItem Style="{StaticResource submenu}" Header="Reselect pso2bin..." x:Name="ResetLogFolder" Click="ResetLogFolder_Click"/>
                     <MenuItem Style="{StaticResource submenu}" Header="Force plugin update..." x:Name="PluginUpdate" Click="UpdatePlugin_Click"/>
                     <MenuItem Style="{StaticResource submenu}" Header="Reset OverParse..." x:Name="Reset" Click="ResetOverParse" />
-                    <MenuItem Style="{StaticResource submenu}" Header="Force Update skills.csv" Click="Updateskills_Click" />
+                    <MenuItem Style="{StaticResource submenu}" Header="Force Update Skills" Click="Updateskills_Click" />
                 </MenuItem>
                 <Label x:Name="Datetime" Foreground="#FFFFFFFF" Padding="0" Margin="-4" />
             </Menu>

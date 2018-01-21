@@ -522,6 +522,8 @@ namespace OverParse
 
         private void Updateskills_Click(object sender, RoutedEventArgs e)
         {
+            string[] tmp;
+            //skills.csv
             try
             {
                 using (System.Net.WebClient client = new System.Net.WebClient())
@@ -529,13 +531,46 @@ namespace OverParse
                     Stream stream = client.OpenRead("https://raw.githubusercontent.com/VariantXYZ/PSO2ACT/master/PSO2ACT/skills.csv");
                     StreamReader webreader = new StreamReader(stream);
                     String content = webreader.ReadToEnd();
-                    File.WriteAllText("skills.csv", content);
-                    MessageBox.Show("skills.csv has been successfully updated");
+
+                    tmp = content.Split('\n');
+                    File.WriteAllText("skills.csv", content);                    
                 }
+
+                skillDict.Clear();
+
+                foreach (string s in tmp)
+                {
+                    string[] split = s.Split(',');
+                    if (split.Length > 1)
+                    {
+                        skillDict.Add(split[1], split[0]);
+                    }
+                }
+
+                MessageBox.Show("skills.csv has been successfully updated");
             }
             catch
             {
                 MessageBox.Show("Failed to update skills.csv");
+            }
+
+            
+
+            //ignoreskills.csv
+            try
+            {
+                using (System.Net.WebClient client = new System.Net.WebClient())
+                {
+                    client.DownloadFile("https://raw.githubusercontent.com/SkrubZer0/OverParse/master/OverParse/Other_Files/ignoreskills.csv", "ignoreskills.csv");
+                }
+
+                ignoreskill = File.ReadAllLines("ignoreskills.csv");
+
+                MessageBox.Show("ignoreskills.csv has been successfully updated");
+            }
+            catch
+            {
+                MessageBox.Show("Failed to update ignoreskills.csv", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
     }
