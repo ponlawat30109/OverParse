@@ -280,7 +280,7 @@ namespace OverParse
             Properties.Settings.Default.DTcfg = DTcfg.IsChecked;
             if (DTcfg.IsChecked)
             {
-                DmgDHC.Width = new GridLength(0, GridUnitType.Star);
+                DmgDHC.Width = new GridLength(0);
 
             }
             else
@@ -295,7 +295,7 @@ namespace OverParse
             Properties.Settings.Default.Pctcfg = Pctcfg.IsChecked;
             if (Pctcfg.IsChecked)
             {
-                PercentHC.Width = new GridLength(0, GridUnitType.Star);
+                PercentHC.Width = new GridLength(0);
 
             }
             else
@@ -310,7 +310,7 @@ namespace OverParse
             Properties.Settings.Default.JAcfg = JAcfg.IsChecked;
             if (JAcfg.IsChecked)
             {
-                JAHC.Width = new GridLength(0, GridUnitType.Star);
+                JAHC.Width = new GridLength(0);
 
             }
             else
@@ -325,7 +325,7 @@ namespace OverParse
             Properties.Settings.Default.Criticalcfg = Cricfg.IsChecked;
             if (Cricfg.IsChecked)
             {
-                CriHC.Width = new GridLength(0, GridUnitType.Star);
+                CriHC.Width = new GridLength(0);
 
             }
             else
@@ -341,7 +341,7 @@ namespace OverParse
             Properties.Settings.Default.CompactMode = CompactMode.IsChecked;
             if (CompactMode.IsChecked)
             {
-                AtkHC.Width = new GridLength(0, GridUnitType.Star);
+                AtkHC.Width = new GridLength(0);
             }
             else
             {
