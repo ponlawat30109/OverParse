@@ -4,10 +4,10 @@ MainWindow.xaml.cs - 起動時に呼ばれ、設定の読み込みやループ�
 Log.cs - インストール関連、ログ書き込み関連、.csv読み込み関連  
 Click.cs - MainWindow.xaml.csからClick関連の処理を分割したもの partial class  
 Hotkey.cs - ホットキー関連  
-WindowsServices.cs - HideIfInactiveから呼ばれているアクティブなアプリのウィンドゥタイトル取得  
+WindowsServices.cs - HideIfInactiveから呼ばれているアクティブなアプリのウィンドゥタイトル取得(?)  
 Detalis - ListViewItemをダブルクリックした時のウィンドゥ  
 FontDialogEx - フォントの選択ウィンドゥ  
-inputbox - 自動エンカウント終了の秒数入力欄(WPF)  
+inputbox - 自動エンカウント終了・csv更新間隔の秒数入力欄(WPF)  
 
   
 
