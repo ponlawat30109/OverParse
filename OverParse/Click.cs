@@ -28,7 +28,9 @@ namespace OverParse
             {
                 Combatant temp2 = new Combatant(c.ID, c.Name, c.isTemporary);
                 foreach (Attack a in c.Attacks)
-                    temp2.Attacks.Add(new Attack(a.ID, a.Damage, a.Timestamp, a.JA, a.Cri, a.Dmgd));
+                {
+                    temp2.Attacks.Add(new Attack(a.ID, a.Damage, a.Timestamp, a.JA, a.Cri, a.Dmgd,a.TargetID));
+                }
                 temp2.ActiveTime = c.ActiveTime;
                 temp2.PercentReadDPS = c.PercentReadDPS;
                 workingListCopy.Add(temp2);
@@ -275,6 +277,10 @@ namespace OverParse
             Width = 670;
         }
 
+        private void Japanese_Click(object sender, RoutedEventArgs e) => Properties.Settings.Default.Language = "ja-JP";
+
+        private void English_Click(object sender, RoutedEventArgs e) => Properties.Settings.Default.Language = "en-US";
+
         private void ChangeFont_Click(object sender, RoutedEventArgs e)
         {
             var dlg = new emanual.Wpf.Dialogs.FontDialogEx() { Owner = this };
@@ -307,11 +313,10 @@ namespace OverParse
         private void JA_Click(object sender, RoutedEventArgs e)
         {
             Properties.Settings.Default.JAcfg = JAcfg.IsChecked;
-            if (JAcfg.IsChecked)
+            if (Properties.Settings.Default.JAcfg)
             {
                 CombatantView.Columns.Remove(JAColumn);
                 JAHC.Width = new GridLength(0);
-
             }
             else
             {
@@ -322,8 +327,8 @@ namespace OverParse
                 CombatantView.Columns.Add(JAColumn);
                 if (!Properties.Settings.Default.Criticalcfg) { CombatantView.Columns.Add(CriColumn); }
                 CombatantView.Columns.Add(HColumn);
-                CombatantView.Columns.Add(MaxHitColumn);
-                JAHC.Width = new GridLength(39);
+                if (!Properties.Settings.Default.CompactMode) { CombatantView.Columns.Add(MaxHitColumn); }
+                if (Properties.Settings.Default.Variable) { JAHC.Width = new GridLength(0.4, GridUnitType.Star); } else { JAHC.Width = new GridLength(39); }
             }
             UpdateForm(null, null);
         }
@@ -335,7 +340,6 @@ namespace OverParse
             {
                 CombatantView.Columns.Remove(CriColumn);
                 CriHC.Width = new GridLength(0);
-
             }
             else
             {
@@ -344,37 +348,52 @@ namespace OverParse
                 CombatantView.Columns.Remove(MaxHitColumn);
                 CombatantView.Columns.Add(CriColumn);
                 CombatantView.Columns.Add(HColumn);
-                CombatantView.Columns.Add(MaxHitColumn);
-                CriHC.Width = new GridLength(39);
+                if (!Properties.Settings.Default.CompactMode) { CombatantView.Columns.Add(MaxHitColumn); }
+                if (Properties.Settings.Default.Variable) { CriHC.Width = new GridLength(0.4, GridUnitType.Star); } else { CriHC.Width = new GridLength(39); }
             }
             UpdateForm(null, null);
         }
-
 
         private void CompactMode_Click(object sender, RoutedEventArgs e)
         {
             Properties.Settings.Default.CompactMode = CompactMode.IsChecked;
             if (CompactMode.IsChecked)
             {
-                AtkHC.Width = new GridLength(0, GridUnitType.Star);
+                CombatantView.Columns.Remove(MaxHitColumn);
+                AtkHC.Width = new GridLength(0);
             }
             else
             {
+                CombatantView.Columns.Remove(MaxHitColumn);
+                CombatantView.Columns.Add(MaxHitColumn);
                 AtkHC.Width = new GridLength(1.7, GridUnitType.Star);
             }
             UpdateForm(null, null);
         }
 
-        /*private void VariableColumn_Click(object sender, RoutedEventArgs e)
+        private void VariableColumn_Click(object sender, RoutedEventArgs e)
         {
-            PercentHC.Width = new GridLength(0.4, GridUnitType.Star);
-            DmgHC.Width = new GridLength(0.8, GridUnitType.Star);
-            DmgDHC.Width = new GridLength(0.6, GridUnitType.Star);
-            DPSHC.Width = new GridLength(0.6, GridUnitType.Star);
-            JAHC.Width = new GridLength(0.4, GridUnitType.Star);
-            CriHC.Width = new GridLength(0.4, GridUnitType.Star);
-            MdmgHC.Width = new GridLength(0.6, GridUnitType.Star);
-        }*/
+            Properties.Settings.Default.Variable = Variable.IsChecked;
+            if (Variable.IsChecked)
+            {
+                PercentHC.Width = new GridLength(0.4, GridUnitType.Star);
+                DmgHC.Width = new GridLength(0.8, GridUnitType.Star);
+                DmgDHC.Width = new GridLength(0.6, GridUnitType.Star);
+                DPSHC.Width = new GridLength(0.6, GridUnitType.Star);
+                if (Properties.Settings.Default.JAcfg) { JAHC.Width = new GridLength(0); } else { JAHC.Width = new GridLength(0.4, GridUnitType.Star); }
+                if (Properties.Settings.Default.Criticalcfg) { CriHC.Width = new GridLength(0); } else { CriHC.Width = new GridLength(0.4, GridUnitType.Star); }
+                MdmgHC.Width = new GridLength(0.6, GridUnitType.Star);
+            } else
+            {
+                PercentHC.Width = new GridLength(39);
+                DmgHC.Width = new GridLength(78);
+                DmgDHC.Width = new GridLength(56);
+                DPSHC.Width = new GridLength(56);
+                if (Properties.Settings.Default.JAcfg) { JAHC.Width = new GridLength(0); } else { JAHC.Width = new GridLength(39); }
+                if (Properties.Settings.Default.Criticalcfg) { CriHC.Width = new GridLength(0); } else { CriHC.Width = new GridLength(39); }
+                MdmgHC.Width = new GridLength(62);
+            }
+        }
 
         private void ShowDamageGraph_Click(object sender, RoutedEventArgs e)
         {

@@ -117,242 +117,252 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AlwaysOnTop" xml:space="preserve">
-    <value>Always on top</value>
-    <comment>33</comment>
-  </data>
   <data name="AutoEnd" xml:space="preserve">
-    <value>Auto-End Encounters</value>
+    <value>自動エンカウント終了</value>
     <comment>03</comment>
   </data>
-  <data name="AutoHide" xml:space="preserve">
-    <value>Auto-hide window</value>
-    <comment>34</comment>
-  </data>
-  <data name="BackOp" xml:space="preserve">
-    <value>List Opacity</value>
-    <comment>32</comment>
-  </data>
-  <data name="BanWarning" xml:space="preserve">
-    <value>OverParse is a 3rd-party tool that breaks PSO2's Terms and Conditions.
-SEGA has confirmed in an official announcement that accounts found using parsing tools may be banned.
-If account safety is your first priority, do NOT use OverParse. You use this tool entirely at your own risk.
-Would you like to continue with setup?</value>
-    <comment>L01</comment>
-  </data>
-  <data name="Cantclip" xml:space="preserve">
-    <value>Could not save data to clipboard.</value>
-    <comment>L11</comment>
-  </data>
-  <data name="ChangeFont" xml:space="preserve">
-    <value>Change Font</value>
-    <comment>36</comment>
-  </data>
   <data name="Changeinv" xml:space="preserve">
-    <value>Change .csv update interval</value>
+    <value>.csv更新間隔を変更</value>
     <comment>29</comment>
   </data>
-  <data name="CPUDraw" xml:space="preserve">
-    <value>Disable GPU Rendering</value>
-    <comment>44</comment>
-  </data>
   <data name="DiscardEncounter" xml:space="preserve">
-    <value>Discard Encounter (No Log)</value>
+    <value>戦闘データ破棄</value>
     <comment>02</comment>
   </data>
-  <data name="Donedll" xml:space="preserve">
-    <value>Setup is complete. Please restart PSO2 if it is already running.</value>
-    <comment>L09</comment>
-  </data>
   <data name="DPSFormat" xml:space="preserve">
-    <value>Change DPS Display Format</value>
+    <value>DPS表示形式を変更</value>
     <comment>27</comment>
   </data>
   <data name="EndEncounter" xml:space="preserve">
-    <value>End Encounter</value>
+    <value>エンカウント終了</value>
     <comment>01</comment>
   </data>
-  <data name="Errordll" xml:space="preserve">
-    <value>An error has occured during setup. Please check that PSO2 is not running and that OverParse has read/write permissions.</value>
-    <comment>L10</comment>
-  </data>
   <data name="HideAIS" xml:space="preserve">
-    <value>Hide A.I.S.</value>
+    <value>A.I.S.を隠す</value>
     <comment>20</comment>
   </data>
-  <data name="HideAtk" xml:space="preserve">
-    <value>Hide Attack Name</value>
-    <comment>40</comment>
-  </data>
-  <data name="HideCri" xml:space="preserve">
-    <value>Hide Critical</value>
-    <comment>39</comment>
-  </data>
   <data name="HideDB" xml:space="preserve">
-    <value>Hide Dark Blast</value>
+    <value>DarkBlastを隠す</value>
     <comment>21</comment>
   </data>
-  <data name="HideJA" xml:space="preserve">
-    <value>Hide JA</value>
-    <comment>38</comment>
-  </data>
   <data name="HideLsw" xml:space="preserve">
-    <value>Hide Laconium Sword</value>
+    <value>ラコニウムソードを隠す</value>
     <comment>23</comment>
   </data>
   <data name="HideName" xml:space="preserve">
-    <value>Anonymize Names</value>
+    <value>他人の匿名化</value>
     <comment>25</comment>
   </data>
   <data name="HideNPC" xml:space="preserve">
-    <value>Hide Enemy/NPCs</value>
+    <value>エネミー/NPCを隠す</value>
     <comment>09</comment>
   </data>
   <data name="HidePlayer" xml:space="preserve">
-    <value>Hide Players</value>
+    <value>プレイヤーを隠す</value>
     <comment>19</comment>
   </data>
   <data name="HidePwp" xml:space="preserve">
-    <value>Hide Photon Weapons</value>
+    <value>Photon weaponを隠す</value>
     <comment>24</comment>
   </data>
   <data name="HideRide" xml:space="preserve">
-    <value>Hide Rideroid</value>
+    <value>Ridroidを隠す</value>
     <comment>22</comment>
   </data>
-  <data name="Highlight" xml:space="preserve">
-    <value>Higlight Self</value>
-    <comment>42</comment>
-  </data>
-  <data name="Installdll" xml:space="preserve">
-    <value>dll plugin install now?</value>
-    <comment>L07</comment>
-  </data>
-  <data name="LowResources" xml:space="preserve">
-    <value>Low Priority Mode</value>
-    <comment>43</comment>
-  </data>
-  <data name="Needdll" xml:space="preserve">
-    <value>OverParse requires PSO2DamageDump.dll in order to recieve damage logs.</value>
-    <comment>L08</comment>
-  </data>
-  <data name="Newdll" xml:space="preserve">
-    <value>This release of OverParse includes a new version of the parsing plugin. Would you like to update now?</value>
-    <comment>L06</comment>
-  </data>
-  <data name="Noexe" xml:space="preserve">
-    <value>That doesn't appear to be a valid pso2_bin directory.
-If you installed the game using default settings, it will probably be in C:\\PHANTASYSTARONLINE2\pso2_bin\.
-Otherwise, find the location you installed to.</value>
-    <comment>L02</comment>
-  </data>
-  <data name="Noinstall" xml:space="preserve">
-    <value>OverParse needs a valid PSO2 installation to function.
-The application will now close.</value>
-    <comment>L05</comment>
-  </data>
   <data name="NoLogs" xml:space="preserve">
-    <value>No logs recorded in this session.</value>
+    <value>まだ記録されていません</value>
     <comment>08</comment>
   </data>
   <data name="OpenLog" xml:space="preserve">
-    <value>Open Logs Folder</value>
+    <value>ログフォルダーを開く</value>
     <comment>06</comment>
   </data>
-  <data name="ResizeWindow" xml:space="preserve">
-    <value>Reset Window Size</value>
-    <comment>30</comment>
-  </data>
   <data name="RoundJA" xml:space="preserve">
-    <value>Round JA/Crit Percents</value>
+    <value>JA / Criticalの小数点以下を削除</value>
     <comment>28</comment>
   </data>
-  <data name="Selectbin" xml:space="preserve">
-    <value>Please select your pso2_bin directory. OverParse uses this to read your damage logs.</value>
-    <comment>L03</comment>
-  </data>
-  <data name="Selectbox" xml:space="preserve">
-    <value>Please select your pso2_bin directory. OverParse uses this to read your damage logs.</value>
-    <comment>L04</comment>
-  </data>
   <data name="Separate" xml:space="preserve">
-    <value>Damage Separation</value>
+    <value>分割オプション</value>
     <comment>10</comment>
   </data>
   <data name="SeparateAIS" xml:space="preserve">
-    <value>Separate A.I.S.</value>
+    <value>A.I.S.のダメージを分けて表示</value>
     <comment>14</comment>
   </data>
   <data name="SeparateDB" xml:space="preserve">
-    <value>Separate Dark Blast</value>
+    <value>DarkBlastのダメージを分けて表示</value>
     <comment>15</comment>
   </data>
   <data name="SeparateHTF" xml:space="preserve">
-    <value>Separate HTF</value>
+    <value>HTFを分けて表示</value>
     <comment>12</comment>
   </data>
   <data name="SeparateLsw" xml:space="preserve">
-    <value>Separate Laconium Sword</value>
+    <value>ラコニウムソードのダメージを分けて表示</value>
     <comment>18</comment>
   </data>
   <data name="SeparatePwp" xml:space="preserve">
-    <value>Separate Photon Weapons</value>
+    <value>Photon Weaponのダメージを分けて表示</value>
     <comment>17</comment>
   </data>
   <data name="SeparateRide" xml:space="preserve">
-    <value>Separate Rideroid</value>
+    <value>Ridroidのダメージを分けて表示</value>
     <comment>16</comment>
   </data>
   <data name="SeparateZanverse" xml:space="preserve">
-    <value>Separate Zanverse</value>
+    <value>ザンバースを分けて表示</value>
     <comment>11</comment>
   </data>
   <data name="SessionLog" xml:space="preserve">
-    <value>Session Logs</value>
+    <value>セッションログ</value>
     <comment>07</comment>
   </data>
-  <data name="ShowGraph" xml:space="preserve">
-    <value>Show Damage Graph</value>
-    <comment>41</comment>
-  </data>
-  <data name="Skipdll" xml:space="preserve">
-    <value>Skip DLL Update</value>
-    <comment>46</comment>
-  </data>
-  <data name="ThroughClick" xml:space="preserve">
-    <value>Clickthrough Toggle</value>
-    <comment>35</comment>
-  </data>
   <data name="ThroughOther" xml:space="preserve">
-    <value>Hide All Other Players</value>
+    <value>自分以外全て無視</value>
     <comment>26</comment>
   </data>
   <data name="TimeOut" xml:space="preserve">
-    <value>Set Encounter Timeout</value>
+    <value>タイムアウト時間の設定</value>
     <comment>04</comment>
   </data>
   <data name="ToClip" xml:space="preserve">
-    <value>Copy Log to Clipboard</value>
+    <value>クリップボードへ自動コピー</value>
     <comment>05</comment>
   </data>
+  <data name="VSeparate" xml:space="preserve">
+    <value>個人別分割オプション</value>
+    <comment>13</comment>
+  </data>
+  <data name="AlwaysOnTop" xml:space="preserve">
+    <value>常に前面に表示</value>
+    <comment>33</comment>
+  </data>
+  <data name="AutoHide" xml:space="preserve">
+    <value>自動でウィンドゥを隠す</value>
+    <comment>34</comment>
+  </data>
+  <data name="BackOp" xml:space="preserve">
+    <value>背景透過度</value>
+    <comment>32</comment>
+  </data>
+  <data name="BanWarning" xml:space="preserve">
+    <value>OverParseは、PSO2の規約を破る外部ツールです。
+SEGAは公式に解析ツールを使用した事が確認されたアカウントを停止する可能性があると発表しました。
+アカウントの安全性を保つ場合にはOverParseを使用しないで下さい。
+このツールの使用は自己責任です。
+
+セットアップを続けますか？</value>
+    <comment>L1</comment>
+  </data>
+  <data name="ChangeFont" xml:space="preserve">
+    <value>フォントを変更(試験中)</value>
+    <comment>36</comment>
+  </data>
+  <data name="HideAtk" xml:space="preserve">
+    <value>Attack Nameを隠す</value>
+    <comment>40</comment>
+  </data>
+  <data name="HideCri" xml:space="preserve">
+    <value>Criticalを隠す</value>
+    <comment>39</comment>
+  </data>
+  <data name="HideJA" xml:space="preserve">
+    <value>JAを隠す</value>
+    <comment>38</comment>
+  </data>
+  <data name="Highlight" xml:space="preserve">
+    <value>自分をハイライト</value>
+    <comment>42</comment>
+  </data>
+  <data name="ResizeWindow" xml:space="preserve">
+    <value>デフォルトサイズに戻す</value>
+    <comment>30</comment>
+  </data>
+  <data name="ShowGraph" xml:space="preserve">
+    <value>ダメージグラフを表示</value>
+    <comment>41</comment>
+  </data>
+  <data name="ThroughClick" xml:space="preserve">
+    <value>クリックを無効化</value>
+    <comment>35</comment>
+  </data>
+  <data name="WinOp" xml:space="preserve">
+    <value>ウィンドゥ透過度</value>
+    <comment>31</comment>
+  </data>
+  <data name="CPUDraw" xml:space="preserve">
+    <value>GPU描画を無効にする</value>
+    <comment>44</comment>
+  </data>
+  <data name="LowResources" xml:space="preserve">
+    <value>プロセス優先度を低にする</value>
+    <comment>43</comment>
+  </data>
+  <data name="Skipdll" xml:space="preserve">
+    <value>dllの更新をスキップ</value>
+    <comment>46</comment>
+  </data>
   <data name="Updatecsv" xml:space="preserve">
-    <value>Update skills.csv</value>
+    <value>skills.csvを更新</value>
     <comment>47</comment>
   </data>
   <data name="UpdateTime" xml:space="preserve">
-    <value>Show UI Updated Time(Debug)</value>
+    <value>画面更新時のPC時刻を表示</value>
     <comment>45</comment>
   </data>
+  <data name="Cantclip" xml:space="preserve">
+    <value>クリップボードにデータを保存できませんでした。</value>
+    <comment>L11</comment>
+  </data>
+  <data name="Donedll" xml:space="preserve">
+    <value>セットアップ完了！
+dllプラグインがpso2_binフォルダにコピーされています。
+PSO2が既に実行されている場合は再起動する必要があります。</value>
+    <comment>L9</comment>
+  </data>
+  <data name="Errordll" xml:space="preserve">
+    <value>インストールで何か問題が発生しました。
+これは通常、ファイルが既に使用中である事を意味します。
+PSO2を閉じた状態でもう一度やり直してみて下さい。
+もしくは、管理者としてOverParseを実行する必要があります。</value>
+    <comment>L10</comment>
+  </data>
+  <data name="Installdll" xml:space="preserve">
+    <value>dllプラグインをインストールしますか？</value>
+    <comment>L7</comment>
+  </data>
+  <data name="Needdll" xml:space="preserve">
+    <value>OverParseにはdllプラグインが必要です。
+アプリケーションを終了します。</value>
+    <comment>L8</comment>
+  </data>
+  <data name="Newdll" xml:space="preserve">
+    <value>このOverParseのバージョンには、dllプラグインの新しいバージョンが含まれています。
+今すぐ更新しますか？</value>
+    <comment>L6</comment>
+  </data>
+  <data name="Noexe" xml:space="preserve">
+    <value>これは有効なpso2_binディレクトリではありません。
+pso2.exeが見つかりません。</value>
+    <comment>L2</comment>
+  </data>
+  <data name="Noinstall" xml:space="preserve">
+    <value>必要なインストールが設定されませんでした。
+アプリケーションを終了します。</value>
+    <comment>L5</comment>
+  </data>
+  <data name="Selectbin" xml:space="preserve">
+    <value>pso2_binディレクトリを選択して下さい。
+OverParseはダメージログを読み込みます。</value>
+    <comment>L3</comment>
+  </data>
+  <data name="Selectbox" xml:space="preserve">
+    <value>pso2_binフォルダを選択して下さい。
+大抵の場合はPSO2をインストールしたフォルダにあります。</value>
+    <comment>L4</comment>
+  </data>
   <data name="Variable" xml:space="preserve">
-    <value>Variable Column</value>
+    <value>リストの幅を可変にする</value>
     <comment>37</comment>
-  </data>
-  <data name="VSeparate" xml:space="preserve">
-    <value>Attack Mode Separation</value>
-    <comment>13</comment>
-  </data>
-  <data name="WinOp" xml:space="preserve">
-    <value>Window Opacity</value>
-    <comment>31</comment>
   </data>
 </root>

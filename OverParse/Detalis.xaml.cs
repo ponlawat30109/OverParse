@@ -7,11 +7,14 @@ namespace OverParse
     /// </summary>
     public partial class Detalis : Window
     {
-        public Detalis(string data1,string data2)
+        public Detalis(Combatant data)
         {
             InitializeComponent();
-            Data1.Content = data1;
-            Data2.Content = data2;
+            //Testing...
+            Data1.Content = data.ID;
+            Data2.Content = data.Name;
+            Data3.Content = data.Damage;
+            Data4.Content = data.MaxHit;
         }
     }
 }

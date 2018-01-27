@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using HotKeyFrame;
 using System.Net;
+using System.Text;
+using System.Globalization;  //ummm....
 
 namespace OverParse
 {
@@ -32,7 +34,6 @@ namespace OverParse
         private string updatemsg = " - Update check Error.";
         List<Combatant> workingList = new List<Combatant>();
         Process thisProcess = Process.GetCurrentProcess();
-        
 
         protected override void OnSourceInitialized(EventArgs e)
         {
@@ -43,10 +44,10 @@ namespace OverParse
 
         public MainWindow()
         {
+            Properties.Resources.Culture = CultureInfo.GetCultureInfo(Properties.Settings.Default.Language);
             InitializeComponent();
-
             Dispatcher.UnhandledException += Panic;
-            Abouttext.Text = "OverParse v3.0.3";
+            Abouttext.Text = "OverParse v3.0.4";
             LowResources.IsChecked = Properties.Settings.Default.LowResources;
             CPUdraw.IsChecked = Properties.Settings.Default.CPUdraw;
             if (Properties.Settings.Default.LowResources) { thisProcess.PriorityClass = ProcessPriorityClass.Idle; }
@@ -72,12 +73,6 @@ namespace OverParse
             Left = Properties.Settings.Default.Left;
             Height = Properties.Settings.Default.Height;
             Width = Properties.Settings.Default.Width;
-
-            //Console.WriteLine("Applying UI settings");
-            //Console.WriteLine(this.Top = Properties.Settings.Default.Top);
-            //Console.WriteLine(this.Left = Properties.Settings.Default.Left);
-            //Console.WriteLine(this.Height = Properties.Settings.Default.Height);
-            //Console.WriteLine(this.Width = Properties.Settings.Default.Width);
 
             bool outOfBounds = (Left <= SystemParameters.VirtualScreenLeft - Width) ||
                 (Top <= SystemParameters.VirtualScreenTop - Height) ||
@@ -124,10 +119,7 @@ namespace OverParse
 
             //Console.WriteLine($"Launch method: {Properties.Settings.Default.LaunchMethod}");
 
-            if (Properties.Settings.Default.Maximized)
-            {
-                WindowState = WindowState.Maximized;
-            }
+            if (Properties.Settings.Default.Maximized) { WindowState = WindowState.Maximized; }
 
             try
             {
@@ -223,8 +215,7 @@ namespace OverParse
 
         private void HideIfInactive(object sender, EventArgs e)
         {
-            if (!Properties.Settings.Default.AutoHideWindow)
-                return;
+            if (!Properties.Settings.Default.AutoHideWindow) { return; }
 
             string title = WindowsServices.GetActiveWindowTitle();
             string[] relevant = { "OverParse", "OverParse Setup", "OverParse Error", "Encounter Timeout", "Phantasy Star Online 2" };
@@ -244,15 +235,10 @@ namespace OverParse
             if (directory.GetFiles().Count() == 0) { return; }
 
             FileInfo log = directory.GetFiles().Where(f => Regex.IsMatch(f.Name, @"\d+\.csv")).OrderByDescending(f => f.Name).First();
-
-            if (log.Name != encounterlog.filename)
-            {
-                //Console.WriteLine($"Found a new log file ({log.Name}), switching...");
-                encounterlog = new Log(Properties.Settings.Default.Path);
-            }
+            if (log.Name != encounterlog.filename) { encounterlog = new Log(Properties.Settings.Default.Path); }
         }
 
-        private void Panic(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        private void Panic(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             try { Directory.CreateDirectory("ErrorLogs"); }
             catch { MessageBox.Show("OverParseはDirectory<ErrorLogs>の作成に失敗しました。"); }
@@ -335,6 +321,7 @@ namespace OverParse
             if (Properties.Settings.Default.Clock) { Datetime.Content = DateTime.Now.ToString("HH:mm:ss.ff"); }
             if (encounterlog == null) { return; }
 
+
             encounterlog.UpdateLog(this, null);
             EncounterStatus.Content = encounterlog.LogStatus();
 
@@ -347,9 +334,19 @@ namespace OverParse
             foreach (Combatant c in targetList)
             {
                 Combatant temp = new Combatant(c.ID, c.Name, c.isTemporary);
-                foreach (Attack a in c.Attacks)
-                    temp.Attacks.Add(new Attack(a.ID, a.Damage, a.Timestamp,a.JA,a.Cri,a.Dmgd));
+                foreach (Attack a in c.Attacks) { temp.Attacks.Add(new Attack(a.ID, a.Damage, a.Timestamp,a.JA,a.Cri,a.Dmgd,a.TargetID)); }
+                foreach (Attack a in c.DBAttacks) { temp.DBAttacks.Add(new Attack(a.ID, a.Damage, a.Timestamp, a.JA, a.Cri, a.Dmgd, a.TargetID)); }
+                foreach (Attack a in c.LswAttacks) { temp.LswAttacks.Add(new Attack(a.ID, a.Damage, a.Timestamp, a.JA, a.Cri, a.Dmgd, a.TargetID)); }
+                foreach (Attack a in c.PwpAttacks) { temp.PwpAttacks.Add(new Attack(a.ID, a.Damage, a.Timestamp, a.JA, a.Cri, a.Dmgd, a.TargetID)); }
+                foreach (Attack a in c.AisAttacks) { temp.AisAttacks.Add(new Attack(a.ID, a.Damage, a.Timestamp, a.JA, a.Cri, a.Dmgd, a.TargetID)); }
+                foreach (Attack a in c.RideAttacks) { temp.RideAttacks.Add(new Attack(a.ID, a.Damage, a.Timestamp, a.JA, a.Cri, a.Dmgd, a.TargetID)); }
+                foreach (Attack a in c.DAttacks) { temp.DAttacks.Add(new Attack(a.ID, a.Damage, a.Timestamp, a.JA, a.Cri, a.Dmgd, a.TargetID)); }
                 temp.ActiveTime = c.ActiveTime;
+                temp.DBDamage = c.DBDamage;
+                temp.LswDamage = c.LswDamage;
+                temp.PwpDamage = c.PwpDamage;
+                temp.AisDamage = c.AisDamage;
+                temp.RideDamage = c.RideDamage;
                 workingList.Add(temp);
             }
 
@@ -361,6 +358,7 @@ namespace OverParse
             PwpData.Items.Clear();
             AisData.Items.Clear();
             RideData.Items.Clear();
+            RDData.Items.Clear();
             //workingList.RemoveAll(c => c.isTemporary != "no");
 
             // for zanverse dummy and status bar because WHAT IS GOOD STRUCTURE
@@ -375,8 +373,7 @@ namespace OverParse
 
                 foreach (Combatant c in workingList)
                 {
-                    if (!c.IsAlly)
-                        continue;
+                    if (!c.IsAlly) { continue; }
                     if (c.AisDamage > 0)
                     {
                         Combatant AISHolder = new Combatant(c.ID, "AIS|" + c.Name, "AIS");
@@ -515,6 +512,7 @@ namespace OverParse
             Int64 totalPwpDamage = workingList.Sum(x => x.PwpDamage);
             Int64 totalAisDamage = workingList.Sum(x => x.AisDamage);
             Int64 totalRideDamage = workingList.Sum(x => x.RideDamage);
+            Int64 totalRDDamage = workingList.Sum(x => x.RDDamage);
 
             // dps calcs!
             foreach (Combatant c in workingList)
@@ -522,10 +520,11 @@ namespace OverParse
                 c.PercentReadDPS = c.ReadDamage / (float)totalReadDamage * 100;
                 c.AllyPct = c.AllyDamage / (float)totalAllyDamage * 100;
                 c.DBPct = c.DBDamage / (float)totalDBDamage * 100;
-                c.LswPct = c.LswDamage / (float)totalReadDamage * 100;
+                c.LswPct = c.LswDamage / (float)totalLswDamage * 100;
                 c.PwpPct = c.PwpDamage / (float)totalPwpDamage * 100;
-                c.AisPct = c.AisDamage / (float)totalReadDamage * 100;
-                c.RidePct = c.RideDamage / (float)totalReadDamage * 100;
+                c.AisPct = c.AisDamage / (float)totalAisDamage * 100;
+                c.RidePct = c.RideDamage / (float)totalRideDamage * 100;
+                c.RDPct = c.RDDamage / (float)totalRDDamage * 100;
             }
 
             // damage graph stuff
@@ -533,8 +532,7 @@ namespace OverParse
 
             foreach (Combatant c in workingList)
             {
-                if ((c.IsAlly) && c.ReadDamage > Combatant.maxShare)
-                    Combatant.maxShare = c.ReadDamage;
+                if ((c.IsAlly) && c.ReadDamage > Combatant.maxShare) { Combatant.maxShare = c.ReadDamage; }
 
                 bool filtered = true;
                 if (Properties.Settings.Default.SeparateAIS || Properties.Settings.Default.SeparateDB || Properties.Settings.Default.SeparateRide || Properties.Settings.Default.SeparatePwp || Properties.Settings.Default.SeparateLsw)
@@ -569,8 +567,8 @@ namespace OverParse
                 if ((c.PwpDamage > 0) && (SeparateTab.SelectedIndex == 4)) { workingList.Sort((x, y) => y.PwpDamage.CompareTo(x.PwpDamage)); PwpData.Items.Add(c); }
                 if ((c.AisDamage > 0) && (SeparateTab.SelectedIndex == 5)) { workingList.Sort((x, y) => y.AisDamage.CompareTo(x.AisDamage)); AisData.Items.Add(c); }
                 if ((c.RideDamage > 0) && (SeparateTab.SelectedIndex == 6)) { workingList.Sort((x, y) => y.RideDamage.CompareTo(x.RideDamage)); RideData.Items.Add(c); }
+                if ((c.RDDamage > 0) && (SeparateTab.SelectedIndex == 7)) { workingList.Sort((x, y) => y.RDDamage.CompareTo(x.RDDamage)); RDData.Items.Add(c); }
             }
-
 
             // status pane updates
             EncounterIndicator.Fill = new SolidColorBrush(Color.FromArgb(192, 255, 128, 128));
@@ -590,12 +588,12 @@ namespace OverParse
                 PwpData.Items.Refresh();
                 AisData.Items.Refresh();
                 RideData.Items.Refresh();
+                RDData.Items.Refresh();
             }
 
             if (encounterlog.running)
             {
                 EncounterIndicator.Fill = new SolidColorBrush(Color.FromArgb(192, 0, 192, 255));
-
                 TimeSpan timespan = TimeSpan.FromSeconds(elapsed);
                 string timer = timespan.ToString(@"h\:mm\:ss");
                 EncounterStatus.Content = $"{timer}";
@@ -664,20 +662,6 @@ namespace OverParse
             Application.Current.Shutdown();
         }
 
-        /*private void WindowStats_Click(object sender, RoutedEventArgs e)
-        {
-            AisData.Items.Add(workingList);
-            string result = "";
-            result += $"Name: {AisNameColumn.Width.ToString()}  Percent: {AisPercentColumn.Width.ToString()}";
-            result += $"Name: {DmgHC.ActualWidth.ToString()}  Percent: {DPSHC.ActualWidth.ToString()}";
-            result += $"Name: {JAHC.ActualWidth.ToString()}  Percent: {CriHC.ActualWidth.ToString()}";
-            result += $"maxdmg: {MdmgHC.ActualWidth.ToString()}  Atk: {AtkHC.ActualWidth.ToString()}";
-            result += $"Tab: {TabHC.ActualWidth.ToString()}  Percent: {PercentHC.ActualWidth.ToString()}";
-            result += $"menu bar: {MenuBar.Width.ToString()} width {MenuBar.Height.ToString()} height\n";
-            result += $"menu bar: {MenuBar.Padding} padding {MenuBar.Margin} margin\n";
-            result += $"menu item: {AutoEndEncounters.Foreground} fg {AutoEndEncounters.Background} bg\n";
-            MessageBox.Show(result);
-        }*/
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -686,9 +670,9 @@ namespace OverParse
 
         private void ListViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var data = (ListViewItem)sender;
-            var item = CombatantData.ContainerFromElement((DependencyObject)e.OriginalSource) as ListViewItem;
-            Detalis f = new Detalis(data.ToString(), "value") { Owner = this };
+            ListViewItem data = sender as ListViewItem;
+            Combatant data2 = (Combatant)data.DataContext;
+            Detalis f = new Detalis(data2) { Owner = this };
             f.Show();
         }
     }

@@ -12,6 +12,8 @@ namespace OverParse
     {
         private int startTimestamp = 0;
         public int newTimestamp = 0;
+        public int nowTimestamp = 0;
+        public int diffTime = 0;
         private string encounterData;
         private List<int> instances = new List<int>();
         public List<Combatant> combatants = new List<Combatant>();
@@ -34,7 +36,7 @@ namespace OverParse
 
             if (Properties.Settings.Default.BanWarning)
             {
-                MessageBoxResult panicResult = MessageBox.Show("OverParseは、PSO2の規約を破る外部ツールです。\nSEGAは公式に解析ツールを使用した事が確認されたアカウントを停止する可能性があると発表しました。\n\nアカウントの安全性を保つ場合にはOverParseを使用しないで下さい。\nこのツールの使用は自己責任です。\n\nセットアップを続けますか？", "OverParse Setup", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                MessageBoxResult panicResult = MessageBox.Show(Properties.Resources.BanWarning, "OverParse Setup", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (panicResult == MessageBoxResult.No) { Environment.Exit(-1); }
                 Properties.Settings.Default.BanWarning = false;
             }
@@ -43,9 +45,9 @@ namespace OverParse
             {
                 if (nagMe)
                 {
-                    MessageBox.Show("これは有効なpso2_binディレクトリではありません。\npso2.exeが見つかりません。", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show(Properties.Resources.Noexe, "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Warning);
                 } else {
-                    MessageBox.Show("pso2_binディレクトリを選択して下さい。\nOverParseはダメージログを読み込みます。\n\nTweakerを設定しているときにフォルダを選択した場合は、そのフォルダを選択します。\nその他の場合にはPSO2のインストールフォルダを選択します。", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show(Properties.Resources.Selectbin, "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
                     nagMe = true;
                 }
 
@@ -54,14 +56,14 @@ namespace OverParse
                 //oDialog.Description = "Select your pso2_bin folder...";
                 //oDialog.UseDescriptionForTitle = true;
 
-                System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog { Description = "pso2_binフォルダを選択して下さい。\n大抵の場合はPSO2をインストールしたフォルダにあります。" };
+                System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog { Description = Properties.Resources.Selectbox };
                 System.Windows.Forms.DialogResult picked = dialog.ShowDialog();
                 if (picked == System.Windows.Forms.DialogResult.OK)
                 {
                     attemptDirectory = dialog.SelectedPath;
                     Properties.Settings.Default.Path = attemptDirectory;
                 } else {
-                    MessageBox.Show("必要なインストールが設定されませんでした。\nアプリケーションを終了します。", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show(Properties.Resources.Noinstall, "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
                     Environment.Exit(-1);
                     break;
                 }
@@ -82,14 +84,14 @@ namespace OverParse
 
                 if (pluginsExist)
                 {
-                    selfdestructResult = MessageBox.Show("このOverParseのバージョンには、dllプラグインの新しいバージョンが含まれています。\n今すぐ更新しますか？", "OverParse Setup", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    selfdestructResult = MessageBox.Show(Properties.Resources.Newdll, "OverParse Setup", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 } else {
-                    selfdestructResult = MessageBox.Show("dllプラグインをインストールしますか？", "OverParse Setup", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    selfdestructResult = MessageBox.Show(Properties.Resources.Installdll, "OverParse Setup", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 }
 
                 if (selfdestructResult == MessageBoxResult.No && !pluginsExist)
                 {
-                    MessageBox.Show("OverParseにはdllプラグインが必要です。\nアプリケーションを終了します。", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show(Properties.Resources.Needdll, "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
                     Environment.Exit(-1);
                     return;
                 } else if (selfdestructResult == MessageBoxResult.Yes) {
@@ -136,10 +138,10 @@ namespace OverParse
                 File.Copy(Directory.GetCurrentDirectory() + "\\resources\\PSO2DamageDump.dll", attemptDirectory + "\\plugins" + "\\PSO2DamageDump.dll", true);
                 File.Copy(Directory.GetCurrentDirectory() + "\\resources\\PSO2DamageDump.cfg", attemptDirectory + "\\plugins" + "\\PSO2DamageDump.cfg", true);
                 Properties.Settings.Default.InstalledPluginVersion = pluginVersion;
-                MessageBox.Show("セットアップ完了！\ndllプラグインがpso2_binフォルダにコピーされています。\nPSO2が既に実行されている場合は再起動する必要があります。", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(Properties.Resources.Donedll, "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
                 return true;
             } catch {
-                MessageBox.Show("インストールで何か問題が発生しました。\nこれは通常、ファイルが既に使用中である事を意味します。\nPSO2を閉じた状態でもう一度やり直してみて下さい。\nもしくは、管理者としてOverParseを実行する必要があります。", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Properties.Resources.Errordll, "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
         }
@@ -165,7 +167,7 @@ namespace OverParse
             {
                 Clipboard.SetText(log);
             } catch {
-                MessageBox.Show("クリップボードにデータを保存できませんでした。");
+                MessageBox.Show(Properties.Resources.Cantclip);
             }
 
         }
@@ -191,7 +193,7 @@ namespace OverParse
 
             if (combatants.Count != 0)
             {
-                int elapsed = newTimestamp - startTimestamp;
+                int elapsed = diffTime;
                 TimeSpan timespan = TimeSpan.FromSeconds(elapsed);
                 string timer = timespan.ToString(@"mm\:ss");
                 string log = DateTime.Now.ToString("F") + " | " + timer + " | "  + Environment.NewLine + Environment.NewLine;
@@ -349,6 +351,7 @@ namespace OverParse
                             continue;
                         }
 
+
                         if (sourceID != Hacks.currentPlayerID && Properties.Settings.Default.Onlyme) { continue; }
                         if (!instances.Contains(instanceID)) { instances.Add(instanceID); }
                         if (hitDamage < 1) { continue; }
@@ -358,8 +361,15 @@ namespace OverParse
                         newTimestamp = lineTimestamp;
                         if (startTimestamp == 0)
                         {
-                            //Console.WriteLine($"FIRST ATTACK RECORDED: {hitDamage} dmg from {sourceID} ({sourceName}) with {attackID}, to {targetID} ({targetName})");
                             startTimestamp = newTimestamp;
+                            nowTimestamp = newTimestamp;
+                        }
+
+                        
+                        if (newTimestamp - nowTimestamp >= 1)
+                        {
+                            diffTime = diffTime + 1;
+                            nowTimestamp = newTimestamp;
                         }
 
 
@@ -377,24 +387,24 @@ namespace OverParse
                             }
 
                             Combatant source = combatants[index];
-
-                            source.Attacks.Add(new Attack(attackID, hitDamage, newTimestamp - startTimestamp, justAttack, critical, 0));
+                            if (Combatant.DBAttackIDs.Contains(attackID)) { source.DBDamage += hitDamage; source.DBAttacks.Add(new Attack(attackID, hitDamage, diffTime, justAttack, critical, 0, targetID)); }
+                            if (Combatant.LaconiumAttackIDs.Contains(attackID)) { source.LswDamage += hitDamage; source.LswAttacks.Add(new Attack(attackID, hitDamage, diffTime, justAttack, critical, 0, targetID)); }
+                            if (Combatant.PhotonAttackIDs.Contains(attackID)) { source.PwpDamage += hitDamage; source.PwpAttacks.Add(new Attack(attackID, hitDamage, diffTime, justAttack, critical, 0, targetID)); }
+                            if (Combatant.AISAttackIDs.Contains(attackID)) { source.AisDamage += hitDamage; source.AisAttacks.Add(new Attack(attackID, hitDamage, diffTime, justAttack, critical, 0, targetID)); }
+                            if (Combatant.RideAttackIDs.Contains(attackID)) { source.RideDamage += hitDamage; source.RideAttacks.Add(new Attack(attackID, hitDamage, diffTime, justAttack, critical, 0, targetID)); }
+                            if (Combatant.RDIDs.Contains(targetID)) { source.DDamage += hitDamage; source.DAttacks.Add(new Attack(attackID, hitDamage, diffTime, justAttack, critical, 0, targetID)); }
+                            source.Attacks.Add(new Attack(attackID, hitDamage, diffTime, justAttack, critical, 0, targetID));
                             running = true;
                         } else {
-                            foreach (Combatant x in combatants)
-                            {
-                                if (x.ID == targetID && x.isTemporary == "no") { index = combatants.IndexOf(x); }
-                            }
-
+                            foreach (Combatant x in combatants) { if (x.ID == targetID && x.isTemporary == "no") { index = combatants.IndexOf(x); } }
                             if (index == -1)
                             {
                                 combatants.Add(new Combatant(targetID, targetName));
                                 index = combatants.Count - 1;
                             }
-
                             Combatant source = combatants[index];
-
-                            source.Attacks.Add(new Attack("0", 0, newTimestamp - startTimestamp, 0, 0, hitDamage));
+                            if (Combatant.RDIDs.Contains(sourceID)) { source.DAttacks.Add(new Attack("0", 0, diffTime, 0, 0, hitDamage, "0")); }
+                            source.Attacks.Add(new Attack("0", 0, diffTime, 0, 0, hitDamage,"0"));
                             running = true;
                         }
                     }
@@ -406,10 +416,7 @@ namespace OverParse
 
                 if (startTimestamp != 0 && newTimestamp != startTimestamp)
                 {
-                    foreach (Combatant x in combatants)
-                    {
-                        if (x.IsAlly || x.IsZanverse) { x.ActiveTime = (newTimestamp - startTimestamp); }
-                    }
+                    foreach (Combatant x in combatants) {  if (x.IsAlly || x.IsZanverse) { x.ActiveTime = (diffTime); }  }
                 }
             }
         }

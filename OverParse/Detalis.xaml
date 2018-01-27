@@ -8,8 +8,9 @@
         WindowStartupLocation="CenterOwner"
         Title="Detalis" Height="300" Width="300">
     <Grid>
-        <Label Content="testing..." Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Top" />
-        <Label Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Top" x:Name="Data1" Margin="0,35,0,0" />
-        <Label x:Name="Data2" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,70,0,0" />
+        <Label Content="ID" x:Name="Data1" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0"/>
+        <Label Content="Name" x:Name="Data2" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" Margin="0,21,0,0"/>
+        <Label Content="Damage" x:Name="Data3" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" Margin="0,42,0,0"/>
+        <Label Content="MaxHit" x:Name="Data4" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" Margin="0,63,0,0" />
     </Grid>
 </Window>
