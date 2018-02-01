@@ -145,6 +145,15 @@ namespace OverParse.Properties {
         }
         
         /// <summary>
+        ///   Taken に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string Damaged {
+            get {
+                return ResourceManager.GetString("Damaged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Discard Encounter (No Log) に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string DiscardEncounter {
@@ -199,38 +208,11 @@ namespace OverParse.Properties {
         }
         
         /// <summary>
-        ///   Hide Attack Name に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string HideAtk {
-            get {
-                return ResourceManager.GetString("HideAtk", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Hide Critical に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string HideCri {
-            get {
-                return ResourceManager.GetString("HideCri", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Hide Dark Blast に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string HideDB {
             get {
                 return ResourceManager.GetString("HideDB", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Hide JA に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        public static string HideJA {
-            get {
-                return ResourceManager.GetString("HideJA", resourceCulture);
             }
         }
         
@@ -409,6 +391,15 @@ namespace OverParse.Properties {
         }
         
         /// <summary>
+        ///   Select Column に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string SelectColumn {
+            get {
+                return ResourceManager.GetString("SelectColumn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Damage Separation に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Separate {
@@ -567,6 +558,15 @@ namespace OverParse.Properties {
         public static string Variable {
             get {
                 return ResourceManager.GetString("Variable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Remove non-combat time に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string VideoTime {
+            get {
+                return ResourceManager.GetString("VideoTime", resourceCulture);
             }
         }
         

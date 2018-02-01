@@ -17,20 +17,16 @@
 
     <Window.Resources>
 
-        <ContextMenu x:Key="Tabmenu">
-            <MenuItem Header="Lap1を有効化?(未実装)" IsCheckable="True" />
-        </ContextMenu>
-
         <Style TargetType="ListViewItem">
             <Setter Property="Height" Value="Auto"/>
             <Setter Property="FontSize" Value="12"/>
-            <Setter Property="MinHeight" Value="18" />
+            <Setter Property="MinHeight" Value="10" />
             <Setter Property="Padding" Value="0,0,0,0"/>
             <Setter Property="Margin" Value="0,0,0,0"/>
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
             <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderThickness" Value="0,0,0,0" />
-            <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick" />
+            <Setter Property="BorderThickness" Value="0" />
+            <EventSetter Event="MouseRightButtonUp" Handler="ListViewItem_MouseRightClick" />
             <Style.Triggers>
                 <Trigger Property="ItemsControl.AlternationIndex" Value="0">
                     <Setter Property="Background" Value="{Binding Brush}"/>
@@ -40,7 +36,6 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-
 
         <Style TargetType="ListView">
             <Setter Property="Background" Value="#FF0A0A0A"/>
@@ -66,8 +61,6 @@
 
         <Style x:Key="submenu" TargetType="MenuItem">
             <Setter Property="Foreground" Value="Black"/>
-            <!--<Setter Property="BorderThickness" Value="0"/>-->
-            <!--<Setter Property="Padding" Value="0,0,0,0"/>-->
         </Style>
 
         <Style TargetType="{x:Type TabItem}">
@@ -92,7 +85,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
+
     </Window.Resources>
 
     <Border BorderBrush="#FF888888" BorderThickness="1">
@@ -106,7 +99,6 @@
                 <MenuItem Style="{StaticResource topmenu}" Header="Logging">
                     <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=EndEncounter}"  x:Name="EndEncounter" InputGestureText="Ctrl+Shift+E" Click="EndEncounter_Click"/>
                     <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=DiscardEncounter}" x:Name="EndEncounterNoLog" InputGestureText="Ctrl+Shift+R" Click="EndEncounterNoLog_Click"/>
-                    <!--<MenuItem Style="{StaticResource submenu}" Header="クエスト選択" Click="Questcheck_Click" />-->
                     <Separator />
                     <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=AutoEnd}" x:Name="AutoEndEncounters" IsCheckable="True" IsChecked="False" Click="AutoEndEncounters_Click"/>
                     <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=TimeOut}" x:Name="SetEncounterTimeout" Click="SetEncounterTimeout_Click"/>
@@ -118,7 +110,6 @@
                     </MenuItem>
                 </MenuItem>
                 <MenuItem Style="{StaticResource topmenu}" Header="Parsing">
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=HideNPC}" IsCheckable="True" IsChecked="True" x:Name="FilterPlayers" Click="FilterPlayers_Click"/>
                     <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=Separate}">
                         <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=SeparateZanverse}" x:Name="SeparateZanverse" IsCheckable="True" IsChecked="False" Click="SeparateZanverse_Click"/>
                         <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=SeparateHTF}" x:Name="SeparateFinish" IsCheckable="True" IsChecked="False" Click="SeparateFinish_Click"/>
@@ -138,11 +129,11 @@
                         <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=HideLsw}" x:Name="HideLsw" IsCheckable="True" IsChecked="False" Click="HideLsw_Click" />
                     </MenuItem>
                     <Separator />
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=HideName}" IsCheckable="True" IsChecked="False" x:Name="AnonymizeNames" Click="AnonymizeNames_Click"/>
                     <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=ThroughOther}" IsCheckable="True" IsChecked="False" x:Name="Onlyme" Click="Onlyme_Click" />
                     <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=DPSFormat}" IsCheckable="True" IsChecked="False" x:Name="DPSFormat" Click="DPSFormat_Click" />
                     <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=RoundJA}" IsCheckable="True" IsChecked="False" x:Name="Nodecimal" Click="Nodecimal_Click" />
                     <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=Changeinv}" Click="ChangeInterval_Click" />
+                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=VideoTime}" IsCheckable="True" IsChecked="False" x:Name="QuestTime" Click="QuestTime_Click"/>
                 </MenuItem>
                 <MenuItem Style="{StaticResource topmenu}" Header="Window">
                     <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=ResizeWindow}" InputGestureText="Ctrl+Shift+D" Click="DefaultWindowSize_Click"/>
@@ -165,16 +156,12 @@
                         <MenuItem Style="{StaticResource submenu}" x:Name="ListOpacity_100" IsCheckable="True" IsChecked="False" Header="100%" Click="ListOpacity_100_Click" />
                     </MenuItem>
                     <Separator />
-                    <MenuItem Style="{StaticResource submenu}" IsCheckable="True" IsChecked="True" Header="{Binding Source={StaticResource resources}, Path=AlwaysOnTop}" x:Name="AlwaysOnTop" Click="AlwaysOnTop_Click"/>
+                    <MenuItem Style="{StaticResource submenu}" IsCheckable="True" IsChecked="True" Header="{Binding Source={StaticResource resources}, Path=AlwaysOnTop}" x:Name="AlwaysOnTop" Click="AlwaysOnTop_Click" InputGestureText="Ctrl+Shift+A"/>
                     <MenuItem Style="{StaticResource submenu}" IsCheckable="True" IsChecked="False" Header="{Binding Source={StaticResource resources}, Path=AutoHide}" x:Name="AutoHideWindow" Click="AutoHideWindow_Click"/>
                     <MenuItem Style="{StaticResource submenu}" IsCheckable="True" IsChecked="False" Header="{Binding Source={StaticResource resources}, Path=ThroughClick}" x:Name="ClickthroughMode" Click="ClickthroughToggle"/>
                 </MenuItem>
                 <MenuItem Style="{StaticResource topmenu}" Header="List">
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=ChangeFont}" Click="ChangeFont_Click" Visibility="Collapsed" />
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=Variable}" Click="VariableColumn_Click" x:Name="Variable" IsCheckable="True" IsChecked="False" />
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=HideJA}" Click="JA_Click" x:Name="JAcfg" IsCheckable="True" IsChecked="False"/>
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=HideCri}" Click="Critical_Click" x:Name="Cricfg" IsCheckable="True" IsChecked="False"/>
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=HideAtk}" IsCheckable="True" IsChecked="False" x:Name="CompactMode" Click="CompactMode_Click"/>
+                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources},Path=SelectColumn}" Click="SelectColumn_Click" />
                     <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=ShowGraph}" IsCheckable="True" IsChecked="False" x:Name="ShowDamageGraph" Click="ShowDamageGraph_Click"/>
                     <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=Highlight}" IsCheckable="True" IsChecked="True" x:Name="HighlightYourDamage" Click="HighlightYourDamage_Click"/>
                 </MenuItem>
@@ -194,15 +181,15 @@
                     <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=Updatecsv}" Click="Updateskills_Click" />
                     <MenuItem Style="{StaticResource submenu}" Header="Reset OverParse..." x:Name="Reset" Click="ResetOverParse"/>
                 </MenuItem>
-                <Label x:Name="Datetime" Foreground="#FFFFFFFF" Padding="0" Margin="-4" />
             </Menu>
+            <Label x:Name="Datetime" Foreground="#FFFFFFFF" Padding="0" Margin="230,0,0,0" FontSize="12" VerticalAlignment="Top" HorizontalAlignment="Left"/>
             <Menu HorizontalAlignment="Right" VerticalAlignment="Stretch" FontSize="12">
                 <MenuItem Header="____" Click="Minimize_Click" Style="{StaticResource topmenu}" />
                 <MenuItem Style="{StaticResource topmenu}" Header="Exit" Click="Exit_Click"/>
             </Menu>
-            <TabControl x:Name="SeparateTab" TabStripPlacement="Right" Grid.Row="1" BorderThickness="0" Padding="0" Margin="0" Background="Transparent" ContextMenu="{DynamicResource Tabmenu}">
+            <TabControl x:Name="SeparateTab" TabStripPlacement="Right" Grid.Row="1" BorderThickness="0" Padding="0" Margin="0" Background="Transparent">
                 <TabItem Header="All" Width="{Binding ElementName=TabH, Path=ActualWidth}"  Padding="0" Margin="0">
-                    <ListView x:Name="CombatantData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True">
+                    <ListView x:Name="CombatantData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True" Margin="-2,0,0,0">
                         <ListView.Background>
                             <SolidColorBrush Opacity="0"/>
                         </ListView.Background>
@@ -211,17 +198,8 @@
                             <GridView x:Name="CombatantView">
                                 <GridView.ColumnHeaderContainerStyle>
                                     <Style TargetType="{x:Type GridViewColumnHeader}">
-                                        <Setter Property="Background">
-                                            <Setter.Value>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                                    <GradientStop Offset="0.0" Color="#000A0A0A" />
-                                                    <GradientStop Offset="1.0" Color="#0000FFFF" />
-                                                </LinearGradientBrush>
-                                            </Setter.Value>
-                                        </Setter>
+                                        <Setter Property="Background" Value="Transparent" />
                                         <Setter Property="Foreground" Value="#FFFFFFFF" />
-                                        <Setter Property="Padding" Value="0,0,0,0"/>
-                                        <Setter Property="MinHeight" Value="17"/>
                                         <Setter Property="IsHitTestVisible" Value="False" />
                                     </Style>
                                 </GridView.ColumnHeaderContainerStyle>
@@ -229,7 +207,7 @@
                                 <GridViewColumn Header="Name" x:Name="NameColumn" Width="{Binding ElementName=NameH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-3,-1,-5,-1" Padding="0" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -250,10 +228,10 @@
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
 
-                                <GridViewColumn Header="Damaged" x:Name="DamagedColumn" Width="{Binding ElementName=DmgdH, Path=ActualWidth}">
+                                <GridViewColumn Header="{Binding Source={StaticResource resources}, Path=Damaged}" x:Name="DamagedColumn" Width="{Binding ElementName=DmgdH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding Damaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding ReadDamaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -297,13 +275,12 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-
                             </GridView>
                         </ListView.View>
                     </ListView>
                 </TabItem>
                 <TabItem Header="Ally" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
-                    <ListView x:Name="AllyData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True">
+                    <ListView x:Name="AllyData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True" Margin="-2,0,0,0">
                         <ListView.Background>
                             <SolidColorBrush Opacity="0"/>
                         </ListView.Background>
@@ -312,17 +289,8 @@
                             <GridView x:Name="AllyView">
                                 <GridView.ColumnHeaderContainerStyle>
                                     <Style TargetType="{x:Type GridViewColumnHeader}">
-                                        <Setter Property="Background">
-                                            <Setter.Value>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                                    <GradientStop Offset="0.0" Color="#000A0A0A" />
-                                                    <GradientStop Offset="1.0" Color="#0000FFFF" />
-                                                </LinearGradientBrush>
-                                            </Setter.Value>
-                                        </Setter>
+                                        <Setter Property="Background" Value="Transparent" />
                                         <Setter Property="Foreground" Value="#FFFFFFFF" />
-                                        <Setter Property="Padding" Value="0,0,0,0"/>
-                                        <Setter Property="MinHeight" Value="17"/>
                                         <Setter Property="IsHitTestVisible" Value="False" />
                                     </Style>
                                 </GridView.ColumnHeaderContainerStyle>
@@ -330,7 +298,7 @@
                                 <GridViewColumn Header="Name" x:Name="AllyNameColumn" Width="{Binding ElementName=NameH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-3,-1,-5,-1" Padding="0" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -354,7 +322,7 @@
                                 <GridViewColumn Header="Damaged" x:Name="AllyDamagedColumn" Width="{Binding ElementName=DmgdH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding Damaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding ReadDamaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -404,7 +372,7 @@
                     </ListView>
                 </TabItem>
                 <TabItem Header="DB" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
-                    <ListView x:Name="DBData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True">
+                    <ListView x:Name="DBData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True" Margin="-2,0,0,0">
                         <ListView.Background>
                             <SolidColorBrush Opacity="0"/>
                         </ListView.Background>
@@ -412,17 +380,8 @@
                             <GridView x:Name="DBView">
                                 <GridView.ColumnHeaderContainerStyle>
                                     <Style TargetType="{x:Type GridViewColumnHeader}">
-                                        <Setter Property="Background">
-                                            <Setter.Value>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                                    <GradientStop Offset="0.0" Color="#000A0A0A" />
-                                                    <GradientStop Offset="1.0" Color="#0000FFFF" />
-                                                </LinearGradientBrush>
-                                            </Setter.Value>
-                                        </Setter>
+                                        <Setter Property="Background" Value="Transparent" />
                                         <Setter Property="Foreground" Value="#FFFFFFFF" />
-                                        <Setter Property="Padding" Value="0,0,0,0"/>
-                                        <Setter Property="MinHeight" Value="17"/>
                                         <Setter Property="IsHitTestVisible" Value="False" />
                                     </Style>
                                 </GridView.ColumnHeaderContainerStyle>
@@ -430,7 +389,7 @@
                                 <GridViewColumn Header="Name" x:Name="DBNameColumn" Width="{Binding ElementName=NameH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-3,-1,-5,-1" Padding="0" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -454,7 +413,7 @@
                                 <GridViewColumn Header="Damaged" x:Name="DBDamagedColumn" Width="{Binding ElementName=DmgdH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding Damaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding ReadDamaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -503,7 +462,7 @@
                     </ListView>
                 </TabItem>
                 <TabItem Header="Lsw" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
-                    <ListView x:Name="LswData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True">
+                    <ListView x:Name="LswData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True" Margin="-2,0,0,0">
                         <ListView.Background>
                             <SolidColorBrush Opacity="0"/>
                         </ListView.Background>
@@ -511,17 +470,8 @@
                             <GridView x:Name="LswView">
                                 <GridView.ColumnHeaderContainerStyle>
                                     <Style TargetType="{x:Type GridViewColumnHeader}">
-                                        <Setter Property="Background">
-                                            <Setter.Value>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                                    <GradientStop Offset="0.0" Color="#000A0A0A" />
-                                                    <GradientStop Offset="1.0" Color="#0000FFFF" />
-                                                </LinearGradientBrush>
-                                            </Setter.Value>
-                                        </Setter>
+                                        <Setter Property="Background" Value="Transparent" />
                                         <Setter Property="Foreground" Value="#FFFFFFFF" />
-                                        <Setter Property="Padding" Value="0,0,0,0"/>
-                                        <Setter Property="MinHeight" Value="17"/>
                                         <Setter Property="IsHitTestVisible" Value="False" />
                                     </Style>
                                 </GridView.ColumnHeaderContainerStyle>
@@ -529,7 +479,7 @@
                                 <GridViewColumn Header="Name" x:Name="LswNameColumn" Width="{Binding ElementName=NameH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-3,-1,-5,-1" Padding="0" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -553,7 +503,7 @@
                                 <GridViewColumn Header="Damaged" x:Name="LswDamagedColumn" Width="{Binding ElementName=DmgdH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding Damaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding ReadDamaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -602,7 +552,7 @@
                     </ListView>
                 </TabItem>
                 <TabItem Header="Pwp" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
-                    <ListView x:Name="PwpData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True">
+                    <ListView x:Name="PwpData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True" Margin="-2,0,0,0">
                         <ListView.Background>
                             <SolidColorBrush Opacity="0"/>
                         </ListView.Background>
@@ -610,17 +560,8 @@
                             <GridView x:Name="PwpView">
                                 <GridView.ColumnHeaderContainerStyle>
                                     <Style TargetType="{x:Type GridViewColumnHeader}">
-                                        <Setter Property="Background">
-                                            <Setter.Value>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                                    <GradientStop Offset="0.0" Color="#000A0A0A" />
-                                                    <GradientStop Offset="1.0" Color="#0000FFFF" />
-                                                </LinearGradientBrush>
-                                            </Setter.Value>
-                                        </Setter>
+                                        <Setter Property="Background" Value="Transparent" />
                                         <Setter Property="Foreground" Value="#FFFFFFFF" />
-                                        <Setter Property="Padding" Value="0,0,0,0"/>
-                                        <Setter Property="MinHeight" Value="17"/>
                                         <Setter Property="IsHitTestVisible" Value="False" />
                                     </Style>
                                 </GridView.ColumnHeaderContainerStyle>
@@ -628,7 +569,7 @@
                                 <GridViewColumn Header="Name" x:Name="PwpNameColumn" Width="{Binding ElementName=NameH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-3,-1,-5,-1" Padding="0" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -652,7 +593,7 @@
                                 <GridViewColumn Header="Damaged" x:Name="PwpDamagedColumn" Width="{Binding ElementName=DmgdH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding Damaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding ReadDamaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -701,7 +642,7 @@
                     </ListView>
                 </TabItem>
                 <TabItem Header="A.I.S." Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
-                    <ListView x:Name="AisData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True">
+                    <ListView x:Name="AisData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True" Margin="-2,0,0,0">
                         <ListView.Background>
                             <SolidColorBrush Opacity="0"/>
                         </ListView.Background>
@@ -709,17 +650,8 @@
                             <GridView x:Name="AisView">
                                 <GridView.ColumnHeaderContainerStyle>
                                     <Style TargetType="{x:Type GridViewColumnHeader}">
-                                        <Setter Property="Background">
-                                            <Setter.Value>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                                    <GradientStop Offset="0.0" Color="#000A0A0A" />
-                                                    <GradientStop Offset="1.0" Color="#0000FFFF" />
-                                                </LinearGradientBrush>
-                                            </Setter.Value>
-                                        </Setter>
+                                        <Setter Property="Background" Value="Transparent" />
                                         <Setter Property="Foreground" Value="#FFFFFFFF" />
-                                        <Setter Property="Padding" Value="0,0,0,0"/>
-                                        <Setter Property="MinHeight" Value="17"/>
                                         <Setter Property="IsHitTestVisible" Value="False" />
                                     </Style>
                                 </GridView.ColumnHeaderContainerStyle>
@@ -727,7 +659,7 @@
                                 <GridViewColumn Header="Name" x:Name="AisNameColumn" Width="{Binding ElementName=NameH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-3,-1,-5,-1" Padding="0" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -751,7 +683,7 @@
                                 <GridViewColumn Header="Damaged" x:Name="AisDamagedColumn" Width="{Binding ElementName=DmgdH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding Damaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding ReadDamaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -800,7 +732,7 @@
                     </ListView>
                 </TabItem>
                 <TabItem Header="Ride" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
-                    <ListView x:Name="RideData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True">
+                    <ListView x:Name="RideData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True" Margin="-2,0,0,0">
                         <ListView.Background>
                             <SolidColorBrush Opacity="0"/>
                         </ListView.Background>
@@ -809,17 +741,8 @@
                             <GridView x:Name="RideView">
                                 <GridView.ColumnHeaderContainerStyle>
                                     <Style TargetType="{x:Type GridViewColumnHeader}">
-                                        <Setter Property="Background">
-                                            <Setter.Value>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                                    <GradientStop Offset="0.0" Color="#000A0A0A" />
-                                                    <GradientStop Offset="1.0" Color="#0000FFFF" />
-                                                </LinearGradientBrush>
-                                            </Setter.Value>
-                                        </Setter>
+                                        <Setter Property="Background" Value="Transparent" />
                                         <Setter Property="Foreground" Value="#FFFFFFFF" />
-                                        <Setter Property="Padding" Value="0,0,0,0"/>
-                                        <Setter Property="MinHeight" Value="17"/>
                                         <Setter Property="IsHitTestVisible" Value="False" />
                                     </Style>
                                 </GridView.ColumnHeaderContainerStyle>
@@ -827,7 +750,7 @@
                                 <GridViewColumn Header="Name" x:Name="RideNameColumn" Width="{Binding ElementName=NameH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-3,-1,-5,-1" Padding="0" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -851,7 +774,7 @@
                                 <GridViewColumn Header="Damaged" x:Name="RideDamagedColumn" Width="{Binding ElementName=DmgdH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding Damaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding ReadDamaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -899,120 +822,11 @@
                         </ListView.View>
                     </ListView>
                 </TabItem>
-                <TabItem Header="RD" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
-                    <ListView x:Name="RDData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True">
-                        <ListView.Background>
-                            <SolidColorBrush Opacity="0"/>
-                        </ListView.Background>
-
-                        <ListView.View>
-                            <GridView x:Name="RDView">
-                                <GridView.ColumnHeaderContainerStyle>
-                                    <Style TargetType="{x:Type GridViewColumnHeader}">
-                                        <Setter Property="Background">
-                                            <Setter.Value>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                                    <GradientStop Offset="0.0" Color="#000A0A0A" />
-                                                    <GradientStop Offset="1.0" Color="#0000FFFF" />
-                                                </LinearGradientBrush>
-                                            </Setter.Value>
-                                        </Setter>
-                                        <Setter Property="Foreground" Value="#FFFFFFFF" />
-                                        <Setter Property="Padding" Value="0,0,0,0"/>
-                                        <Setter Property="MinHeight" Value="17"/>
-                                        <Setter Property="IsHitTestVisible" Value="False" />
-                                    </Style>
-                                </GridView.ColumnHeaderContainerStyle>
-
-                                <GridViewColumn Header="Name" x:Name="RDNameColumn" Width="{Binding ElementName=NameH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-5,-1,-5,-1" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="%" x:Name="RDPercentColumn" Width="{Binding ElementName=PercentH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding RDReadPct}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Damage" x:Name="RDDamageColumn" Width="{Binding ElementName=DmgH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding RDReadDamage}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Damaged" x:Name="RDDamagedColumn" Width="{Binding ElementName=DmgdH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding RDDamaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="DPS" x:Name="RDDPSColumn" Width="{Binding ElementName=DPSH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding RDDPS}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="JA" x:Name="RDJAColumn" Width="{Binding ElementName=JAH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding RDJAPct}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Critical" x:Name="RDCriColumn" Width="{Binding ElementName=CriH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding RDCriPct}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Max Hit" x:Name="RDHColumn" Width="{Binding ElementName=MdmgH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding RDMaxHitdmg}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Attack Name" x:Name="RDMaxHitColumn" Width="{Binding ElementName=AtkH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding RDAtkName}" TextAlignment="Center" Margin="-5,-1,-5,-1" Padding="0" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </TabItem>
-                <TabItem Header="Lap1" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0" Visibility="Collapsed">
-
-                </TabItem>
-                <TabItem Header="Lap2" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0" Visibility="Collapsed">
-
-                </TabItem>
-                <TabItem Header="Lap3" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0" Visibility="Collapsed">
-
-                </TabItem>
                 <TabItem Header="Info" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
-                    <TextBox x:Name="Abouttext" Background="Transparent" Foreground="White" FontSize="16" FontFamily="Noto Sans CJK JP DemiLight" IsHitTestVisible="False" BorderThickness="0" />
+                    <TextBox Text="OverParse v3.1.0&#xa;" Background="Transparent" Foreground="White" FontSize="16" FontFamily="Noto Sans CJK JP DemiLight" IsHitTestVisible="False" BorderThickness="0" />
                 </TabItem>
             </TabControl>
-
+            
             <Grid Visibility="Hidden" Grid.Row="1" Margin="0" Grid.RowSpan="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition x:Name="NameHC" Width="1*"/>

@@ -258,17 +258,9 @@ SEGAは公式に解析ツールを使用した事が確認されたアカウン�
     <value>フォントを変更(試験中)</value>
     <comment>36</comment>
   </data>
-  <data name="HideAtk" xml:space="preserve">
-    <value>Attack Nameを隠す</value>
+  <data name="SelectColumn" xml:space="preserve">
+    <value>列を選択...</value>
     <comment>40</comment>
-  </data>
-  <data name="HideCri" xml:space="preserve">
-    <value>Criticalを隠す</value>
-    <comment>39</comment>
-  </data>
-  <data name="HideJA" xml:space="preserve">
-    <value>JAを隠す</value>
-    <comment>38</comment>
   </data>
   <data name="Highlight" xml:space="preserve">
     <value>自分をハイライト</value>
@@ -364,5 +356,12 @@ OverParseはダメージログを読み込みます。</value>
   <data name="Variable" xml:space="preserve">
     <value>リストの幅を可変にする</value>
     <comment>37</comment>
+  </data>
+  <data name="Damaged" xml:space="preserve">
+    <value>Damaged</value>
+    <comment>UI01</comment>
+  </data>
+  <data name="VideoTime" xml:space="preserve">
+    <value>非戦闘時間をDPSの計算から除外</value>
   </data>
 </root>

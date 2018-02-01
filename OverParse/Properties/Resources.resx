@@ -180,21 +180,13 @@ Would you like to continue with setup?</value>
     <value>Hide A.I.S.</value>
     <comment>20</comment>
   </data>
-  <data name="HideAtk" xml:space="preserve">
-    <value>Hide Attack Name</value>
+  <data name="SelectColumn" xml:space="preserve">
+    <value>Select Column</value>
     <comment>40</comment>
-  </data>
-  <data name="HideCri" xml:space="preserve">
-    <value>Hide Critical</value>
-    <comment>39</comment>
   </data>
   <data name="HideDB" xml:space="preserve">
     <value>Hide Dark Blast</value>
     <comment>21</comment>
-  </data>
-  <data name="HideJA" xml:space="preserve">
-    <value>Hide JA</value>
-    <comment>38</comment>
   </data>
   <data name="HideLsw" xml:space="preserve">
     <value>Hide Laconium Sword</value>
@@ -354,5 +346,12 @@ The application will now close.</value>
   <data name="WinOp" xml:space="preserve">
     <value>Window Opacity</value>
     <comment>31</comment>
+  </data>
+  <data name="Damaged" xml:space="preserve">
+    <value>Taken</value>
+    <comment>UI01</comment>
+  </data>
+  <data name="VideoTime" xml:space="preserve">
+    <value>Remove non-combat time</value>
   </data>
 </root>

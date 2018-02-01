@@ -11,10 +11,16 @@ namespace OverParse
         {
             InitializeComponent();
             //Testing...
-            Data1.Content = data.ID;
-            Data2.Content = data.Name;
-            Data3.Content = data.Damage;
-            Data4.Content = data.MaxHit;
+            ID.Content = data.ID;
+            PlayerName.Content = data.Name;
+            Percent.Content = data.RatioPercent;
+            Damage.Content = data.ReadDamage;
+            Damaged.Content = data.ReadDamaged;
+            DPS.Content = data.ReadDPS;
+            JA.Content = data.WJAPercent;
+            Critical.Content = data.WCRIPercent;
+            Max.Content = data.MaxHitdmg;
+            Atk.Content = data.MaxHit;
         }
     }
 }

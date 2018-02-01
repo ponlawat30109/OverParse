@@ -4,29 +4,28 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
+using Ookii.Dialogs.Wpf;
 
 
 namespace OverParse
 {
     public class Log
     {
-        private int startTimestamp = 0;
-        public int newTimestamp = 0;
-        public int nowTimestamp = 0;
-        public int diffTime = 0;
+        public static int startTimestamp = 0;
+        public static int newTimestamp = 0;
+        public static int nowTimestamp = 0;
+        public static int diffTime = 0;
+        public static int ActiveTime = 0;
+        public static int backupTime = 0;
         private string encounterData;
+        public string filename;
         private List<int> instances = new List<int>();
         public List<Combatant> combatants = new List<Combatant>();
         public List<Combatant> backupCombatants = new List<Combatant>();
         private const int pluginVersion = 5;
-        public bool valid;
-        public bool notEmpty;
-        public bool running;
+        public bool valid, notEmpty, running;
         public DirectoryInfo logDirectory;
-        public string filename;
         private StreamReader logReader;
-
-
         public Log(string attemptDirectory)
         {
             bool nagMe = false;
@@ -51,14 +50,8 @@ namespace OverParse
                     nagMe = true;
                 }
 
-                //WINAPI FILE DIALOGS DON'T SHOW UP FOR PEOPLE SOMETIMES AND I HAVE NO IDEA WHY, *** S I C K  M E M E ***
-                //VistaFolderBrowserDialog oDialog = new VistaFolderBrowserDialog();
-                //oDialog.Description = "Select your pso2_bin folder...";
-                //oDialog.UseDescriptionForTitle = true;
-
-                System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog { Description = Properties.Resources.Selectbox };
-                System.Windows.Forms.DialogResult picked = dialog.ShowDialog();
-                if (picked == System.Windows.Forms.DialogResult.OK)
+                VistaFolderBrowserDialog dialog = new VistaFolderBrowserDialog();
+                if ((bool)dialog.ShowDialog())
                 {
                     attemptDirectory = dialog.SelectedPath;
                     Properties.Settings.Default.Path = attemptDirectory;
@@ -111,7 +104,6 @@ namespace OverParse
             notEmpty = true;
 
             FileInfo log = logDirectory.GetFiles().Where(f => Regex.IsMatch(f.Name, @"\d+\.")).OrderByDescending(f => f.Name).First();
-            //Console.WriteLine($"Reading from {log.DirectoryName}\\{log.Name}");
             filename = log.Name;
             FileStream fileStream = File.Open(log.DirectoryName + "\\" + log.Name, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             fileStream.Seek(0, SeekOrigin.Begin);
@@ -124,7 +116,7 @@ namespace OverParse
                 if (s == "")
                     continue;
                 string[] parts = s.Split(',');
-                if (parts[0] == "0" && parts[3] == "YOU") { Hacks.currentPlayerID = parts[2]; }
+                if (parts[0] == "0" && parts[3] == "YOU") { Combatant.currentPlayerID = parts[2]; }
             }
         }
 
@@ -174,26 +166,10 @@ namespace OverParse
 
         public string WriteLog()
         {
-
-            /*
-            foreach (Combatant c in combatants) // Debug for ID mapping
-            {
-                if (c.IsAlly)
-                {
-                    foreach (Attack a in c.Attacks)
-                    {
-                        if (!MainWindow.skillDict.ContainsKey(a.ID))
-                        {
-                            TimeSpan t = TimeSpan.FromSeconds(a.Timestamp);
-                            //Console.WriteLine($"{t.ToString(@"dd\.hh\:mm\:ss")} unmapped: {a.ID} ({a.Damage} dmg from {c.Name})");
-                        }
-                    }
-                }
-            } */
-
             if (combatants.Count != 0)
             {
-                int elapsed = diffTime;
+                int elapsed = ActiveTime;
+                if (ActiveTime == 0) { ActiveTime = 1; }
                 TimeSpan timespan = TimeSpan.FromSeconds(elapsed);
                 string timer = timespan.ToString(@"mm\:ss");
                 string log = DateTime.Now.ToString("F") + " | " + timer + " | "  + Environment.NewLine + Environment.NewLine;
@@ -203,7 +179,7 @@ namespace OverParse
                     try
                     {
                         if (c.IsAlly || c.IsZanverse || c.IsFinish)
-                            log += $"{c.Name} | {c.RatioPercent}% | {c.ReadDamage.ToString("N0")} dmg | {c.Damaged} dmgd | {c.DPS} DPS | JA : {c.WJAPercent}% | Critical : {c.WCRIPercent}% | Max:{c.MaxHitdmg} ({c.MaxHit})" + Environment.NewLine;
+                            log += $"{c.Name} | {c.RatioPercent}% | {c.Damage.ToString("N0")} dmg | {c.ReadDamaged} dmgd | {c.DPS} DPS | JA : {c.WJAPercent}% | Critical : {c.WCRIPercent}% | Max:{c.MaxHitdmg} ({c.MaxHit})" + Environment.NewLine;
                     }
                     catch{/* 今の所何もしないっぽい */}
                 }
@@ -214,27 +190,27 @@ namespace OverParse
                 {
                     if (c.IsAlly || c.IsZanverse || c.IsFinish)
                     {
-                        string header = $"[ {c.Name} - {c.RatioPercent}% - {c.ReadDamage.ToString("N0")} dmg ]";
+                        string header = $"[ {c.Name} - {c.RatioPercent}% - {c.Damage.ToString("N0")} dmg ]";
                         log += header + Environment.NewLine + Environment.NewLine;
 
                         List<string> attackNames = new List<string>();
                         List<string> finishNames = new List<string>();
-                        List<Tuple<string, List<Int64>>> attackData = new List<Tuple<string, List<Int64>>>();
+                        List <Tuple<string, List<Int64>, List<int>, List<int>>> attackData = new List<Tuple<string, List<Int64>,List<int>,List<int>>>();
 
                         if (c.IsZanverse && Properties.Settings.Default.SeparateZanverse)
                         {
                             foreach (Combatant c2 in backupCombatants)
                             {
-                                if (c2.GetZanverseDamage > 0) { attackNames.Add(c2.ID); }
+                                if (c2.ZvsDamage > 0) { attackNames.Add(c2.ID); }
                             }
 
                             foreach (string s in attackNames)
                             {
                                 Combatant targetCombatant = backupCombatants.First(x => x.ID == s);
                                 List<Int64> matchingAttacks = targetCombatant.Attacks.Where(a => a.ID == "2106601422").Select(a => a.Damage).ToList();
-                                //List<int> jaPercents = c.Attacks.Where(a => a.ID == s).Select(a => a.JA).ToList();
-                                //List<int> criPercents = c.Attacks.Where(a => a.ID == s).Select(a => a.Cri).ToList();
-                                attackData.Add(new Tuple<string, List<Int64>>(targetCombatant.Name, matchingAttacks));
+                                List<int> jaPercents = c.Attacks.Where(a => a.ID == s).Select(a => a.JA).ToList();
+                                List<int> criPercents = c.Attacks.Where(a => a.ID == s).Select(a => a.Cri).ToList();
+                                attackData.Add(new Tuple<string, List<Int64>,List<int>,List<int>>(targetCombatant.Name, matchingAttacks, jaPercents,criPercents));
                             }
                         }
 
@@ -242,14 +218,16 @@ namespace OverParse
                         {
                             foreach (Combatant c3 in backupCombatants)
                             {
-                                if (c3.GetFinishDamage > 0) { finishNames.Add(c3.ID); }
+                                if (c3.HTFDamage > 0) { finishNames.Add(c3.ID); }
                             }
 
                             foreach (string htf in finishNames)
                             {
                                 Combatant tCombatant = backupCombatants.First(x => x.ID == htf);
                                 List<Int64> fmatchingAttacks = tCombatant.Attacks.Where(a => Combatant.FinishAttackIDs.Contains(a.ID)).Select(a => a.Damage).ToList();
-                                attackData.Add(new Tuple<string, List<Int64>>(tCombatant.Name, fmatchingAttacks));
+                                List<int> jaPercents = c.Attacks.Where(a => a.ID == htf).Select(a => a.JA).ToList();
+                                List<int> criPercents = c.Attacks.Where(a => a.ID == htf).Select(a => a.Cri).ToList();
+                                attackData.Add(new Tuple<string, List<Int64>,List<int>,List<int>>(tCombatant.Name, fmatchingAttacks,jaPercents,criPercents));
                             }
                         } else {
                             foreach (Attack a in c.Attacks)
@@ -263,9 +241,9 @@ namespace OverParse
                             {
                                 //マッチングアタックからダメージを選択するだけ
                                 List<Int64> matchingAttacks = c.Attacks.Where(a => a.ID == s).Select(a => a.Damage).ToList();
-                                //List<int> jaPercents = c.Attacks.Where(a => a.ID == s).Select(a => a.JA).ToList();
-                                //List<int> criPercents = c.Attacks.Where(a => a.ID == s).Select(a => a.Cri).ToList();
-                                attackData.Add(new Tuple<string, List<Int64>>(s, matchingAttacks));
+                                List<int> jaPercents = c.Attacks.Where(a => a.ID == s).Select(a => a.JA).ToList();
+                                List<int> criPercents = c.Attacks.Where(a => a.ID == s).Select(a => a.Cri).ToList();
+                                attackData.Add(new Tuple<string, List<Int64>,List<int>,List<int>>(s, matchingAttacks,jaPercents,criPercents));
                             }
                         }
                         
@@ -273,19 +251,19 @@ namespace OverParse
 
                         foreach (var i in attackData)
                         {
-                            double percent = i.Item2.Sum() * 100d / c.ReadDamage;
+                            double percent = i.Item2.Sum() * 100d / c.Damage;
                             string spacer = (percent >= 9) ? "" : " ";
 
-                            string paddedPercent = percent.ToString("00.00").Substring(0, 5);
+                            string paddedPercent = percent.ToString("00.00");
                             string hits = i.Item2.Count().ToString("N0") ?? "0";
                             string sum = i.Item2.Sum().ToString("N0");
                             string min = i.Item2.Min().ToString("N0");
                             string max = i.Item2.Max().ToString("N0");
                             string avg = i.Item2.Average().ToString("N0");
-                            //string ja = (i.Item3.Average() * 100).ToString("N2") ?? "null";
-                            //string cri = (i.Item4.Average() * 100).ToString("N2") ?? "null" ;
+                            string ja = (i.Item3.Average() * 100).ToString("N2") ?? "null";
+                            string cri = (i.Item4.Average() * 100).ToString("N2") ?? "null" ;
                             log += $"{paddedPercent}%	| {i.Item1} - {sum} dmg";
-                            //log += $" - JA : {ja}% - Critical : {cri}%";
+                            log += $" - JA : {ja}% - Critical : {cri}%";
                             log += Environment.NewLine;
                             log += $"	|   {hits} hits - {min} min, {avg} avg, {max} max" + Environment.NewLine;
                         }
@@ -311,8 +289,8 @@ namespace OverParse
 
         public string LogStatus()
         {
-            if (!valid) { return "USER SHOULD PROBABLY NEVER SEE THIS"; }
-            if (!notEmpty) { return "Directory No logs: Enable plugin and check pso2_bin!"; }
+            if (!valid) { return "Error. OverParse Reset Please  Other -> Reset OverParse..."; }
+            if (!notEmpty) { return "Directory No logs: Start PSO2 , Enable plugin and check pso2_bin!"; }
             if (!running) { return $"Waiting..."; }
             return encounterData;
         }
@@ -347,12 +325,11 @@ namespace OverParse
 
                         if (lineTimestamp == 0 && parts[3] == "YOU")
                         {
-                            Hacks.currentPlayerID = parts[2];
+                            Combatant.currentPlayerID = parts[2];
                             continue;
                         }
 
-
-                        if (sourceID != Hacks.currentPlayerID && Properties.Settings.Default.Onlyme) { continue; }
+                        if (sourceID != Combatant.currentPlayerID && Properties.Settings.Default.Onlyme) { continue; }
                         if (!instances.Contains(instanceID)) { instances.Add(instanceID); }
                         if (hitDamage < 1) { continue; }
                         if (sourceID == "0" || attackID == "0") { continue; }
@@ -372,6 +349,8 @@ namespace OverParse
                             nowTimestamp = newTimestamp;
                         }
 
+                        if (Properties.Settings.Default.QuestTime) { ActiveTime = diffTime; }
+                        else { ActiveTime = newTimestamp - startTimestamp; }
 
                         if (10000000 < int.Parse(sourceID))
                         {
@@ -387,13 +366,15 @@ namespace OverParse
                             }
 
                             Combatant source = combatants[index];
-                            if (Combatant.DBAttackIDs.Contains(attackID)) { source.DBDamage += hitDamage; source.DBAttacks.Add(new Attack(attackID, hitDamage, diffTime, justAttack, critical, 0, targetID)); }
-                            if (Combatant.LaconiumAttackIDs.Contains(attackID)) { source.LswDamage += hitDamage; source.LswAttacks.Add(new Attack(attackID, hitDamage, diffTime, justAttack, critical, 0, targetID)); }
-                            if (Combatant.PhotonAttackIDs.Contains(attackID)) { source.PwpDamage += hitDamage; source.PwpAttacks.Add(new Attack(attackID, hitDamage, diffTime, justAttack, critical, 0, targetID)); }
-                            if (Combatant.AISAttackIDs.Contains(attackID)) { source.AisDamage += hitDamage; source.AisAttacks.Add(new Attack(attackID, hitDamage, diffTime, justAttack, critical, 0, targetID)); }
-                            if (Combatant.RideAttackIDs.Contains(attackID)) { source.RideDamage += hitDamage; source.RideAttacks.Add(new Attack(attackID, hitDamage, diffTime, justAttack, critical, 0, targetID)); }
-                            if (Combatant.RDIDs.Contains(targetID)) { source.DDamage += hitDamage; source.DAttacks.Add(new Attack(attackID, hitDamage, diffTime, justAttack, critical, 0, targetID)); }
-                            source.Attacks.Add(new Attack(attackID, hitDamage, diffTime, justAttack, critical, 0, targetID));
+                            source.CDamage += hitDamage;
+                            if(attackID == "2106601422") { source.ZvsDamage += hitDamage; source.ZvsAttacks.Add(new Attack(attackID, hitDamage, justAttack, critical, targetID)); }
+                            if (Combatant.FinishAttackIDs.Contains(attackID)) { source.HTFDamage += hitDamage; source.HTFAttacks.Add(new Attack(attackID, hitDamage, justAttack, critical, targetID)); }
+                            if (Combatant.DBAttackIDs.Contains(attackID)) { source.DBDamage += hitDamage; source.DBAttacks.Add(new Attack(attackID, hitDamage, justAttack, critical, targetID)); }
+                            if (Combatant.LaconiumAttackIDs.Contains(attackID)) { source.LswDamage += hitDamage; source.LswAttacks.Add(new Attack(attackID, hitDamage, justAttack, critical, targetID)); }
+                            if (Combatant.PhotonAttackIDs.Contains(attackID)) { source.PwpDamage += hitDamage; source.PwpAttacks.Add(new Attack(attackID, hitDamage, justAttack, critical, targetID)); }
+                            if (Combatant.AISAttackIDs.Contains(attackID)) { source.AisDamage += hitDamage; source.AisAttacks.Add(new Attack(attackID, hitDamage, justAttack, critical, targetID)); }
+                            if (Combatant.RideAttackIDs.Contains(attackID)) { source.RideDamage += hitDamage; source.RideAttacks.Add(new Attack(attackID, hitDamage, justAttack, critical, targetID)); }
+                            source.Attacks.Add(new Attack(attackID, hitDamage, justAttack, critical, targetID));
                             running = true;
                         } else {
                             foreach (Combatant x in combatants) { if (x.ID == targetID && x.isTemporary == "no") { index = combatants.IndexOf(x); } }
@@ -403,8 +384,7 @@ namespace OverParse
                                 index = combatants.Count - 1;
                             }
                             Combatant source = combatants[index];
-                            if (Combatant.RDIDs.Contains(sourceID)) { source.DAttacks.Add(new Attack("0", 0, diffTime, 0, 0, hitDamage, "0")); }
-                            source.Attacks.Add(new Attack("0", 0, diffTime, 0, 0, hitDamage,"0"));
+                            source.Damaged += hitDamage;
                             running = true;
                         }
                     }
@@ -414,10 +394,6 @@ namespace OverParse
 
                 if (startTimestamp != 0) { encounterData = "0:00:00 - ∞ DPS"; }
 
-                if (startTimestamp != 0 && newTimestamp != startTimestamp)
-                {
-                    foreach (Combatant x in combatants) {  if (x.IsAlly || x.IsZanverse) { x.ActiveTime = (diffTime); }  }
-                }
             }
         }
 

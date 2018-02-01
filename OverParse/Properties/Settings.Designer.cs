@@ -302,36 +302,12 @@ namespace OverParse.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool AnonymizeNames {
-            get {
-                return ((bool)(this["AnonymizeNames"]));
-            }
-            set {
-                this["AnonymizeNames"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool SeparateAuxDamage {
             get {
                 return ((bool)(this["SeparateAuxDamage"]));
             }
             set {
                 this["SeparateAuxDamage"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool CompactMode {
-            get {
-                return ((bool)(this["CompactMode"]));
-            }
-            set {
-                this["CompactMode"] = value;
             }
         }
         
@@ -356,30 +332,6 @@ namespace OverParse.Properties {
             }
             set {
                 this["ListOpacity"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool Criticalcfg {
-            get {
-                return ((bool)(this["Criticalcfg"]));
-            }
-            set {
-                this["Criticalcfg"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool JAcfg {
-            get {
-                return ((bool)(this["JAcfg"]));
-            }
-            set {
-                this["JAcfg"] = value;
             }
         }
         
@@ -530,12 +482,12 @@ namespace OverParse.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool End6 {
+        public bool End {
             get {
-                return ((bool)(this["End6"]));
+                return ((bool)(this["End"]));
             }
             set {
-                this["End6"] = value;
+                this["End"] = value;
             }
         }
         
@@ -553,7 +505,7 @@ namespace OverParse.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        [global::System.Configuration.DefaultSettingValueAttribute("250")]
         public int Updateinv {
             get {
                 return ((int)(this["Updateinv"]));
@@ -584,6 +536,138 @@ namespace OverParse.Properties {
             }
             set {
                 this["Variable"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool QuestTime {
+            get {
+                return ((bool)(this["QuestTime"]));
+            }
+            set {
+                this["QuestTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ListName {
+            get {
+                return ((bool)(this["ListName"]));
+            }
+            set {
+                this["ListName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ListPct {
+            get {
+                return ((bool)(this["ListPct"]));
+            }
+            set {
+                this["ListPct"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ListDmg {
+            get {
+                return ((bool)(this["ListDmg"]));
+            }
+            set {
+                this["ListDmg"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ListDmgd {
+            get {
+                return ((bool)(this["ListDmgd"]));
+            }
+            set {
+                this["ListDmgd"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ListDPS {
+            get {
+                return ((bool)(this["ListDPS"]));
+            }
+            set {
+                this["ListDPS"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ListJA {
+            get {
+                return ((bool)(this["ListJA"]));
+            }
+            set {
+                this["ListJA"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ListCri {
+            get {
+                return ((bool)(this["ListCri"]));
+            }
+            set {
+                this["ListCri"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ListHit {
+            get {
+                return ((bool)(this["ListHit"]));
+            }
+            set {
+                this["ListHit"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ListAtk {
+            get {
+                return ((bool)(this["ListAtk"]));
+            }
+            set {
+                this["ListAtk"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ListTab {
+            get {
+                return ((bool)(this["ListTab"]));
+            }
+            set {
+                this["ListTab"] = value;
             }
         }
     }

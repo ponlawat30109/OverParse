@@ -24,8 +24,8 @@ namespace OverParse
             int chars = 256;
             StringBuilder buff = new StringBuilder(chars);
             IntPtr handle = GetForegroundWindow();
-            if (GetWindowText(handle, buff, chars) > 0)
-                return buff.ToString();
+            if (GetWindowText(handle, buff, chars) > 0) { return buff.ToString(); }
+
             return null;
         }
 
@@ -34,5 +34,6 @@ namespace OverParse
             var extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
             SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
         }
+
     }
 }
