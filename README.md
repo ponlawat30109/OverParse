@@ -23,3 +23,8 @@ MainWindow.xaml.cs / MainWindow.MainWindow() - 起動時読み込み
    
 イベントハンドラまみれだったMainWindow.xaml.csをClick.csに分けたので大分見やすくなったと思いますがまだまだ見通しが悪いと言えば悪いです  
  
+ 翻訳に利用させて貰ったデータ
+ 
+https://github.com/SkrubZer0/OverParse/
+
+https://github.com/mysterious64/OverParse/
