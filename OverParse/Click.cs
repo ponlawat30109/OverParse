@@ -53,10 +53,7 @@ namespace OverParse
             Log.startTimestamp = Log.nowTimestamp = Log.diffTime = 0;
         }
 
-<<<<<<< HEAD
         public void EndEncounter_Key(object sender, EventArgs e) => EndEncounter_Click(null, null);
-=======
->>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
 
         private void EndEncounterNoLog_Click(object sender, RoutedEventArgs e)
         {
@@ -71,11 +68,8 @@ namespace OverParse
             Log.startTimestamp = Log.nowTimestamp = Log.diffTime = 0;
         }
 
-<<<<<<< HEAD
         private void EndEncounterNoLog_Key(object sender, EventArgs e) => EndEncounterNoLog_Click(null, null);
 
-=======
->>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
         private void AutoEndEncounters_Click(object sender, RoutedEventArgs e)
         {
             Properties.Settings.Default.AutoEndEncounters = AutoEndEncounters.IsChecked;
@@ -85,7 +79,7 @@ namespace OverParse
         private void SetEncounterTimeout_Click(object sender, RoutedEventArgs e)
         {
             AlwaysOnTop.IsChecked = false;
-            Inputbox input = new Inputbox("Encounter Timeout", "Please input the amount of seconds you would like for the Encounter Timeout", Properties.Settings.Default.EncounterTimeout.ToString()) { Owner = this };
+            Inputbox input = new Inputbox("Encounter Timeout", "何秒経過すればエンカウントを終了させますか？", Properties.Settings.Default.EncounterTimeout.ToString()) { Owner = this };
             input.ShowDialog();
             if (Int32.TryParse(input.ResultText, out int x))
             {
@@ -94,7 +88,7 @@ namespace OverParse
             }
             else
             {
-                if (input.ResultText.Length > 0) { MessageBox.Show("Could not read your input. Please use numbers only."); }
+                if (input.ResultText.Length > 0) { MessageBox.Show("Couldn't parse your input. Enter only a number."); }
             }
 
             AlwaysOnTop.IsChecked = Properties.Settings.Default.AlwaysOnTop;
@@ -102,26 +96,7 @@ namespace OverParse
 
         private void LogToClipboard_Click(object sender, RoutedEventArgs e) => Properties.Settings.Default.LogToClipboard = LogToClipboard.IsChecked;
 
-<<<<<<< HEAD
         private void OpenLogsFolder_Click(object sender, RoutedEventArgs e) => Process.Start(Directory.GetCurrentDirectory() + "\\Logs");
-=======
-        private void OpenLogsFolder_Click(object sender, RoutedEventArgs e)
-        {
-            Process.Start(Directory.GetCurrentDirectory() + "\\Logs");
-        }
-
-        private void OpenRecentLog_Click(object sender, RoutedEventArgs e)
-        {
-            string filename = sessionLogFilenames[SessionLogs.Items.IndexOf((e.OriginalSource as MenuItem))];
-            //attempting to open
-            Process.Start(Directory.GetCurrentDirectory() + "\\" + filename);
-        }
-
-        private void FilterPlayers_Click(object sender, RoutedEventArgs e)
-        {
-            UpdateForm(null, null);
-        }
->>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
 
         private void SeparateZanverse_Click(object sender, RoutedEventArgs e)
         {
@@ -252,14 +227,10 @@ namespace OverParse
                 if (input.ResultText.Length > 0) { MessageBox.Show("Couldn't parse your input. Enter only a number."); }
             }
 
-<<<<<<< HEAD
             AlwaysOnTop.IsChecked = Properties.Settings.Default.AlwaysOnTop;
         }
 
         private void QuestTime_Click(object sender, RoutedEventArgs e)
-=======
-        private void ChangeFont_Click(object sender, RoutedEventArgs e)
->>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
         {
             Properties.Settings.Default.QuestTime = QuestTime.IsChecked;
             if(Properties.Settings.Default.QuestTime)
@@ -270,74 +241,14 @@ namespace OverParse
             }
         }
 
-<<<<<<< HEAD
         private void DefaultWindowSize_Click(object sender, RoutedEventArgs e)
         {
             Height = 275; Width = 670;
-=======
-        private void DamageTaken_Click(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.DTcfg = DTcfg.IsChecked;
-            if (DTcfg.IsChecked)
-            {
-                DmgDHC.Width = new GridLength(0);
-
-            }
-            else
-            {
-                DmgDHC.Width = new GridLength(0.9, GridUnitType.Star);
-            }
-            UpdateForm(null, null);
-        }
-
-        private void Percent_Click(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.Pctcfg = Pctcfg.IsChecked;
-            if (Pctcfg.IsChecked)
-            {
-                PercentHC.Width = new GridLength(0);
-
-            }
-            else
-            {
-                PercentHC.Width = new GridLength(52);
-            }
-            UpdateForm(null, null);
-        }
-
-        private void JA_Click(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.JAcfg = JAcfg.IsChecked;
-            if (JAcfg.IsChecked)
-            {
-                JAHC.Width = new GridLength(0);
-
-            }
-            else
-            {
-                JAHC.Width = new GridLength(52);
-            }
-            UpdateForm(null, null);
->>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
         }
 
         private void DefaultWindowSize_Key(object sender, EventArgs e)
         {
-<<<<<<< HEAD
             Height = 275; Width = 670;
-=======
-            Properties.Settings.Default.Criticalcfg = Cricfg.IsChecked;
-            if (Cricfg.IsChecked)
-            {
-                CriHC.Width = new GridLength(0);
-
-            }
-            else
-            {
-                CriHC.Width = new GridLength(52);
-            }
-            UpdateForm(null, null);
->>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
         }
 
         private void Japanese_Click(object sender, RoutedEventArgs e) => Properties.Settings.Default.Language = "ja-JP";
@@ -346,7 +257,6 @@ namespace OverParse
 
         private void SelectColumn_Click(object sender, RoutedEventArgs e)
         {
-<<<<<<< HEAD
             GridLength temp = new GridLength(0);
             bool Name, Pct, Dmg, Dmgd, DPS, JA, Cri, Hit, Atk, Tab, Vrb;
             Name = Pct = Dmg = Dmgd = DPS = JA = Cri = Hit = Atk = Tab = true;
@@ -400,27 +310,6 @@ namespace OverParse
             Properties.Settings.Default.ListHit = selectColumn.Hit;
             Properties.Settings.Default.ListTab = selectColumn.Tab;
             Properties.Settings.Default.Variable = selectColumn.Vrb;
-=======
-            Properties.Settings.Default.CompactMode = CompactMode.IsChecked;
-            if (CompactMode.IsChecked)
-            {
-                AtkHC.Width = new GridLength(0);
-            }
-            else
-            {
-                AtkHC.Width = new GridLength(1.7, GridUnitType.Star);
-            }
-            UpdateForm(null, null);
-        }
-
-        private void VariableColumn_Click(object sender, RoutedEventArgs e)
-        {
-            PercentHC.Width = new GridLength(0.4, GridUnitType.Star);
-            DmgHC.Width = new GridLength(0.8, GridUnitType.Star);
-            DPSHC.Width = new GridLength(0.6, GridUnitType.Star);
-            JAHC.Width = new GridLength(0.4, GridUnitType.Star);
-            CriHC.Width = new GridLength(0.4, GridUnitType.Star);
->>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
         }
 
         private void ShowDamageGraph_Click(object sender, RoutedEventArgs e)
@@ -520,7 +409,7 @@ namespace OverParse
         {
             if (AutoHideWindow.IsChecked && Properties.Settings.Default.AutoHideWindowWarning)
             {
-                MessageBox.Show("When PSO2 or OverParse is not in the foreground, OverParse will be hidden. To display OverParse, use Alt + Tab to select OverParse, or click the taskbar icon.", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("これにより、PSO2またはOverParseがフォアグラウンドにない時は、OverParseのウィンドゥが非表示になります。\nウィンドゥを表示するには、Alt+TabでOverParseにするか、タスクバーのアイコンをクリックします。", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
                 Properties.Settings.Default.AutoHideWindowWarning = false;
             }
             Properties.Settings.Default.AutoHideWindow = AutoHideWindow.IsChecked;
@@ -534,11 +423,7 @@ namespace OverParse
         private void About_Click(object sender, RoutedEventArgs e)
         {
             var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-<<<<<<< HEAD
             MessageBox.Show($"OverParse v{version}\n簡易的な自己監視ツール。\n\nShoutouts to WaifuDfnseForce.\nAdditional shoutouts to Variant, AIDA, and everyone else who makes the Tweaker plugin possible.\n\nPlease use damage information responsibly.", "OverParse");
-=======
-            MessageBox.Show($"OverParse v3\nSelf Monitoring tool. \n\nShoutouts to Variant, AIDA, and everyone else who makes the Tweaker plugin possible.\n\nPlease use damage information responsibly.", "OverParse");
->>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
         }
 
         private void LowResources_Click(object sender, RoutedEventArgs e)
@@ -547,7 +432,7 @@ namespace OverParse
             if (Properties.Settings.Default.LowResources)
             {
                 thisProcess.PriorityClass = ProcessPriorityClass.Idle;
-                MessageBox.Show("Process priority of OverParse is now set to low. \n\nThis setting is only recommended if your CPU is a potato. Please remember that OverParse may become unresponsive due to this setting.", "OverParse");
+                MessageBox.Show("OverParseの基本優先度を低に設定しました。\n殆どのCPUではあまり影響ありませんが、CPU使用率が100%になるようなPCスペックの場合にOverParseの動作を止め、PSO2や画面キャプチャ等の他のプログラムを優先させます。\nOverParseが応答不能になる可能性があることを覚えておいて下さい。","OverParse");
             } else {
                 thisProcess.PriorityClass = ProcessPriorityClass.Normal;
             }
@@ -559,7 +444,7 @@ namespace OverParse
             if (Properties.Settings.Default.CPUdraw)
             {
                 RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
-                MessageBox.Show("OverParse is now using CPU rendering. \n\nThis setting is only recommended if you do not have a discrete GPU. \n Please remember that this setting may increase CPU load.", "OverParse");
+                MessageBox.Show("OverParseの画面描画をCPU処理(ソフトウェアレンダリング)に変更しました。\nグラフィックボード搭載のPCでは逆効果ですが、CPUのみ高性能で内蔵GPUを使用する大部分の日本メーカー製ノートPCではある程度効果があります。\nIntel HD Graphicsを使用している場合や0.1%でもGPUの負荷を減らしたい場合これを有効にして下さい。", "OverParse");
             } else {
                 RenderOptions.ProcessRenderMode = RenderMode.Default;
             }
@@ -572,13 +457,10 @@ namespace OverParse
             else { Datetime.Visibility = Visibility.Collapsed; }
         }
 
-        private void Github_Click(object sender, RoutedEventArgs e) => Process.Start("https://github.com/SkrubZer0/OverParse");
+        private void Discord_Click(object sender, RoutedEventArgs e) => Process.Start("https://discord.gg/pTCq443");
 
-<<<<<<< HEAD
         private void Github_Click(object sender, RoutedEventArgs e) => Process.Start("https://github.com/Remon-7L/OverParse");
 
-=======
->>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
         private void SkipPlugin_Click(object sender, RoutedEventArgs e) => Properties.Settings.Default.InstalledPluginVersion = 5;
 
         private void ResetLogFolder_Click(object sender, RoutedEventArgs e)
@@ -611,7 +493,7 @@ namespace OverParse
 
         private void ResetOverParse(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("Are you sure you want to Reset OverParse? \n\nYour user settings will be deleted but your logs will remain in your log folder.", "OverParse Setup", MessageBoxButton.YesNo, MessageBoxImage.Information);
+            MessageBoxResult result = MessageBox.Show("OverParseをリセットしますか？\n設定は消去されますが、ログは消去されません。", "OverParse Setup", MessageBoxButton.YesNo, MessageBoxImage.Information);
             if (result != MessageBoxResult.Yes)
                 return;
 
@@ -624,58 +506,5 @@ namespace OverParse
             Application.Current.Shutdown();
         }
 
-        private void Updateskills_Click(object sender, RoutedEventArgs e)
-        {
-            string[] tmp;
-            //skills.csv
-            try
-            {
-                using (System.Net.WebClient client = new System.Net.WebClient())
-                {
-                    Stream stream = client.OpenRead("https://raw.githubusercontent.com/VariantXYZ/PSO2ACT/master/PSO2ACT/skills.csv");
-                    StreamReader webreader = new StreamReader(stream);
-                    String content = webreader.ReadToEnd();
-
-                    tmp = content.Split('\n');
-                    File.WriteAllText("skills.csv", content);                    
-                }
-
-                skillDict.Clear();
-
-                foreach (string s in tmp)
-                {
-                    string[] split = s.Split(',');
-                    if (split.Length > 1)
-                    {
-                        skillDict.Add(split[1], split[0]);
-                    }
-                }
-
-                MessageBox.Show("skills.csv has been successfully updated");
-            }
-            catch
-            {
-                MessageBox.Show("Failed to update skills.csv");
-            }
-
-            
-
-            //ignoreskills.csv
-            try
-            {
-                using (System.Net.WebClient client = new System.Net.WebClient())
-                {
-                    client.DownloadFile("https://raw.githubusercontent.com/SkrubZer0/OverParse/master/OverParse/Other_Files/ignoreskills.csv", "ignoreskills.csv");
-                }
-
-                ignoreskill = File.ReadAllLines("ignoreskills.csv");
-
-                MessageBox.Show("ignoreskills.csv has been successfully updated");
-            }
-            catch
-            {
-                MessageBox.Show("Failed to update ignoreskills.csv", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-        }
     }
 }

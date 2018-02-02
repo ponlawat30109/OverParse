@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,15 +10,10 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
-<<<<<<< HEAD
 using HotKeyFrame;
 using System.Net;
 using System.Text;
 using System.Globalization;  //ummm....
-=======
-using NHotkey;
-using NHotkey.Wpf;
->>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
 
 namespace OverParse
 {
@@ -33,10 +27,7 @@ namespace OverParse
         private List<Combatant> workingList = new List<Combatant>();
         private List<string> sessionLogFilenames = new List<string>();
         private string lastStatus = "";
-<<<<<<< HEAD
         private HotKey hotkey1, hotkey2, hotkey3, hotkey4;
-=======
->>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
         private IntPtr hwndcontainer;
         private string updatemsg = " - Update check Error.";
         private Process thisProcess = Process.GetCurrentProcess();
@@ -61,19 +52,10 @@ namespace OverParse
             try { Directory.CreateDirectory("Logs"); }
             catch
             {
-<<<<<<< HEAD
-                /* change */
                 MessageBox.Show("OverParseにアクセス権が無く、ログの保存が出来ません！\n管理者としてOverParseを実行してみるか、システムのアクセス権を確認して下さい！\nOverParseを別のフォルダーに移動してみるのも良いかも知れません。", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Error);
                 Application.Current.Shutdown();
             }
 
-=======
-                MessageBox.Show("Overparse cannot save logs at the moment. \n\nPlease check that you are running Overparse as an administrator or that your account has read/write access to this directory", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Error);
-                Application.Current.Shutdown();
-            }
-
-
->>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
             if (Properties.Settings.Default.UpgradeRequired && !Properties.Settings.Default.ResetInvoked)
             {
                 //Console.WriteLine("Upgrading settings");
@@ -95,6 +77,7 @@ namespace OverParse
 
             if (outOfBounds)
             {
+                //Console.WriteLine("Window's off-screen, resetting");
                 Top = 50;
                 Left = 50;
             }
@@ -117,7 +100,6 @@ namespace OverParse
             AutoHideWindow.IsChecked = Properties.Settings.Default.AutoHideWindow;
 
             ShowDamageGraph.IsChecked = Properties.Settings.Default.ShowDamageGraph; ShowDamageGraph_Click(null, null);
-<<<<<<< HEAD
             HighlightYourDamage.IsChecked = Properties.Settings.Default.HighlightYourDamage; HighlightYourDamage_Click(null, null);
             Clock.IsChecked = Properties.Settings.Default.Clock; Clock_Click(null, null);
             HandleWindowOpacity(); HandleListOpacity();
@@ -127,27 +109,11 @@ namespace OverParse
             SeparatePwp_Click(null, null);
             SeparateLsw_Click(null, null);
             LoadListColumn();
-=======
-            DTcfg.IsChecked = Properties.Settings.Default.DTcfg; DamageTaken_Click(null, null);
-            Pctcfg.IsChecked = Properties.Settings.Default.Pctcfg; Percent_Click(null, null);
-            JAcfg.IsChecked = Properties.Settings.Default.JAcfg; JA_Click(null, null);
-            Cricfg.IsChecked = Properties.Settings.Default.Criticalcfg; Critical_Click(null, null);
-            CompactMode.IsChecked = Properties.Settings.Default.CompactMode; CompactMode_Click(null, null);
-            AnonymizeNames.IsChecked = Properties.Settings.Default.AnonymizeNames; AnonymizeNames_Click(null, null);
-            HighlightYourDamage.IsChecked = Properties.Settings.Default.HighlightYourDamage; HighlightYourDamage_Click(null, null);
-            Clock.IsChecked = Properties.Settings.Default.Clock; Clock_Click(null, null);
-            HandleWindowOpacity(); HandleListOpacity(); SeparateAIS_Click(null, null);
-            HandleWindowOpacity(); HandleListOpacity(); SeparateDB_Click(null, null);
-            HandleWindowOpacity(); HandleListOpacity(); SeparateRide_Click(null, null);
-            HandleWindowOpacity(); HandleListOpacity(); SeparatePwp_Click(null, null);
-            HandleWindowOpacity(); HandleListOpacity(); SeparateLsw_Click(null, null);
->>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
 
             if (Properties.Settings.Default.Maximized) { WindowState = WindowState.Maximized; }
 
             try
             {
-<<<<<<< HEAD
                 hotkey1 = new HotKey(this);
                 hotkey2 = new HotKey(this);
                 hotkey3 = new HotKey(this);
@@ -156,16 +122,10 @@ namespace OverParse
                 hotkey2.Regist(ModifierKeys.Control | ModifierKeys.Shift, Key.R, new EventHandler(EndEncounterNoLog_Key), 0x0072);
                 hotkey3.Regist(ModifierKeys.Control | ModifierKeys.Shift, Key.D, new EventHandler(DefaultWindowSize_Key), 0x0073);
                 hotkey4.Regist(ModifierKeys.Control | ModifierKeys.Shift, Key.A, new EventHandler(AlwaysOnTop_Key), 0x0074);
-=======
-                HotkeyManager.Current.AddOrReplace("End Encounter", Key.E, ModifierKeys.Control | ModifierKeys.Shift, EndEncounter_Key);
-                HotkeyManager.Current.AddOrReplace("End Encounter (No log)", Key.R, ModifierKeys.Control | ModifierKeys.Shift, EndEncounterNoLog_Key);
-                HotkeyManager.Current.AddOrReplace("Default Window Size", Key.D, ModifierKeys.Control | ModifierKeys.Shift, DefaultWindowSize_Key);
->>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
             } catch {
-                MessageBox.Show("Hot keys are currently not working for this instance of Overparse. \n\nPlease check that you are not running multiple instances of Overparse", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("OverParseはホットキーを初期化出来ませんでした。　多重起動していないか確認して下さい！\nプログラムは引き続き使用できますが、ホットキーは反応しません。", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
             }
 
-<<<<<<< HEAD
 
             //new_version_check
             try
@@ -211,52 +171,7 @@ namespace OverParse
             } catch (Exception e) {
                 MessageBox.Show(e.ToString());
                 critignoreskill = new string[] { "12345678900" }; //nullだとエラーが出るので適当な値
-=======
-            //skills.csv
-            Console.WriteLine("Updating skills.csv");
-            string[] tmp;
-            try
-            {
-                WebClient client = new WebClient();
-                Stream stream = client.OpenRead("https://raw.githubusercontent.com/VariantXYZ/PSO2ACT/master/PSO2ACT/skills.csv");
-                StreamReader webreader = new StreamReader(stream);
-                String content = webreader.ReadToEnd();
-
-                tmp = content.Split('\n');
-                File.WriteAllText("skills.csv", content);
-
-                webreader.Close();
-                stream.Close();
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"skills.csv update failed: {ex.ToString()}");
-                if (File.Exists("skills.csv"))
-                {
-                    MessageBox.Show("OverParse failed to update its skill mappings. This usually means your connection hiccuped for a moment.\n\nA local copy will be used instead. If you'd like to try and update again, please use the 'Force Update Skills' option within the 'Other' menu.", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
-                    tmp = File.ReadAllLines("skills.csv");
-                }
-                else
-                {
-                    MessageBox.Show("OverParse failed to update its skill mappings. This usually means your connection hiccuped for a moment.\n\nSince you have no skill mappings downloaded, all attacks will be marked as \"Unknown\". If you'd like to try and update again, please use the 'Force update of skills.csv' option within the 'Other' menu.", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
-                    tmp = new string[0];
-                }
-            }
-            //ignoreskills.csv
-            try
-            {
-                WebClient client = new WebClient();
-                client.DownloadFile("https://raw.githubusercontent.com/SkrubZer0/OverParse/master/OverParse/Other_Files/ignoreskills.csv", "ignoreskills.csv");
->>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
-            }
-            catch
-            {
-                MessageBox.Show("Cannot update your local ignoreskills.csv please be warned that JA data might be wrong.\n\nA local copy will be used instead. If you'd like to try and update again, please use the 'Force Update Skills' option within the 'Other' menu.", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-
-            ignoreskill = File.ReadAllLines("ignoreskills.csv");
-
-            Console.WriteLine("Parsing skills.csv");
 
             foreach (string s in skills)
             {
@@ -345,7 +260,7 @@ namespace OverParse
         private void Panic(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             try { Directory.CreateDirectory("ErrorLogs"); }
-            catch { MessageBox.Show("OverParse has failed to create the directory: <ErrorLogs>"); }
+            catch { MessageBox.Show("OverParseはDirectory<ErrorLogs>の作成に失敗しました。"); }
             string datetime = string.Format("{0:yyyy-MM-dd_HH-mm-ss}", DateTime.Now);
             string filename = $"ErrorLogs/ErrorLogs - {datetime}.txt";
             //=== UNHANDLED EXCEPTION ===
@@ -427,14 +342,17 @@ namespace OverParse
 
             // clear out the list
             CombatantData.Items.Clear();
+            AllyData.Items.Clear();
+            DBData.Items.Clear();
+            LswData.Items.Clear();
+            PwpData.Items.Clear();
+            AisData.Items.Clear();
+            RideData.Items.Clear();
+            //workingList.RemoveAll(c => c.isTemporary != "no");
 
             int elapsed = Log.ActiveTime;
 
-<<<<<<< HEAD
             //Separate Part
-=======
-            // Separation...
->>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
             if (Properties.Settings.Default.SeparateAIS)
             {
                 List<Combatant> pendingCombatants = new List<Combatant>();
@@ -529,13 +447,8 @@ namespace OverParse
                 workingList.AddRange(pendingLswCombatants);
             }
 
-<<<<<<< HEAD
             //分けたものを含めて再ソート
             if (SeparateTab.SelectedIndex == 0) { workingList.Sort((x, y) => y.ReadDamage.CompareTo(x.ReadDamage)); }
-=======
-            // Re-sort everything
-            workingList.Sort((x, y) => y.ReadDamage.CompareTo(x.ReadDamage));
->>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
 
             //ザンバースをプレイヤーとして認識させ、元の計算から除外
             Int64 totalZanverse = workingList.Sum(x => x.ZvsDamage);
@@ -565,7 +478,6 @@ namespace OverParse
             }
 
             // get group damage totals
-<<<<<<< HEAD
             Int64 totalReadDamage = workingList.Sum(x => x.Damage);
             Int64 totalAllyDamage = workingList.Where(c => c.IsAlly).Sum(x => x.ReadDamage);
             Int64 totalDBDamage = workingList.Sum(x => x.DBDamage);
@@ -573,77 +485,30 @@ namespace OverParse
             Int64 totalPwpDamage = workingList.Sum(x => x.PwpDamage);
             Int64 totalAisDamage = workingList.Sum(x => x.AisDamage);
             Int64 totalRideDamage = workingList.Sum(x => x.RideDamage);
-=======
-            int totalReadDamage = workingList.Where(c => c.IsAlly).Sum(x => x.Damage);
->>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
 
             // dps calcs!
             foreach (Combatant c in workingList)
             {
                 c.PercentReadDPS = c.ReadDamage / (float)totalReadDamage * 100;
-<<<<<<< HEAD
                 c.AllyPct = c.AllyDamage / (float)totalAllyDamage * 100;
                 c.DBPct = c.DBDamage / (float)totalDBDamage * 100;
                 c.LswPct = c.LswDamage / (float)totalLswDamage * 100;
                 c.PwpPct = c.PwpDamage / (float)totalPwpDamage * 100;
                 c.AisPct = c.AisDamage / (float)totalAisDamage * 100;
                 c.RidePct = c.RideDamage / (float)totalRideDamage * 100;
-=======
->>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
             }
 
             // status pane updates
             if (!encounterlog.running || (encounterlog.valid && encounterlog.notEmpty))
             {
-<<<<<<< HEAD
                 EncounterIndicator.Fill = new SolidColorBrush(Color.FromArgb(192, 255, 128, 128));
                 EncounterStatus.Content = encounterlog.LogStatus();
-=======
-                if ((c.IsAlly) && c.ReadDamage > Combatant.maxShare)
-                    Combatant.maxShare = c.ReadDamage;
-
-                bool filtered = true;
-                if (Properties.Settings.Default.SeparateAIS || Properties.Settings.Default.SeparateDB || Properties.Settings.Default.SeparateRide || Properties.Settings.Default.SeparatePwp || Properties.Settings.Default.SeparateLsw)
-                {
-                    if (c.IsAlly && c.isTemporary == "no" && !HidePlayers.IsChecked)
-                        filtered = false;
-                    if (c.IsAlly && c.isTemporary == "AIS" && !HideAIS.IsChecked)
-                        filtered = false;
-                    if (c.IsAlly && c.isTemporary == "DB" && !HideDB.IsChecked)
-                        filtered = false;
-                    if (c.IsAlly && c.isTemporary == "Ride" && !HideRide.IsChecked)
-                        filtered = false;
-                    if (c.IsAlly && c.isTemporary == "Pwp" && !HidePwp.IsChecked)
-                        filtered = false;
-                    if (c.IsAlly && c.isTemporary == "Lsw" && !HideLsw.IsChecked)
-                        filtered = false;
-                    if (c.IsZanverse)
-                        filtered = false;
-                    if (c.IsFinish)
-                        filtered = false;
-                }
-                else
-                {
-                    if ((c.IsAlly || c.IsZanverse || c.IsFinish || !FilterPlayers.IsChecked) && (c.Damage > 0))
-                        filtered = false;
-                }
-
-                if (!filtered && c.Damage > 0) CombatantData.Items.Add(c);
-
->>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
             }
             if (encounterlog.valid && encounterlog.notEmpty)
             {
                 EncounterIndicator.Fill = new SolidColorBrush(Color.FromArgb(192, 64, 192, 64));
                 EncounterStatus.Content = $"Waiting - {lastStatus}";
-<<<<<<< HEAD
                 if (lastStatus == "") { EncounterStatus.Content = "Waiting... - " + encounterlog.filename + updatemsg; }
-=======
-                if (lastStatus == "")
-                    EncounterStatus.Content = "Waiting... - " + encounterlog.filename;
-
-                CombatantData.Items.Refresh();
->>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
             }
             if (encounterlog.running)
             {
@@ -658,7 +523,6 @@ namespace OverParse
                 lastStatus = EncounterStatus.Content.ToString();
             }
 
-<<<<<<< HEAD
             // damage graph stuff
             Combatant.maxShare = 0;
 
@@ -680,10 +544,6 @@ namespace OverParse
                 } else {
                     if ((c.IsAlly || c.IsZanverse || c.IsFinish) && (c.Damage > 0)) { filtered = false; }
                 }
-=======
-                if (totalDPS > 0)
-                    EncounterStatus.Content += $" - {totalDPS.ToString("N2")} DPS - {totalReadDamage.ToString("N0")} Total Damage";
->>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
 
                 if (!filtered && (c.Damage > 0) && (SeparateTab.SelectedIndex == 0)) { CombatantData.Items.Add(c); }
                 if ((c.AllyDamage > 0) && (SeparateTab.SelectedIndex == 1)) { workingList.Sort((x, y) => y.AllyDamage.CompareTo(x.AllyDamage)); AllyData.Items.Add(c); }
@@ -695,21 +555,10 @@ namespace OverParse
             }
 
             // autoend
-<<<<<<< HEAD
             if (Properties.Settings.Default.AutoEndEncounters && encounterlog.running)
             {
                 int unixTimestamp = (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
                 if ((unixTimestamp - Log.newTimestamp) >= Properties.Settings.Default.EncounterTimeout) { EndEncounter_Click(null, null); }
-=======
-            if (encounterlog.running && Properties.Settings.Default.AutoEndEncounters)
-            {
-                int unixTimestamp = (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-                if ((unixTimestamp - encounterlog.newTimestamp) >= Properties.Settings.Default.EncounterTimeout)
-                {
-                    //Automatically ending an encounter
-                    EndEncounter_Click(null, null);
-                }
->>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
             }
         }
 
@@ -742,6 +591,14 @@ namespace OverParse
             Properties.Settings.Default.Save();
         }
 
+
+        private void OpenRecentLog_Click(object sender, RoutedEventArgs e)
+        {
+            string filename = sessionLogFilenames[SessionLogs.Items.IndexOf((e.OriginalSource as MenuItem))];
+            //attempting to open
+            Process.Start(Directory.GetCurrentDirectory() + "\\" + filename);
+        }
+
         private void Minimize_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
 
         private void Exit_Click(object sender, RoutedEventArgs e)
@@ -750,29 +607,6 @@ namespace OverParse
             Application.Current.Shutdown();
         }
 
-<<<<<<< HEAD
-=======
-        public void EndEncounter_Key(object sender, HotkeyEventArgs e)
-        {
-            //Encounter hotkey pressed
-            EndEncounter_Click(null, null);
-            e.Handled = true;
-        }
-
-        public void EndEncounterNoLog_Key(object sender, HotkeyEventArgs e)
-        {
-            //Encounter hotkey (no log) pressed
-            EndEncounterNoLog_Click(null, null);
-            e.Handled = true;
-        }
-
-        public void DefaultWindowSize_Key(object sender, HotkeyEventArgs e)
-        {
-            DefaultWindowSize_Click(null, null);
-            e.Handled = true;
-        }
-
->>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed) { DragMove(); }
@@ -780,15 +614,9 @@ namespace OverParse
 
         private void ListViewItem_MouseRightClick(object sender, MouseButtonEventArgs e)
         {
-<<<<<<< HEAD
             ListViewItem data = sender as ListViewItem;
             Combatant data2 = (Combatant)data.DataContext;
             Detalis f = new Detalis(data2) { Owner = this };
-=======
-            var data = (ListViewItem)sender;
-            var item = CombatantData.ContainerFromElement((DependencyObject)e.OriginalSource) as ListViewItem;
-            Details f = new Details(data.ToString(), "value") { Owner = this };
->>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
             f.Show();
         }
     }

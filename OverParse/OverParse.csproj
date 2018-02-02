@@ -26,7 +26,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.0</ApplicationVersion>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -38,12 +38,12 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>
     </DefineConstants>
-    <ErrorReport>none</ErrorReport>
+    <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
-    <LangVersion>default</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -90,12 +90,6 @@
     <Optimize>true</Optimize>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NHotkey, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NHotkey.1.2.1\lib\net20\NHotkey.dll</HintPath>
-    </Reference>
-    <Reference Include="NHotkey.Wpf, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NHotkey.Wpf.1.2.1\lib\net35\NHotkey.Wpf.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -117,10 +111,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Click.cs" />
-    <Compile Include="Details.xaml.cs">
-      <DependentUpon>Details.xaml</DependentUpon>
+    <Compile Include="Detalis.xaml.cs">
+      <DependentUpon>Detalis.xaml</DependentUpon>
     </Compile>
-<<<<<<< HEAD
     <Compile Include="FolderDialog\FolderDialog.cs" />
     <Compile Include="Hotkey.cs" />
     <Compile Include="inputbox.xaml.cs">
@@ -140,16 +133,8 @@
     <Compile Include="SelectColumn.xaml.cs">
       <DependentUpon>SelectColumn.xaml</DependentUpon>
     </Compile>
-=======
-    <Compile Include="FontDialogEx.xaml.cs">
-      <DependentUpon>FontDialogEx.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="inputbox.xaml.cs">
-      <DependentUpon>inputbox.xaml</DependentUpon>
-    </Compile>
->>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
     <Compile Include="WindowsServices.cs" />
-    <Page Include="Details.xaml">
+    <Page Include="Detalis.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -171,13 +156,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-<<<<<<< HEAD
     <Page Include="SelectColumn.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-=======
->>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -201,7 +183,6 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
