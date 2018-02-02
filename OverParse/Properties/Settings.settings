@@ -122,6 +122,7 @@
     <Setting Name="HideLsw" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+<<<<<<< HEAD
     <Setting Name="Updateinv" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">250</Value>
     </Setting>
@@ -164,5 +165,13 @@
     <Setting Name="ListTab" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+=======
+    <Setting Name="DTcfg" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Pctcfg" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+>>>>>>> cc0dadfeb20fcf257fc512232ff89cd46bc61faa
   </Settings>
 </SettingsFile>
