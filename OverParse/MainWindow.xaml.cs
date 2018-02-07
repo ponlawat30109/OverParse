@@ -58,7 +58,6 @@ namespace OverParse
 
             if (Properties.Settings.Default.UpgradeRequired && !Properties.Settings.Default.ResetInvoked)
             {
-                //Console.WriteLine("Upgrading settings");
                 Properties.Settings.Default.Upgrade();
                 Properties.Settings.Default.UpgradeRequired = false;
             }
@@ -77,9 +76,7 @@ namespace OverParse
 
             if (outOfBounds)
             {
-                //Console.WriteLine("Window's off-screen, resetting");
-                Top = 50;
-                Left = 50;
+                Top = 50; Left = 50;
             }
 
             AutoEndEncounters.IsChecked = Properties.Settings.Default.AutoEndEncounters;
@@ -98,6 +95,7 @@ namespace OverParse
             LogToClipboard.IsChecked = Properties.Settings.Default.LogToClipboard;
             AlwaysOnTop.IsChecked = Properties.Settings.Default.AlwaysOnTop;
             AutoHideWindow.IsChecked = Properties.Settings.Default.AutoHideWindow;
+            QuestTime.IsChecked = Properties.Settings.Default.QuestTime;
 
             ShowDamageGraph.IsChecked = Properties.Settings.Default.ShowDamageGraph; ShowDamageGraph_Click(null, null);
             HighlightYourDamage.IsChecked = Properties.Settings.Default.HighlightYourDamage; HighlightYourDamage_Click(null, null);
@@ -126,13 +124,12 @@ namespace OverParse
                 MessageBox.Show("OverParseはホットキーを初期化出来ませんでした。　多重起動していないか確認して下さい！\nプログラムは引き続き使用できますが、ホットキーは反応しません。", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
             }
 
-
             //new_version_check
             try
             {
                 const string url = "https://api.github.com/repos/remon-7l/overparse/releases/latest";
                 var request = (HttpWebRequest)WebRequest.Create(url);
-                request.UserAgent = "Mozilla / 5.0 OverParse / 3.1.0";
+                request.UserAgent = "Mozilla / 5.0 OverParse / 3.1.2";
                 request.GetResponseAsync().ContinueWith(task => {
                     var response = task.Result;
                     using (var reader = new StreamReader(response.GetResponseStream()))
@@ -141,13 +138,12 @@ namespace OverParse
                         var m = Regex.Match(content, @"tag_name.........");
                         var v = Regex.Match(m.Value, @"\d.\d.\d");
                         var newVersion = Version.Parse(v.ToString());
-                        var nowVersion = Version.Parse("3.1.0");
+                        var nowVersion = Version.Parse("3.1.2");
                         if (newVersion <= nowVersion) { updatemsg = ""; }
                         if (nowVersion < newVersion) { updatemsg = " - New version available(" + v.ToString() + ")"; }
                     }
                 });
-            } catch {
-            }
+            } catch { }
 
         //skills.csv
         string[] skills = new string[0];
@@ -203,16 +199,13 @@ namespace OverParse
             logCheckTimer.Tick += new EventHandler(CheckForNewLog);
             logCheckTimer.Interval = new TimeSpan(0, 0, 1);
             logCheckTimer.Start();
-
         }
 
         private void HideIfInactive(object sender, EventArgs e)
         {
             if (!Properties.Settings.Default.AutoHideWindow) { return; }
-
             string title = WindowsServices.GetActiveWindowTitle();
             string[] relevant = { "OverParse", "OverParse Setup", "OverParse Error", "Encounter Timeout", "Phantasy Star Online 2" };
-
             if (!relevant.Contains(title))
             {
                 Opacity = 0;
@@ -226,7 +219,6 @@ namespace OverParse
             DirectoryInfo directory = encounterlog.logDirectory;
             if (!directory.Exists) { return; }
             if (directory.GetFiles().Count() == 0) { return; }
-
             FileInfo log = directory.GetFiles().Where(f => Regex.IsMatch(f.Name, @"\d+\.csv")).OrderByDescending(f => f.Name).First();
             if (log.Name != encounterlog.filename) { encounterlog = new Log(Properties.Settings.Default.Path); }
         }
@@ -263,8 +255,6 @@ namespace OverParse
             catch { MessageBox.Show("OverParseはDirectory<ErrorLogs>の作成に失敗しました。"); }
             string datetime = string.Format("{0:yyyy-MM-dd_HH-mm-ss}", DateTime.Now);
             string filename = $"ErrorLogs/ErrorLogs - {datetime}.txt";
-            //=== UNHANDLED EXCEPTION ===
-            //e.Exception.ToString()
             File.WriteAllText(filename, e.Exception.ToString());
         }
 
@@ -338,11 +328,29 @@ namespace OverParse
             // get a copy of the right combatants
             List<Combatant> targetList = (encounterlog.running ? encounterlog.combatants : lastCombatants);
             workingList.Clear();
-            foreach (Combatant c in targetList) { workingList.Add(c); }
+            foreach (Combatant c in targetList)
+            {
+                Combatant temp = new Combatant(c.ID, c.Name, c.isTemporary);
+                foreach (Attack a in c.Attacks) { temp.Attacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.DBAttacks) { temp.DBAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.LswAttacks) { temp.LswAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.PwpAttacks) { temp.PwpAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.AisAttacks) { temp.AisAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.RideAttacks) { temp.RideAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
+                temp.Damaged = c.Damaged;
+                temp.ZvsDamage = c.ZvsDamage;
+                temp.HTFDamage = c.HTFDamage;
+                temp.DBDamage = c.DBDamage;
+                temp.LswDamage = c.LswDamage;
+                temp.PwpDamage = c.PwpDamage;
+                temp.AisDamage = c.AisDamage;
+                temp.RideDamage = c.RideDamage;
+                temp.PercentReadDPS = c.PercentReadDPS;
+                workingList.Add(temp);
+            }
 
             // clear out the list
             CombatantData.Items.Clear();
-            AllyData.Items.Clear();
             DBData.Items.Clear();
             LswData.Items.Clear();
             PwpData.Items.Clear();
@@ -356,15 +364,15 @@ namespace OverParse
             if (Properties.Settings.Default.SeparateAIS)
             {
                 List<Combatant> pendingCombatants = new List<Combatant>();
-
                 foreach (Combatant c in workingList)
                 {
                     if (!c.IsAlly) { continue; }
                     if (c.AisDamage > 0)
                     {
                         Combatant AISHolder = new Combatant(c.ID, "AIS|" + c.Name, "AIS");
-                        c.Attacks = c.Attacks.Except(c.AisAttacks).ToList();
-                        AISHolder.Attacks.AddRange(c.AisAttacks);
+                        List<Attack> targetAttacks = c.Attacks.Where(a => Combatant.AISAttackIDs.Contains(a.ID)).ToList();
+                        c.Attacks = c.Attacks.Except(targetAttacks).ToList();
+                        AISHolder.Attacks.AddRange(targetAttacks);
                         pendingCombatants.Add(AISHolder);
                     }
                 }
@@ -374,16 +382,15 @@ namespace OverParse
             if (Properties.Settings.Default.SeparateDB)
             {
                 List<Combatant> pendingDBCombatants = new List<Combatant>();
-
                 foreach (Combatant c in workingList)
                 {
-                    if (!c.IsAlly)
-                        continue;
+                    if (!c.IsAlly) { continue; }
                     if (c.DBDamage > 0)
                     {
                         Combatant DBHolder = new Combatant(c.ID, "DB|" + c.Name, "DB");
-                        c.Attacks = c.Attacks.Except(c.DBAttacks).ToList();
-                        DBHolder.Attacks.AddRange(c.DBAttacks);
+                        List<Attack> targetAttacks = c.Attacks.Where(a => Combatant.DBAttackIDs.Contains(a.ID)).ToList();
+                        c.Attacks = c.Attacks.Except(targetAttacks).ToList();
+                        DBHolder.Attacks.AddRange(targetAttacks);
                         pendingDBCombatants.Add(DBHolder);
                     }
                 }
@@ -393,16 +400,15 @@ namespace OverParse
             if (Properties.Settings.Default.SeparateRide)
             {
                 List<Combatant> pendingRideCombatants = new List<Combatant>();
-
                 foreach (Combatant c in workingList)
                 {
-                    if (!c.IsAlly)
-                        continue;
+                    if (!c.IsAlly) { continue; }
                     if (c.RideDamage > 0)
                         {
                         Combatant RideHolder = new Combatant(c.ID, "Ride|" + c.Name, "Ride");
-                        c.Attacks = c.Attacks.Except(c.RideAttacks).ToList();
-                        RideHolder.Attacks.AddRange(c.RideAttacks);
+                        List<Attack> targetAttacks = c.Attacks.Where(a => Combatant.RideAttackIDs.Contains(a.ID)).ToList();
+                        c.Attacks = c.Attacks.Except(targetAttacks).ToList();
+                        RideHolder.Attacks.AddRange(targetAttacks);
                         pendingRideCombatants.Add(RideHolder);
                     }
                 }
@@ -415,13 +421,13 @@ namespace OverParse
 
                 foreach (Combatant c in workingList)
                 {
-                    if (!c.IsAlly)
-                        continue;
+                    if (!c.IsAlly) { continue; }
                     if (c.PwpDamage > 0)
                     {
                         Combatant PhotonHolder = new Combatant(c.ID, "Pwp|" + c.Name, "Pwp");
-                        c.Attacks = c.Attacks.Except(c.PwpAttacks).ToList();
-                        PhotonHolder.Attacks.AddRange(c.PwpAttacks);
+                        List<Attack> targetAttacks = c.Attacks.Where(a => Combatant.PhotonAttackIDs.Contains(a.ID)).ToList();
+                        c.Attacks = c.Attacks.Except(targetAttacks).ToList();
+                        PhotonHolder.Attacks.AddRange(targetAttacks);
                         pendingPwpCombatants.Add(PhotonHolder);
                     }
                 }
@@ -431,16 +437,15 @@ namespace OverParse
             if (Properties.Settings.Default.SeparateLsw)
             {
                 List<Combatant> pendingLswCombatants = new List<Combatant>();
-
                 foreach (Combatant c in workingList)
                 {
-                    if (!c.IsAlly)
-                        continue;
+                    if (!c.IsAlly) { continue; }
                     if (c.LswDamage > 0)
                     {
                         Combatant LswHolder = new Combatant(c.ID, "Lsw|" + c.Name, "Lsw");
-                        c.Attacks = c.Attacks.Except(c.LswAttacks).ToList();
-                        LswHolder.Attacks.AddRange(c.LswAttacks);
+                        List<Attack> targetAttacks = c.Attacks.Where(a => Combatant.LaconiumAttackIDs.Contains(a.ID)).ToList();
+                        c.Attacks = c.Attacks.Except(targetAttacks).ToList();
+                        LswHolder.Attacks.AddRange(targetAttacks);
                         pendingLswCombatants.Add(LswHolder);
                     }
                 }
@@ -459,8 +464,12 @@ namespace OverParse
                 Combatant finishHolder = new Combatant("99999998", "HTF Attacks", "HTF Attacks");
                 foreach (Combatant c in workingList)
                 {
-                    finishHolder.Attacks.AddRange(c.HTFAttacks);
-                    c.Attacks = c.Attacks.Except(c.HTFAttacks).ToList();
+                    if (c.IsAlly)
+                    {
+                        List<Attack> targetAttacks = c.Attacks.Where(a => Combatant.FinishAttackIDs.Contains(a.ID)).ToList();
+                        finishHolder.Attacks.AddRange(targetAttacks);
+                        c.Attacks = c.Attacks.Except(targetAttacks).ToList();
+                    }
                 }
                 workingList.Add(finishHolder);
             }
@@ -470,16 +479,18 @@ namespace OverParse
                 Combatant zanverseHolder = new Combatant("99999999", "Zanverse", "Zanverse");
                 foreach (Combatant c in workingList)
                 {
-                    zanverseHolder.Attacks.AddRange(c.ZvsAttacks);
-                    c.Attacks = c.Attacks.Except(c.ZvsAttacks).ToList();
-                    zanverseHolder.ZvsDamage = c.ZvsDamage;
+                    if (c.IsAlly)
+                    {
+                        List<Attack> targetAttacks = c.Attacks.Where(a => a.ID == "2106601422").ToList();
+                        zanverseHolder.Attacks.AddRange(targetAttacks);
+                        c.Attacks = c.Attacks.Except(targetAttacks).ToList();
+                    }
                 }
                 workingList.Add(zanverseHolder);
             }
 
             // get group damage totals
-            Int64 totalReadDamage = workingList.Sum(x => x.Damage);
-            Int64 totalAllyDamage = workingList.Where(c => c.IsAlly).Sum(x => x.ReadDamage);
+            Int64 totalReadDamage = workingList.Sum(x => x.ReadDamage);
             Int64 totalDBDamage = workingList.Sum(x => x.DBDamage);
             Int64 totalLswDamage = workingList.Sum(x => x.LswDamage);
             Int64 totalPwpDamage = workingList.Sum(x => x.PwpDamage);
@@ -490,7 +501,6 @@ namespace OverParse
             foreach (Combatant c in workingList)
             {
                 c.PercentReadDPS = c.ReadDamage / (float)totalReadDamage * 100;
-                c.AllyPct = c.AllyDamage / (float)totalAllyDamage * 100;
                 c.DBPct = c.DBDamage / (float)totalDBDamage * 100;
                 c.LswPct = c.LswDamage / (float)totalLswDamage * 100;
                 c.PwpPct = c.PwpDamage / (float)totalPwpDamage * 100;
@@ -499,29 +509,7 @@ namespace OverParse
             }
 
             // status pane updates
-            if (!encounterlog.running || (encounterlog.valid && encounterlog.notEmpty))
-            {
-                EncounterIndicator.Fill = new SolidColorBrush(Color.FromArgb(192, 255, 128, 128));
-                EncounterStatus.Content = encounterlog.LogStatus();
-            }
-            if (encounterlog.valid && encounterlog.notEmpty)
-            {
-                EncounterIndicator.Fill = new SolidColorBrush(Color.FromArgb(192, 64, 192, 64));
-                EncounterStatus.Content = $"Waiting - {lastStatus}";
-                if (lastStatus == "") { EncounterStatus.Content = "Waiting... - " + encounterlog.filename + updatemsg; }
-            }
-            if (encounterlog.running)
-            {
-                EncounterIndicator.Fill = new SolidColorBrush(Color.FromArgb(192, 0, 192, 255));
-                TimeSpan timespan = TimeSpan.FromSeconds(Log.ActiveTime);
-                string timer = timespan.ToString(@"h\:mm\:ss");
-                EncounterStatus.Content = $"{timer}";
-
-                float totalDPS = totalReadDamage / (float)Log.ActiveTime;
-                if (totalDPS > 0) { EncounterStatus.Content += $" - Total : {totalReadDamage.ToString("N0")}" + $" - {totalDPS.ToString("N0")} DPS"; }
-                if (!Properties.Settings.Default.SeparateZanverse) { EncounterStatus.Content += $" - Zanverse : {totalZanverse.ToString("N0")}"; }
-                lastStatus = EncounterStatus.Content.ToString();
-            }
+            StatusUpdate(totalReadDamage,totalZanverse);
 
             // damage graph stuff
             Combatant.maxShare = 0;
@@ -546,12 +534,11 @@ namespace OverParse
                 }
 
                 if (!filtered && (c.Damage > 0) && (SeparateTab.SelectedIndex == 0)) { CombatantData.Items.Add(c); }
-                if ((c.AllyDamage > 0) && (SeparateTab.SelectedIndex == 1)) { workingList.Sort((x, y) => y.AllyDamage.CompareTo(x.AllyDamage)); AllyData.Items.Add(c); }
-                if ((c.DBDamage > 0) && (SeparateTab.SelectedIndex == 2) ) { workingList.Sort((x, y) => y.DBDamage.CompareTo(x.DBDamage)); DBData.Items.Add(c); }
-                if ((c.LswDamage > 0) && (SeparateTab.SelectedIndex == 3)) { workingList.Sort((x, y) => y.LswDamage.CompareTo(x.LswDamage)); LswData.Items.Add(c); }
-                if ((c.PwpDamage > 0) && (SeparateTab.SelectedIndex == 4)) { workingList.Sort((x, y) => y.PwpDamage.CompareTo(x.PwpDamage)); PwpData.Items.Add(c); }
-                if ((c.AisDamage > 0) && (SeparateTab.SelectedIndex == 5)) { workingList.Sort((x, y) => y.AisDamage.CompareTo(x.AisDamage)); AisData.Items.Add(c); }
-                if ((c.RideDamage > 0) && (SeparateTab.SelectedIndex == 6)) { workingList.Sort((x, y) => y.RideDamage.CompareTo(x.RideDamage)); RideData.Items.Add(c); }
+                if ((c.DBDamage > 0) && (c.IsAlly) && (SeparateTab.SelectedIndex == 1) ) { workingList.Sort((x, y) => y.DBDamage.CompareTo(x.DBDamage)); DBData.Items.Add(c); }
+                if ((c.LswDamage > 0) && (SeparateTab.SelectedIndex == 2)) { workingList.Sort((x, y) => y.LswDamage.CompareTo(x.LswDamage)); LswData.Items.Add(c); }
+                if ((c.PwpDamage > 0) && (SeparateTab.SelectedIndex == 3)) { workingList.Sort((x, y) => y.PwpDamage.CompareTo(x.PwpDamage)); PwpData.Items.Add(c); }
+                if ((c.AisDamage > 0) && (SeparateTab.SelectedIndex == 4)) { workingList.Sort((x, y) => y.AisDamage.CompareTo(x.AisDamage)); AisData.Items.Add(c); }
+                if ((c.RideDamage > 0) && (SeparateTab.SelectedIndex == 5)) { workingList.Sort((x, y) => y.RideDamage.CompareTo(x.RideDamage)); RideData.Items.Add(c); }
             }
 
             // autoend
@@ -559,6 +546,33 @@ namespace OverParse
             {
                 int unixTimestamp = (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
                 if ((unixTimestamp - Log.newTimestamp) >= Properties.Settings.Default.EncounterTimeout) { EndEncounter_Click(null, null); }
+            }
+        }
+
+        private void StatusUpdate(Int64 totalReadDamage,Int64 totalZanverse)
+        {
+            if (!encounterlog.running || (encounterlog.valid && encounterlog.notEmpty))
+            {
+                EncounterIndicator.Fill = new SolidColorBrush(Color.FromArgb(192, 255, 128, 128));
+                EncounterStatus.Content = encounterlog.LogStatus();
+            }
+            if (encounterlog.valid && encounterlog.notEmpty)
+            {
+                EncounterIndicator.Fill = new SolidColorBrush(Color.FromArgb(192, 64, 192, 64));
+                EncounterStatus.Content = $"Waiting - {lastStatus}";
+                if (lastStatus == "") { EncounterStatus.Content = "Waiting... - " + encounterlog.filename + updatemsg; }
+            }
+            if (encounterlog.running)
+            {
+                EncounterIndicator.Fill = new SolidColorBrush(Color.FromArgb(192, 0, 192, 255));
+                TimeSpan timespan = TimeSpan.FromSeconds(Log.ActiveTime);
+                string timer = timespan.ToString(@"h\:mm\:ss");
+                EncounterStatus.Content = $"{timer}";
+
+                float totalDPS = totalReadDamage / (float)Log.ActiveTime;
+                if (totalDPS > 0) { EncounterStatus.Content += $" - Total : {totalReadDamage.ToString("N0")}" + $" - {totalDPS.ToString("N0")} DPS"; }
+                if (!Properties.Settings.Default.SeparateZanverse) { EncounterStatus.Content += $" - Zanverse : {totalZanverse.ToString("N0")}"; }
+                lastStatus = EncounterStatus.Content.ToString();
             }
         }
 
@@ -587,7 +601,6 @@ namespace OverParse
             }
 
             encounterlog.WriteLog();
-
             Properties.Settings.Default.Save();
         }
 
@@ -619,5 +632,6 @@ namespace OverParse
             Detalis f = new Detalis(data2) { Owner = this };
             f.Show();
         }
+
     }
 }

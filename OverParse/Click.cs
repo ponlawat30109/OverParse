@@ -27,8 +27,20 @@ namespace OverParse
             foreach (Combatant c in workingList)
             {
                 Combatant temp2 = new Combatant(c.ID, c.Name, c.isTemporary);
-                foreach (Attack a in c.Attacks) { temp2.Attacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri, a.TargetID)); }
+                foreach (Attack a in c.Attacks) { temp2.Attacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.DBAttacks) { temp2.DBAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.LswAttacks) { temp2.LswAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.PwpAttacks) { temp2.PwpAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.AisAttacks) { temp2.AisAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.RideAttacks) { temp2.RideAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
                 temp2.Damaged = c.Damaged;
+                temp2.ZvsDamage = c.ZvsDamage;
+                temp2.HTFDamage = c.HTFDamage;
+                temp2.DBDamage = c.DBDamage;
+                temp2.LswDamage = c.LswDamage;
+                temp2.PwpDamage = c.PwpDamage;
+                temp2.AisDamage = c.AisDamage;
+                temp2.RideDamage = c.RideDamage;
                 temp2.PercentReadDPS = c.PercentReadDPS;
                 workingListCopy.Add(temp2);
             }

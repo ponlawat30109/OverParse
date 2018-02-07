@@ -493,18 +493,6 @@ namespace OverParse.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool HideLsw {
-            get {
-                return ((bool)(this["HideLsw"]));
-            }
-            set {
-                this["HideLsw"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("250")]
         public int Updateinv {
             get {
@@ -668,6 +656,18 @@ namespace OverParse.Properties {
             }
             set {
                 this["ListTab"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool End8 {
+            get {
+                return ((bool)(this["End8"]));
+            }
+            set {
+                this["End8"] = value;
             }
         }
     }

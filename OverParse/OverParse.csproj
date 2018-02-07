@@ -47,7 +47,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>none</DebugType>
+    <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>
@@ -57,9 +57,10 @@
     <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <LangVersion>7.2</LangVersion>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Hero.ico</ApplicationIcon>
+    <ApplicationIcon>prop\Hero.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
@@ -111,12 +112,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Click.cs" />
-    <Compile Include="Detalis.xaml.cs">
+    <Compile Include="prop\Detalis.xaml.cs">
       <DependentUpon>Detalis.xaml</DependentUpon>
     </Compile>
     <Compile Include="FolderDialog\FolderDialog.cs" />
-    <Compile Include="Hotkey.cs" />
-    <Compile Include="inputbox.xaml.cs">
+    <Compile Include="prop\Hotkey.cs" />
+    <Compile Include="prop\inputbox.xaml.cs">
       <DependentUpon>inputbox.xaml</DependentUpon>
     </Compile>
     <Compile Include="FolderDialog\COMGuids.cs" />
@@ -130,15 +131,15 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.ja-JP.resx</DependentUpon>
     </Compile>
-    <Compile Include="SelectColumn.xaml.cs">
+    <Compile Include="prop\SelectColumn.xaml.cs">
       <DependentUpon>SelectColumn.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WindowsServices.cs" />
-    <Page Include="Detalis.xaml">
+    <Compile Include="prop\WindowsServices.cs" />
+    <Page Include="prop\Detalis.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="inputbox.xaml">
+    <Page Include="prop\inputbox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -156,7 +157,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="SelectColumn.xaml">
+    <Page Include="prop\SelectColumn.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -199,7 +200,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Hero.ico" />
+    <Resource Include="prop\Hero.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="FolderDialog\license.txt" />

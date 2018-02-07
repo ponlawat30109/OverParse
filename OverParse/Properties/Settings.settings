@@ -119,9 +119,6 @@
     <Setting Name="End" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="HideLsw" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="Updateinv" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">250</Value>
     </Setting>
@@ -163,6 +160,9 @@
     </Setting>
     <Setting Name="ListTab" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="End8" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>
