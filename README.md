@@ -6,7 +6,6 @@ Click.cs - MainWindow.xaml.csからClick関連の処理を分割したもの par
 Hotkey.cs - ホットキー関連  
 WindowsServices.cs - HideIfInactiveから呼ばれているアクティブなアプリのウィンドゥタイトル取得(?)  
 Detalis - ListViewItemをダブルクリックした時のウィンドゥ  
-FontDialogEx - フォントの選択ウィンドゥ  
 inputbox - 自動エンカウント終了・csv更新間隔の秒数入力欄(WPF)  
 
   
