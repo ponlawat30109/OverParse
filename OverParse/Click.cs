@@ -27,15 +27,15 @@ namespace OverParse
             foreach (Combatant c in workingList)
             {
                 Combatant temp2 = new Combatant(c.ID, c.Name, c.isTemporary);
-                foreach (Attack a in c.Attacks) { temp2.Attacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
-                foreach (Attack a in c.DBAttacks) { temp2.DBAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
-                foreach (Attack a in c.LswAttacks) { temp2.LswAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
-                foreach (Attack a in c.PwpAttacks) { temp2.PwpAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
-                foreach (Attack a in c.AisAttacks) { temp2.AisAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
-                foreach (Attack a in c.RideAttacks) { temp2.RideAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.Attacks) { temp2.Attacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.AllyAttacks) { temp2.AllyAttacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.DBAttacks) { temp2.DBAttacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.LswAttacks) { temp2.LswAttacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.PwpAttacks) { temp2.PwpAttacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.AisAttacks) { temp2.AisAttacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.RideAttacks) { temp2.RideAttacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
                 temp2.Damaged = c.Damaged;
-                temp2.ZvsDamage = c.ZvsDamage;
-                temp2.HTFDamage = c.HTFDamage;
+                temp2.AllyDamage = c.AllyDamage;
                 temp2.DBDamage = c.DBDamage;
                 temp2.LswDamage = c.LswDamage;
                 temp2.PwpDamage = c.PwpDamage;
@@ -496,7 +496,7 @@ namespace OverParse
                     Stream stream = client.OpenRead("https://remon-7l.github.io/skills.csv");
                     StreamReader streamReader = new StreamReader(stream);
                     String content = streamReader.ReadToEnd();
-                    File.WriteAllText("skills.csv", content);
+                    File.WriteAllText("skills_ja.csv", content);
                 }
                 } catch {
                 MessageBox.Show("skills.csvの取得に失敗しました。");

@@ -658,17 +658,5 @@ namespace OverParse.Properties {
                 this["ListTab"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool End8 {
-            get {
-                return ((bool)(this["End8"]));
-            }
-            set {
-                this["End8"] = value;
-            }
-        }
     }
 }

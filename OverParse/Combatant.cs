@@ -11,11 +11,11 @@ namespace OverParse
         private const float maxBGopacity = 0.6f;
         public string ID, isTemporary;
         public string Name { get; set; }
-        public float PercentDPS, PercentReadDPS, DBPct, LswPct, PwpPct, AisPct, RidePct;
+        public float PercentDPS, PercentReadDPS, AllyPct, DBPct, LswPct, PwpPct, AisPct, RidePct;
         //public int ActiveTime;
         public static string Log;
-        public List<Attack> Attacks, DBAttacks, LswAttacks, PwpAttacks, AisAttacks, RideAttacks;
-        public Int64 Damaged, ZvsDamage, HTFDamage, DBDamage, LswDamage, PwpDamage, AisDamage, RideDamage;
+        public List<Attack> Attacks, AllyAttacks, DBAttacks, LswAttacks, PwpAttacks, AisAttacks, RideAttacks;
+        public Int64 Damaged, AllyDamage, DBDamage, LswDamage, PwpDamage, AisDamage, RideDamage;
         public static string[] FinishAttackIDs = new string[] { "2268332858", "170999070", "2268332813", "1266101764", "11556353", "1233721870", "1233722348", "3480338695" };
         public static string[] PhotonAttackIDs = new string[] { "2414748436", "1954812953", "2822784832", "3339644659", "2676260123", "224805109" , "1913897098" };
         public static string[] LaconiumAttackIDs = new string[] { "2235773608", "2235773610", "2235773611", "2235773818", "2235773926", "2235773927", "2235773944", "2618804663", "2619614461", "3607718359" };
@@ -36,6 +36,8 @@ namespace OverParse
         public string RatioPercent => $"{PercentReadDPS:00.00}";
 
         public Int64 Damage => Attacks.Sum(x => x.Damage);
+        public Int64 ZvsDamage => Attacks.Where(a => a.ID == "2106601422").Sum(x => x.Damage);
+        public Int64 HTFDamage => Attacks.Where(a => FinishAttackIDs.Contains(a.ID)).Sum(x => x.Damage);
         public Int64 ReadDamage
         {
             get
@@ -158,8 +160,39 @@ namespace OverParse
                 return MaxHitAttack.Damage.ToString(attack);
             }
         }
-        
+
         #region
+
+        //Ally Data
+        public string AllyReadPct => AllyPct.ToString("N2");
+        public string AllyReadDamage => AllyDamage.ToString("N0");
+        public string AllyDPS => Math.Round(AllyDamage / (double)OverParse.Log.ActiveTime).ToString("N0");
+        public string AllyJAPct => (AllyAttacks.Where(a => !MainWindow.jaignoreskill.Contains(a.ID)).Average(x => x.JA) * 100).ToString("N2");
+        public string AllyCriPct => (AllyAttacks.Where(a => !MainWindow.critignoreskill.Contains(a.ID)).Average(x => x.Cri) * 100).ToString("N2");
+        public string AllyMaxHitdmg => AllyMaxHit.Damage.ToString("N0");
+        public string AllyAtkName
+        {
+            get
+            {
+                if (AllyMaxHit == null) { return "--"; }
+                string attack = "Unknown";
+                if (MainWindow.skillDict.ContainsKey(AllyMaxHit.ID)) { attack = MainWindow.skillDict[AllyMaxHit.ID]; }
+                return AllyMaxHit.Damage.ToString(attack);
+            }
+        }
+        public Attack AllyMaxHit
+        {
+            get
+            {
+                AllyAttacks.Sort((x, y) => y.Damage.CompareTo(x.Damage));
+                if (AllyAttacks != null)
+                {
+                    return AllyAttacks.FirstOrDefault();
+                } else {
+                    return null;
+                }
+            }
+        }
 
         //DarkBlast Data
         public string DBReadPct => DBPct.ToString("N2");
@@ -183,7 +216,7 @@ namespace OverParse
             get
             {
                 DBAttacks.Sort((x, y) => y.Damage.CompareTo(x.Damage));
-                if (Attacks != null)
+                if (DBAttacks != null)
                 {
                     return DBAttacks.FirstOrDefault();
                 } else {
@@ -365,11 +398,8 @@ namespace OverParse
 
         LinearGradientBrush GenerateBarBrush(Color c, Color c2)
         {
-            if (!Properties.Settings.Default.ShowDamageGraph)
-                c = new Color();
-
-            if (IsYou && Properties.Settings.Default.HighlightYourDamage)
-                c = Color.FromArgb(128, 0, 255, 255);
+            if (!Properties.Settings.Default.ShowDamageGraph) { c = new Color(); }
+            if (IsYou && Properties.Settings.Default.HighlightYourDamage) { c = Color.FromArgb(128, 0, 255, 255); }
 
             LinearGradientBrush lgb = new LinearGradientBrush
             {
@@ -384,45 +414,22 @@ namespace OverParse
             return lgb;
         }
 
-        public Combatant(string id, string name)
-        {
-            ID = id;
-            Name = name;
-            PercentDPS = -1;
-            Attacks = new List<Attack>();
-            DBAttacks = new List<Attack>();
-            LswAttacks = new List<Attack>();
-            PwpAttacks = new List<Attack>();
-            AisAttacks = new List<Attack>();
-            RideAttacks = new List<Attack>();
-            isTemporary = "no";
-            PercentReadDPS = 0;
-            Damaged = 0;
-            ZvsDamage = 0;
-            HTFDamage = 0;
-            DBDamage = 0;
-            LswDamage = 0;
-            PwpDamage = 0;
-            AisDamage = 0;
-            RideDamage = 0;
-        }
-
         public Combatant(string id, string name, string temp)
         {
             ID = id;
             Name = name;
+            isTemporary = temp;
             PercentDPS = -1;
             Attacks = new List<Attack>();
+            AllyAttacks = new List<Attack>();
             DBAttacks = new List<Attack>();
             LswAttacks = new List<Attack>();
             PwpAttacks = new List<Attack>();
             AisAttacks = new List<Attack>();
             RideAttacks = new List<Attack>();
-            isTemporary = temp;
             PercentReadDPS = 0;
+            AllyDamage = 0;
             Damaged = 0;
-            ZvsDamage = 0;
-            HTFDamage = 0;
             DBDamage = 0;
             LswDamage = 0;
             PwpDamage = 0;
@@ -436,10 +443,11 @@ namespace OverParse
     {
         public string ID;
         public Int64 Damage;
-        public int JA, Cri;
+        public int TimeID, JA, Cri;
 
-        public Attack(string initID, Int64 initDamage,int ja,int cri)
+        public Attack(int timeid,string initID, Int64 initDamage,int ja,int cri)
         {
+            TimeID = timeid; //U N I Q U E  Atks for diffcommands
             ID = initID;
             Damage = initDamage;
             JA = ja;

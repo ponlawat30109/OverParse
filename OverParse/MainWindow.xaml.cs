@@ -129,7 +129,7 @@ namespace OverParse
             {
                 const string url = "https://api.github.com/repos/remon-7l/overparse/releases/latest";
                 var request = (HttpWebRequest)WebRequest.Create(url);
-                request.UserAgent = "Mozilla / 5.0 OverParse / 3.1.2";
+                request.UserAgent = "Mozilla / 5.0 OverParse / 3.1.3";
                 request.GetResponseAsync().ContinueWith(task => {
                     var response = task.Result;
                     using (var reader = new StreamReader(response.GetResponseStream()))
@@ -138,7 +138,7 @@ namespace OverParse
                         var m = Regex.Match(content, @"tag_name.........");
                         var v = Regex.Match(m.Value, @"\d.\d.\d");
                         var newVersion = Version.Parse(v.ToString());
-                        var nowVersion = Version.Parse("3.1.2");
+                        var nowVersion = Version.Parse("3.1.3");
                         if (newVersion <= nowVersion) { updatemsg = ""; }
                         if (nowVersion < newVersion) { updatemsg = " - New version available(" + v.ToString() + ")"; }
                     }
@@ -323,6 +323,7 @@ namespace OverParse
         {
             if (encounterlog == null) { return; }
             if (Properties.Settings.Default.Clock) { Datetime.Content = DateTime.Now.ToString("HH:mm:ss.ff"); }
+
             encounterlog.UpdateLog(this, null);
 
             // get a copy of the right combatants
@@ -331,15 +332,15 @@ namespace OverParse
             foreach (Combatant c in targetList)
             {
                 Combatant temp = new Combatant(c.ID, c.Name, c.isTemporary);
-                foreach (Attack a in c.Attacks) { temp.Attacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
-                foreach (Attack a in c.DBAttacks) { temp.DBAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
-                foreach (Attack a in c.LswAttacks) { temp.LswAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
-                foreach (Attack a in c.PwpAttacks) { temp.PwpAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
-                foreach (Attack a in c.AisAttacks) { temp.AisAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
-                foreach (Attack a in c.RideAttacks) { temp.RideAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.Attacks) { temp.Attacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.AllyAttacks) { temp.AllyAttacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.DBAttacks) { temp.DBAttacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.LswAttacks) { temp.LswAttacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.PwpAttacks) { temp.PwpAttacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.AisAttacks) { temp.AisAttacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.RideAttacks) { temp.RideAttacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
                 temp.Damaged = c.Damaged;
-                temp.ZvsDamage = c.ZvsDamage;
-                temp.HTFDamage = c.HTFDamage;
+                temp.AllyDamage = c.AllyDamage;
                 temp.DBDamage = c.DBDamage;
                 temp.LswDamage = c.LswDamage;
                 temp.PwpDamage = c.PwpDamage;
@@ -351,12 +352,12 @@ namespace OverParse
 
             // clear out the list
             CombatantData.Items.Clear();
+            AllyData.Items.Clear();
             DBData.Items.Clear();
             LswData.Items.Clear();
             PwpData.Items.Clear();
             AisData.Items.Clear();
             RideData.Items.Clear();
-            //workingList.RemoveAll(c => c.isTemporary != "no");
 
             int elapsed = Log.ActiveTime;
 
@@ -455,7 +456,6 @@ namespace OverParse
             //分けたものを含めて再ソート
             if (SeparateTab.SelectedIndex == 0) { workingList.Sort((x, y) => y.ReadDamage.CompareTo(x.ReadDamage)); }
 
-            //ザンバースをプレイヤーとして認識させ、元の計算から除外
             Int64 totalZanverse = workingList.Sum(x => x.ZvsDamage);
             Int64 totalFinish = workingList.Sum(x => x.HTFDamage);
 
@@ -490,7 +490,9 @@ namespace OverParse
             }
 
             // get group damage totals
+            Int64 totalDamage = workingList.Sum(x => x.Damage);
             Int64 totalReadDamage = workingList.Sum(x => x.ReadDamage);
+            Int64 totalAllyDamage = workingList.Sum(x => x.AllyDamage);
             Int64 totalDBDamage = workingList.Sum(x => x.DBDamage);
             Int64 totalLswDamage = workingList.Sum(x => x.LswDamage);
             Int64 totalPwpDamage = workingList.Sum(x => x.PwpDamage);
@@ -501,6 +503,7 @@ namespace OverParse
             foreach (Combatant c in workingList)
             {
                 c.PercentReadDPS = c.ReadDamage / (float)totalReadDamage * 100;
+                c.AllyPct = c.AllyDamage / (float)totalAllyDamage * 100;
                 c.DBPct = c.DBDamage / (float)totalDBDamage * 100;
                 c.LswPct = c.LswDamage / (float)totalLswDamage * 100;
                 c.PwpPct = c.PwpDamage / (float)totalPwpDamage * 100;
@@ -509,7 +512,7 @@ namespace OverParse
             }
 
             // status pane updates
-            StatusUpdate(totalReadDamage,totalZanverse);
+            StatusUpdate(totalDamage,totalZanverse);
 
             // damage graph stuff
             Combatant.maxShare = 0;
@@ -534,11 +537,12 @@ namespace OverParse
                 }
 
                 if (!filtered && (c.Damage > 0) && (SeparateTab.SelectedIndex == 0)) { CombatantData.Items.Add(c); }
-                if ((c.DBDamage > 0) && (c.IsAlly) && (SeparateTab.SelectedIndex == 1) ) { workingList.Sort((x, y) => y.DBDamage.CompareTo(x.DBDamage)); DBData.Items.Add(c); }
-                if ((c.LswDamage > 0) && (SeparateTab.SelectedIndex == 2)) { workingList.Sort((x, y) => y.LswDamage.CompareTo(x.LswDamage)); LswData.Items.Add(c); }
-                if ((c.PwpDamage > 0) && (SeparateTab.SelectedIndex == 3)) { workingList.Sort((x, y) => y.PwpDamage.CompareTo(x.PwpDamage)); PwpData.Items.Add(c); }
-                if ((c.AisDamage > 0) && (SeparateTab.SelectedIndex == 4)) { workingList.Sort((x, y) => y.AisDamage.CompareTo(x.AisDamage)); AisData.Items.Add(c); }
-                if ((c.RideDamage > 0) && (SeparateTab.SelectedIndex == 5)) { workingList.Sort((x, y) => y.RideDamage.CompareTo(x.RideDamage)); RideData.Items.Add(c); }
+                if ((c.AllyDamage > 0) && (SeparateTab.SelectedIndex == 1)) { workingList.Sort((x, y) => y.AllyDamage.CompareTo(x.AllyDamage)); AllyData.Items.Add(c); }
+                if ((c.DBDamage > 0) && (SeparateTab.SelectedIndex == 2) ) { workingList.Sort((x, y) => y.DBDamage.CompareTo(x.DBDamage)); DBData.Items.Add(c); }
+                if ((c.LswDamage > 0) && (SeparateTab.SelectedIndex == 3)) { workingList.Sort((x, y) => y.LswDamage.CompareTo(x.LswDamage)); LswData.Items.Add(c); }
+                if ((c.PwpDamage > 0) && (SeparateTab.SelectedIndex == 4)) { workingList.Sort((x, y) => y.PwpDamage.CompareTo(x.PwpDamage)); PwpData.Items.Add(c); }
+                if ((c.AisDamage > 0) && (SeparateTab.SelectedIndex == 5)) { workingList.Sort((x, y) => y.AisDamage.CompareTo(x.AisDamage)); AisData.Items.Add(c); }
+                if ((c.RideDamage > 0) && (SeparateTab.SelectedIndex == 6)) { workingList.Sort((x, y) => y.RideDamage.CompareTo(x.RideDamage)); RideData.Items.Add(c); }
             }
 
             // autoend
