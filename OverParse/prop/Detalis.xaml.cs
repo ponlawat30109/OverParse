@@ -21,6 +21,8 @@ namespace OverParse
             Critical.Content = data.WCRIPercent;
             Max.Content = data.MaxHitdmg;
             Atk.Content = data.MaxHit;
+            Heal.Content = data.ReadHeal;
+            Recovery.Content = data.ReadRecovery;
         }
     }
 }

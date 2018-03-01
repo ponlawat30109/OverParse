@@ -95,7 +95,7 @@ namespace OverParse
             input.ShowDialog();
             if (Int32.TryParse(input.ResultText, out int x))
             {
-                if (x > 0) { Properties.Settings.Default.EncounterTimeout = x; }
+                if (0 < x) { Properties.Settings.Default.EncounterTimeout = x; }
                 else { MessageBox.Show("Error"); }
             }
             else
@@ -273,43 +273,42 @@ namespace OverParse
             bool Name, Pct, Dmg, Dmgd, DPS, JA, Cri, Hit, Atk, Tab, Vrb;
             Name = Pct = Dmg = Dmgd = DPS = JA = Cri = Hit = Atk = Tab = true;
             Vrb = Properties.Settings.Default.Variable; 
-            if (NameHC.Width == temp) { Name = false; }
-            if (PercentHC.Width == temp) { Pct = false; }
-            if (DmgHC.Width == temp) { Dmg = false; }
-            if (DmgDHC.Width == temp) { Dmgd = false; }
-            if (DPSHC.Width == temp) { DPS = false; }
-            if (JAHC.Width == temp) { JA = false; }
-            if (CriHC.Width == temp) { Cri = false; }
-            if (MdmgHC.Width == temp) { Hit = false; }
-            if (AtkHC.Width == temp) { Atk = false; }
+            if (CNameHC.Width == temp) { Name = false; }
+            if (CPercentHC.Width == temp) { Pct = false; }
+            if (CDmgHC.Width == temp) { Dmg = false; }
+            if (CDmgDHC.Width == temp) { Dmgd = false; }
+            if (CDPSHC.Width == temp) { DPS = false; }
+            if (CJAHC.Width == temp) { JA = false; }
+            if (CCriHC.Width == temp) { Cri = false; }
+            if (CMdmgHC.Width == temp) { Hit = false; }
+            if (CAtkHC.Width == temp) { Atk = false; }
             if (TabHC.Width == temp) { Tab = false; }
             SelectColumn selectColumn = new SelectColumn(Name, Pct, Dmg, Dmgd, DPS, JA, Cri, Hit, Atk, Tab, Vrb) { Owner = this };
             selectColumn.ShowDialog();
             if (!(bool)selectColumn.DialogResult) { return; }
             CombatantView.Columns.Clear();
 
-
-            if (selectColumn.ResultName) { CombatantView.Columns.Add(NameColumn); NameHC.Width = new GridLength(1, GridUnitType.Star); } else { NameHC.Width = temp; }
+            if (selectColumn.ResultName) { CombatantView.Columns.Add(NameColumn); CNameHC.Width = new GridLength(1, GridUnitType.Star); } else { CNameHC.Width = temp; }
             if (selectColumn.Vrb)
             {
-                if (selectColumn.Pct) { CombatantView.Columns.Add(PercentColumn); PercentHC.Width = new GridLength(0.4, GridUnitType.Star); } else { PercentHC.Width = temp; }
-                if (selectColumn.Dmg) { CombatantView.Columns.Add(DamageColumn); DmgHC.Width = new GridLength(0.8, GridUnitType.Star); } else { DmgHC.Width = temp; }
-                if (selectColumn.Dmgd) { CombatantView.Columns.Add(DamagedColumn); DmgDHC.Width = new GridLength(0.6, GridUnitType.Star); } else { DmgDHC.Width = temp; }
-                if (selectColumn.DPS) { CombatantView.Columns.Add(DPSColumn); DPSHC.Width = new GridLength(0.6, GridUnitType.Star); } else { DPSHC.Width = temp; }
-                if (selectColumn.JA) { CombatantView.Columns.Add(JAColumn); JAHC.Width = new GridLength(0.4, GridUnitType.Star); } else { JAHC.Width = temp; }
-                if (selectColumn.Cri) { CombatantView.Columns.Add(CriColumn); CriHC.Width = new GridLength(0.4, GridUnitType.Star); } else { CriHC.Width = temp; }
-                if (selectColumn.Hit) { CombatantView.Columns.Add(HColumn); MdmgHC.Width = new GridLength(0.6, GridUnitType.Star); } else { MdmgHC.Width = temp; }
+                if (selectColumn.Pct) { CombatantView.Columns.Add(PercentColumn); CPercentHC.Width = new GridLength(0.4, GridUnitType.Star); } else { CPercentHC.Width = temp; }
+                if (selectColumn.Dmg) { CombatantView.Columns.Add(DamageColumn); CDmgHC.Width = new GridLength(0.8, GridUnitType.Star); } else { CDmgHC.Width = temp; }
+                if (selectColumn.Dmgd) { CombatantView.Columns.Add(DamagedColumn); CDmgDHC.Width = new GridLength(0.6, GridUnitType.Star); } else { CDmgDHC.Width = temp; }
+                if (selectColumn.DPS) { CombatantView.Columns.Add(DPSColumn); CDPSHC.Width = new GridLength(0.6, GridUnitType.Star); } else { CDPSHC.Width = temp; }
+                if (selectColumn.JA) { CombatantView.Columns.Add(JAColumn); CJAHC.Width = new GridLength(0.4, GridUnitType.Star); } else { CJAHC.Width = temp; }
+                if (selectColumn.Cri) { CombatantView.Columns.Add(CriColumn); CCriHC.Width = new GridLength(0.4, GridUnitType.Star); } else { CCriHC.Width = temp; }
+                if (selectColumn.Hit) { CombatantView.Columns.Add(HColumn); CMdmgHC.Width = new GridLength(0.6, GridUnitType.Star); } else { CMdmgHC.Width = temp; }
             } else {
-                if (selectColumn.Pct) { CombatantView.Columns.Add(PercentColumn); PercentHC.Width = new GridLength(39); } else { PercentHC.Width = temp; }
-                if (selectColumn.Dmg) { CombatantView.Columns.Add(DamageColumn); DmgHC.Width = new GridLength(78); } else { DmgHC.Width = temp; }
-                if (selectColumn.Dmgd) { CombatantView.Columns.Add(DamagedColumn); DmgDHC.Width = new GridLength(56); } else { DmgDHC.Width = temp; }
-                if (selectColumn.DPS) { CombatantView.Columns.Add(DPSColumn); DPSHC.Width = new GridLength(56); } else { DPSHC.Width = temp; }
-                if (selectColumn.JA) { CombatantView.Columns.Add(JAColumn); JAHC.Width = new GridLength(39); } else { JAHC.Width = temp; }
-                if (selectColumn.Cri) { CombatantView.Columns.Add(CriColumn); CriHC.Width = new GridLength(39); } else { CriHC.Width = temp; }
-                if (selectColumn.Hit) { CombatantView.Columns.Add(HColumn); MdmgHC.Width = new GridLength(62); } else { MdmgHC.Width = temp; }
+                if (selectColumn.Pct) { CombatantView.Columns.Add(PercentColumn); CPercentHC.Width = new GridLength(39); } else { CPercentHC.Width = temp; }
+                if (selectColumn.Dmg) { CombatantView.Columns.Add(DamageColumn); CDmgHC.Width = new GridLength(78); } else { CDmgHC.Width = temp; }
+                if (selectColumn.Dmgd) { CombatantView.Columns.Add(DamagedColumn); CDmgDHC.Width = new GridLength(56); } else { CDmgDHC.Width = temp; }
+                if (selectColumn.DPS) { CombatantView.Columns.Add(DPSColumn); CDPSHC.Width = new GridLength(56); } else { CDPSHC.Width = temp; }
+                if (selectColumn.JA) { CombatantView.Columns.Add(JAColumn); CJAHC.Width = new GridLength(39); } else { CJAHC.Width = temp; }
+                if (selectColumn.Cri) { CombatantView.Columns.Add(CriColumn); CCriHC.Width = new GridLength(39); } else { CCriHC.Width = temp; }
+                if (selectColumn.Hit) { CombatantView.Columns.Add(HColumn); CMdmgHC.Width = new GridLength(62); } else { CMdmgHC.Width = temp; }
             }
-            if (selectColumn.Atk) { CombatantView.Columns.Add(MaxHitColumn); AtkHC.Width = new GridLength(1.7, GridUnitType.Star); } else { AtkHC.Width = temp; }
-            if (selectColumn.Tab) { TabHC.Width = new GridLength(30); } else { TabHC.Width = temp; }
+            if (selectColumn.Atk) { CombatantView.Columns.Add(MaxHitColumn); CAtkHC.Width = new GridLength(1.7, GridUnitType.Star); } else { CAtkHC.Width = temp; }
+            if (selectColumn.Tab) { TabHC.Width = new GridLength(30); CTabHC.Width = new GridLength(30); HealTabHC.Width = new GridLength(30); } else { TabHC.Width = temp; CTabHC.Width = temp; HealTabHC.Width = temp; }
             Properties.Settings.Default.ListName = selectColumn.ResultName;
             Properties.Settings.Default.ListPct = selectColumn.Pct;
             Properties.Settings.Default.ListDmg = selectColumn.Dmg;
@@ -493,7 +492,7 @@ namespace OverParse
             {
                 using (System.Net.WebClient client = new System.Net.WebClient())
                 {
-                    Stream stream = client.OpenRead("https://remon-7l.github.io/skills.csv");
+                    Stream stream = client.OpenRead("https://remon-7l.github.io/skills_ja.csv");
                     StreamReader streamReader = new StreamReader(stream);
                     String content = streamReader.ReadToEnd();
                     File.WriteAllText("skills_ja.csv", content);

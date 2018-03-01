@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Ookii.Dialogs.Wpf;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
-using Ookii.Dialogs.Wpf;
 
 namespace OverParse
 {
@@ -25,6 +25,7 @@ namespace OverParse
         public bool valid, notEmpty, running;
         public DirectoryInfo logDirectory;
         private StreamReader logReader;
+
         public Log(string attemptDirectory)
         {
             bool nagMe = false;
@@ -77,7 +78,9 @@ namespace OverParse
                 if (pluginsExist)
                 {
                     selfdestructResult = MessageBox.Show(Properties.Resources.Newdll, "OverParse Setup", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                } else {
+                }
+                else
+                {
                     selfdestructResult = MessageBox.Show(Properties.Resources.Installdll, "OverParse Setup", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 }
 
@@ -86,7 +89,9 @@ namespace OverParse
                     MessageBox.Show(Properties.Resources.Needdll, "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
                     Environment.Exit(-1);
                     return;
-                } else if (selfdestructResult == MessageBoxResult.Yes) {
+                }
+                else if (selfdestructResult == MessageBoxResult.Yes)
+                {
                     bool success = UpdatePlugin(attemptDirectory);
                     if (!pluginsExist && !success)
                         Environment.Exit(-1);
@@ -130,7 +135,9 @@ namespace OverParse
                 Properties.Settings.Default.InstalledPluginVersion = pluginVersion;
                 MessageBox.Show(Properties.Resources.Donedll, "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
                 return true;
-            } catch {
+            }
+            catch
+            {
                 MessageBox.Show(Properties.Resources.Errordll, "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
@@ -156,7 +163,9 @@ namespace OverParse
             try
             {
                 Clipboard.SetText(log);
-            } catch {
+            }
+            catch
+            {
                 MessageBox.Show(Properties.Resources.Cantclip);
             }
 
@@ -180,11 +189,11 @@ namespace OverParse
                         if (c.IsAlly || c.IsZanverse || c.IsFinish)
                             log += $"{c.Name} | {c.RatioPercent}% | {c.ReadDamage.ToString("N0")} dmg | {c.ReadDamaged} dmgd | {c.DPS} DPS | JA : {c.WJAPercent}% | Critical : {c.WCRIPercent}% | Max:{c.MaxHitdmg} ({c.MaxHit})" + Environment.NewLine;
                     }
-                    catch{/* 今の所何もしないっぽい */}
+                    catch {/* 今の所何もしないっぽい */}
                 }
 
                 log += Environment.NewLine + Environment.NewLine;
-                
+
                 foreach (Combatant c in combatants)
                 {
                     if (c.IsAlly || c.IsZanverse || c.IsFinish)
@@ -194,7 +203,7 @@ namespace OverParse
 
                         List<string> attackNames = new List<string>();
                         List<string> finishNames = new List<string>();
-                        List <Tuple<string, List<Int64>, List<int>, List<int>>> attackData = new List<Tuple<string, List<Int64>,List<int>,List<int>>>();
+                        List<Tuple<string, List<Int64>, List<int>, List<int>>> attackData = new List<Tuple<string, List<Int64>, List<int>, List<int>>>();
 
                         if (c.IsZanverse && Properties.Settings.Default.SeparateZanverse)
                         {
@@ -205,7 +214,7 @@ namespace OverParse
                                 List<Int64> matchingAttacks = targetCombatant.Attacks.Where(a => a.ID == "2106601422").Select(a => a.Damage).ToList();
                                 List<int> jaPercents = c.Attacks.Where(a => a.ID == "2106601422").Select(a => a.JA).ToList();
                                 List<int> criPercents = c.Attacks.Where(a => a.ID == "2106601422").Select(a => a.Cri).ToList();
-                                attackData.Add(new Tuple<string, List<Int64>,List<int>,List<int>>(targetCombatant.Name, matchingAttacks, jaPercents,criPercents));
+                                attackData.Add(new Tuple<string, List<Int64>, List<int>, List<int>>(targetCombatant.Name, matchingAttacks, jaPercents, criPercents));
                             }
                         }
 
@@ -219,16 +228,18 @@ namespace OverParse
                             foreach (string htf in finishNames)
                             {
                                 Combatant tCombatant = backupCombatants.First(x => x.ID == htf);
-                                List<Int64> fmatchingAttacks = tCombatant.Attacks.Where(a => Combatant.FinishAttackIDs.Contains(a.ID)).Select(a => a.Damage).ToList();
-                                List<int> jaPercents = c.Attacks.Where(a => Combatant.FinishAttackIDs.Contains(a.ID)).Select(a => a.JA).ToList();
-                                List<int> criPercents = c.Attacks.Where(a => Combatant.FinishAttackIDs.Contains(a.ID)).Select(a => a.Cri).ToList();
-                                attackData.Add(new Tuple<string, List<Int64>,List<int>,List<int>>(tCombatant.Name, fmatchingAttacks,jaPercents,criPercents));
+                                List<Int64> fmatchingAttacks = tCombatant.Attacks.Where(a => Sepid.HTFAtkID.Contains(a.ID)).Select(a => a.Damage).ToList();
+                                List<int> jaPercents = c.Attacks.Where(a => Sepid.HTFAtkID.Contains(a.ID)).Select(a => a.JA).ToList();
+                                List<int> criPercents = c.Attacks.Where(a => Sepid.HTFAtkID.Contains(a.ID)).Select(a => a.Cri).ToList();
+                                attackData.Add(new Tuple<string, List<Int64>, List<int>, List<int>>(tCombatant.Name, fmatchingAttacks, jaPercents, criPercents));
                             }
 
-                        } else {
+                        }
+                        else
+                        {
                             foreach (Attack a in c.Attacks)
                             {
-                                if ((a.ID == "2106601422" && Properties.Settings.Default.SeparateZanverse) || (Combatant.FinishAttackIDs.Contains(a.ID) && Properties.Settings.Default.SeparateFinish)) { continue; } //ザンバースの場合に何もしない
+                                if ((a.ID == "2106601422" && Properties.Settings.Default.SeparateZanverse) || (Sepid.HTFAtkID.Contains(a.ID) && Properties.Settings.Default.SeparateFinish)) { continue; } //ザンバースの場合に何もしない
                                 if (MainWindow.skillDict.ContainsKey(a.ID)) { a.ID = MainWindow.skillDict[a.ID]; } // these are getting disposed anyway, no 1 cur
                                 if (!attackNames.Contains(a.ID.ToString())) { attackNames.Add(a.ID); }
                             }
@@ -239,10 +250,10 @@ namespace OverParse
                                 List<Int64> matchingAttacks = c.Attacks.Where(a => a.ID == s).Select(a => a.Damage).ToList();
                                 List<int> jaPercents = c.Attacks.Where(a => a.ID == s).Select(a => a.JA).ToList();
                                 List<int> criPercents = c.Attacks.Where(a => a.ID == s).Select(a => a.Cri).ToList();
-                                attackData.Add(new Tuple<string, List<Int64>,List<int>,List<int>>(s, matchingAttacks,jaPercents,criPercents));
+                                attackData.Add(new Tuple<string, List<Int64>, List<int>, List<int>>(s, matchingAttacks, jaPercents, criPercents));
                             }
                         }
-                        
+
                         attackData = attackData.OrderByDescending(x => x.Item2.Sum()).ToList();
 
                         try
@@ -297,7 +308,7 @@ namespace OverParse
 
         public void UpdateLog(object sender, EventArgs e)
         {
-            if (!valid || !notEmpty)  { return; }
+            if (!valid || !notEmpty) { return; }
             string newLines = logReader.ReadToEnd();
 
             if (newLines != "")
@@ -317,7 +328,7 @@ namespace OverParse
                         string attackID = parts[6]; //WriteLog部分にてID<->Nameの相互変換がある為int化が無理
                         Int64 hitDamage = Int64.Parse(parts[7]);
                         int JA = int.Parse(parts[8]);
-                       int Cri = int.Parse(parts[9]);
+                        int Cri = int.Parse(parts[9]);
                         //string isMultiHit = parts[10];
                         //string isMisc = parts[11];
                         //string isMisc2 = parts[12];
@@ -331,73 +342,80 @@ namespace OverParse
 
                         if (sourceID != Combatant.currentPlayerID && Properties.Settings.Default.Onlyme) { continue; }
                         if (!instances.Contains(instanceID)) { instances.Add(instanceID); }
-                        if (hitDamage < 1) { continue; }
                         if (sourceID == "0" || attackID == "0") { continue; }
 
                         //処理スタート
 
                         if (10000000 < int.Parse(sourceID))
                         {
-                            newTimestamp = lineTimestamp;
-                            if (startTimestamp == 0)
+                            if (0 < hitDamage)
                             {
-                                startTimestamp = newTimestamp;
-                                nowTimestamp = newTimestamp;
+                                newTimestamp = lineTimestamp;
+                                if (startTimestamp == 0)
+                                {
+                                    startTimestamp = newTimestamp;
+                                    nowTimestamp = newTimestamp;
+                                }
+
+                                if (newTimestamp - nowTimestamp >= 1)
+                                {
+                                    diffTime = diffTime + 1;
+                                    nowTimestamp = newTimestamp;
+                                }
+
+                                if (Properties.Settings.Default.QuestTime) { ActiveTime = diffTime; }
+                                else { ActiveTime = newTimestamp - startTimestamp; }
                             }
-
-
-                            if (newTimestamp - nowTimestamp >= 1)
-                            {
-                                diffTime = diffTime + 1;
-                                nowTimestamp = newTimestamp;
-                            }
-
-                            if (Properties.Settings.Default.QuestTime) { ActiveTime = diffTime; }
-                            else { ActiveTime = newTimestamp - startTimestamp; }
 
                             foreach (Combatant x in combatants)
                             {
-                                if (x.ID == sourceID && x.isTemporary == "no") { index = combatants.IndexOf(x); }
+                                if (x.ID == sourceID && x.isTemporary == "raw") { index = combatants.IndexOf(x); }
                             }
 
                             if (index == -1)
                             {
-                                combatants.Add(new Combatant(sourceID, sourceName, "no"));
+                                combatants.Add(new Combatant(sourceID, sourceName, "raw"));
                                 index = combatants.Count - 1;
                             }
 
                             Combatant source = combatants[index];
-                            if (Combatant.DBAttackIDs.Contains(attackID)) { source.DBDamage += hitDamage; source.DBAttacks.Add(new Attack(lineTimestamp, attackID, hitDamage, JA, Cri)); }
-                            else if (Combatant.LaconiumAttackIDs.Contains(attackID)) { source.LswDamage += hitDamage; source.LswAttacks.Add(new Attack(lineTimestamp, attackID, hitDamage, JA, Cri)); }
-                            else if (Combatant.PhotonAttackIDs.Contains(attackID)) { source.PwpDamage += hitDamage; source.PwpAttacks.Add(new Attack(lineTimestamp, attackID, hitDamage, JA, Cri)); }
-                            else if (Combatant.AISAttackIDs.Contains(attackID)) { source.AisDamage += hitDamage; source.AisAttacks.Add(new Attack(lineTimestamp, attackID, hitDamage, JA, Cri)); }
-                            else if (Combatant.RideAttackIDs.Contains(attackID)) { source.RideDamage += hitDamage; source.RideAttacks.Add(new Attack(lineTimestamp, attackID, hitDamage, JA, Cri)); }
-                            else { source.AllyDamage += hitDamage; source.AllyAttacks.Add(new Attack(lineTimestamp, attackID, hitDamage, JA, Cri)); }
-                            source.Attacks.Add(new Attack(lineTimestamp, attackID, hitDamage, JA, Cri));
-                            running = true;
-                        } else {
-                            if (10000000 < int.Parse(targetID))
+                            if (0 < hitDamage)
                             {
-                                foreach (Combatant x in combatants) { if (x.ID == targetID && x.isTemporary == "no") { index = combatants.IndexOf(x); } }
-                                if (index == -1)
-                                {
-                                    combatants.Add(new Combatant(targetID, targetName, "no"));
-                                    index = combatants.Count - 1;
-                                }
-                                Combatant source = combatants[index];
-                                source.Damaged += hitDamage;
-                                running = true;
+                                if (Sepid.DBAtkID.Contains(attackID)) { source.DBDamage += hitDamage; source.DBAttacks.Add(new Attack(lineTimestamp, attackID, hitDamage, JA, Cri)); }
+                                else if (Sepid.LswAtkID.Contains(attackID)) { source.LswDamage += hitDamage; source.LswAttacks.Add(new Attack(lineTimestamp, attackID, hitDamage, JA, Cri)); }
+                                else if (Sepid.PwpAtkID.Contains(attackID)) { source.PwpDamage += hitDamage; source.PwpAttacks.Add(new Attack(lineTimestamp, attackID, hitDamage, JA, Cri)); }
+                                else if (Sepid.AISAtkID.Contains(attackID)) { source.AisDamage += hitDamage; source.AisAttacks.Add(new Attack(lineTimestamp, attackID, hitDamage, JA, Cri)); }
+                                else if (Sepid.RideAtkID.Contains(attackID)) { source.RideDamage += hitDamage; source.RideAttacks.Add(new Attack(lineTimestamp, attackID, hitDamage, JA, Cri)); }
+                                else { source.AllyDamage += hitDamage; source.AllyAttacks.Add(new Attack(lineTimestamp, attackID, hitDamage, JA, Cri)); }
+                                source.Attacks.Add(new Attack(lineTimestamp, attackID, hitDamage, JA, Cri));
+                            } else {
+                                if (hitDamage < 0) { source.Recovery += Math.Abs(hitDamage); }
                             }
+                            running = true;
                         }
+
+                        if (10000000 < int.Parse(targetID))
+                        {
+                            foreach (Combatant x in combatants) { if (x.ID == targetID && x.isTemporary == "raw") { index = combatants.IndexOf(x); } }
+                            if (index == -1)
+                            {
+                                combatants.Add(new Combatant(targetID, targetName, "raw"));
+                                index = combatants.Count - 1;
+                            }
+                            Combatant source = combatants[index];
+                            if (0 < hitDamage) { source.Damaged += hitDamage; }
+                            if (hitDamage < 0) { source.Heal += Math.Abs(hitDamage); }
+                            running = true;
+                        }
+
                     }
                 }
-
-                combatants.Sort((x, y) => y.ReadDamage.CompareTo(x.ReadDamage));
-
-                if (startTimestamp != 0) { encounterData = "0:00:00 - ∞ DPS"; }
-
             }
-        }
 
+            combatants.Sort((x, y) => y.ReadDamage.CompareTo(x.ReadDamage));
+
+            if (startTimestamp != 0) { encounterData = "0:00:00 - ∞ DPS"; }
+
+        }
     }
 }

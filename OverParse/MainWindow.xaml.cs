@@ -1,8 +1,11 @@
-﻿using System;
+﻿using HotKeyFrame;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;  //ummm....
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,10 +13,6 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
-using HotKeyFrame;
-using System.Net;
-using System.Text;
-using System.Globalization;  //ummm....
 
 namespace OverParse
 {
@@ -129,7 +128,7 @@ namespace OverParse
             {
                 const string url = "https://api.github.com/repos/remon-7l/overparse/releases/latest";
                 var request = (HttpWebRequest)WebRequest.Create(url);
-                request.UserAgent = "Mozilla / 5.0 OverParse / 3.1.3";
+                request.UserAgent = "Mozilla / 5.0 OverParse / 3.1.4";
                 request.GetResponseAsync().ContinueWith(task => {
                     var response = task.Result;
                     using (var reader = new StreamReader(response.GetResponseStream()))
@@ -138,7 +137,7 @@ namespace OverParse
                         var m = Regex.Match(content, @"tag_name.........");
                         var v = Regex.Match(m.Value, @"\d.\d.\d");
                         var newVersion = Version.Parse(v.ToString());
-                        var nowVersion = Version.Parse("3.1.3");
+                        var nowVersion = Version.Parse("3.1.4");
                         if (newVersion <= nowVersion) { updatemsg = ""; }
                         if (nowVersion < newVersion) { updatemsg = " - New version available(" + v.ToString() + ")"; }
                     }
@@ -226,27 +225,27 @@ namespace OverParse
         private void LoadListColumn()
         {
             GridLength temp = new GridLength(0);
-            if (!Properties.Settings.Default.ListName) { CombatantView.Columns.Remove(NameColumn); NameHC.Width = temp; }
+            if (!Properties.Settings.Default.ListName) { CombatantView.Columns.Remove(NameColumn); CNameHC.Width = temp; }
             if (Properties.Settings.Default.Variable)
             {
-                if (Properties.Settings.Default.ListPct) { PercentHC.Width = new GridLength(0.4, GridUnitType.Star); } else { CombatantView.Columns.Remove(PercentColumn); PercentHC.Width = temp; }
-                if (Properties.Settings.Default.ListDmg) { DmgHC.Width = new GridLength(0.8, GridUnitType.Star); } else { CombatantView.Columns.Remove(DamageColumn); DmgHC.Width = temp; }
-                if (Properties.Settings.Default.ListDmgd) { DmgDHC.Width = new GridLength(0.6, GridUnitType.Star); } else { CombatantView.Columns.Remove(DamagedColumn); DmgDHC.Width = temp; }
-                if (Properties.Settings.Default.ListDPS) { DPSHC.Width = new GridLength(0.6, GridUnitType.Star); } else { CombatantView.Columns.Remove(DPSColumn); DPSHC.Width = temp; }
-                if (Properties.Settings.Default.ListJA) { JAHC.Width = new GridLength(0.4, GridUnitType.Star); } else { CombatantView.Columns.Remove(JAColumn); JAHC.Width = temp; }
-                if (Properties.Settings.Default.ListCri) { CriHC.Width = new GridLength(0.4, GridUnitType.Star); } else { CombatantView.Columns.Remove(CriColumn); CriHC.Width = temp; }
-                if (Properties.Settings.Default.ListHit) { MdmgHC.Width = new GridLength(0.6, GridUnitType.Star); } else { CombatantView.Columns.Remove(HColumn); MdmgHC.Width = temp; }
+                if (Properties.Settings.Default.ListPct) { CPercentHC.Width = new GridLength(0.4, GridUnitType.Star); } else { CombatantView.Columns.Remove(PercentColumn); CPercentHC.Width = temp; }
+                if (Properties.Settings.Default.ListDmg) { CDmgHC.Width = new GridLength(0.8, GridUnitType.Star); } else { CombatantView.Columns.Remove(DamageColumn); CDmgHC.Width = temp; }
+                if (Properties.Settings.Default.ListDmgd) { CDmgDHC.Width = new GridLength(0.6, GridUnitType.Star); } else { CombatantView.Columns.Remove(DamagedColumn); CDmgDHC.Width = temp; }
+                if (Properties.Settings.Default.ListDPS) { CDPSHC.Width = new GridLength(0.6, GridUnitType.Star); } else { CombatantView.Columns.Remove(DPSColumn); CDPSHC.Width = temp; }
+                if (Properties.Settings.Default.ListJA) { CJAHC.Width = new GridLength(0.4, GridUnitType.Star); } else { CombatantView.Columns.Remove(JAColumn); CJAHC.Width = temp; }
+                if (Properties.Settings.Default.ListCri) { CCriHC.Width = new GridLength(0.4, GridUnitType.Star); } else { CombatantView.Columns.Remove(CriColumn); CCriHC.Width = temp; }
+                if (Properties.Settings.Default.ListHit) { CMdmgHC.Width = new GridLength(0.6, GridUnitType.Star); } else { CombatantView.Columns.Remove(HColumn); CMdmgHC.Width = temp; }
             } else {
-                if (Properties.Settings.Default.ListPct) { PercentHC.Width = new GridLength(39); } else { CombatantView.Columns.Remove(PercentColumn); PercentHC.Width = temp; }
-                if (Properties.Settings.Default.ListDmg) { DmgHC.Width = new GridLength(78); } else { CombatantView.Columns.Remove(DamageColumn); DmgHC.Width = temp; }
-                if (Properties.Settings.Default.ListDmgd) { DmgDHC.Width = new GridLength(56); } else { CombatantView.Columns.Remove(DamagedColumn); DmgDHC.Width = temp; }
-                if (Properties.Settings.Default.ListDPS) { DPSHC.Width = new GridLength(56); } else { CombatantView.Columns.Remove(DPSColumn); DPSHC.Width = temp; }
-                if (Properties.Settings.Default.ListJA) { JAHC.Width = new GridLength(39); } else { CombatantView.Columns.Remove(JAColumn); JAHC.Width = temp; }
-                if (Properties.Settings.Default.ListCri) { CriHC.Width = new GridLength(39); } else { CombatantView.Columns.Remove(CriColumn); CriHC.Width = temp; }
-                if (Properties.Settings.Default.ListHit) { MdmgHC.Width = new GridLength(62); } else { CombatantView.Columns.Remove(HColumn); MdmgHC.Width = temp; }
+                if (Properties.Settings.Default.ListPct) { CPercentHC.Width = new GridLength(39); } else { CombatantView.Columns.Remove(PercentColumn); CPercentHC.Width = temp; }
+                if (Properties.Settings.Default.ListDmg) { CDmgHC.Width = new GridLength(78); } else { CombatantView.Columns.Remove(DamageColumn); CDmgHC.Width = temp; }
+                if (Properties.Settings.Default.ListDmgd) { CDmgDHC.Width = new GridLength(56); } else { CombatantView.Columns.Remove(DamagedColumn); CDmgDHC.Width = temp; }
+                if (Properties.Settings.Default.ListDPS) { CDPSHC.Width = new GridLength(56); } else { CombatantView.Columns.Remove(DPSColumn); CDPSHC.Width = temp; }
+                if (Properties.Settings.Default.ListJA) { CJAHC.Width = new GridLength(39); } else { CombatantView.Columns.Remove(JAColumn); CJAHC.Width = temp; }
+                if (Properties.Settings.Default.ListCri) { CCriHC.Width = new GridLength(39); } else { CombatantView.Columns.Remove(CriColumn); CCriHC.Width = temp; }
+                if (Properties.Settings.Default.ListHit) { CMdmgHC.Width = new GridLength(62); } else { CombatantView.Columns.Remove(HColumn); CMdmgHC.Width = temp; }
             }
-            if (!Properties.Settings.Default.ListAtk) { CombatantView.Columns.Remove(MaxHitColumn); AtkHC.Width = temp; }
-            if (!Properties.Settings.Default.ListTab) { TabHC.Width = temp; }
+            if (!Properties.Settings.Default.ListAtk) { CombatantView.Columns.Remove(MaxHitColumn); CAtkHC.Width = temp; }
+            if (!Properties.Settings.Default.ListTab) { TabHC.Width = temp; CTabHC.Width = temp; HealTabHC.Width = temp; }
         }
 
         private void Panic(object sender, DispatcherUnhandledExceptionEventArgs e)
@@ -347,12 +346,15 @@ namespace OverParse
                 temp.AisDamage = c.AisDamage;
                 temp.RideDamage = c.RideDamage;
                 temp.PercentReadDPS = c.PercentReadDPS;
+                temp.Heal = c.Heal;
+                temp.Recovery = c.Recovery;
                 workingList.Add(temp);
             }
 
             // clear out the list
             CombatantData.Items.Clear();
             AllyData.Items.Clear();
+            HealData.Items.Clear();
             DBData.Items.Clear();
             LswData.Items.Clear();
             PwpData.Items.Clear();
@@ -362,23 +364,6 @@ namespace OverParse
             int elapsed = Log.ActiveTime;
 
             //Separate Part
-            if (Properties.Settings.Default.SeparateAIS)
-            {
-                List<Combatant> pendingCombatants = new List<Combatant>();
-                foreach (Combatant c in workingList)
-                {
-                    if (!c.IsAlly) { continue; }
-                    if (c.AisDamage > 0)
-                    {
-                        Combatant AISHolder = new Combatant(c.ID, "AIS|" + c.Name, "AIS");
-                        List<Attack> targetAttacks = c.Attacks.Where(a => Combatant.AISAttackIDs.Contains(a.ID)).ToList();
-                        c.Attacks = c.Attacks.Except(targetAttacks).ToList();
-                        AISHolder.Attacks.AddRange(targetAttacks);
-                        pendingCombatants.Add(AISHolder);
-                    }
-                }
-                workingList.AddRange(pendingCombatants);
-            }
 
             if (Properties.Settings.Default.SeparateDB)
             {
@@ -386,10 +371,10 @@ namespace OverParse
                 foreach (Combatant c in workingList)
                 {
                     if (!c.IsAlly) { continue; }
-                    if (c.DBDamage > 0)
+                    if (0 < c.DBDamage)
                     {
                         Combatant DBHolder = new Combatant(c.ID, "DB|" + c.Name, "DB");
-                        List<Attack> targetAttacks = c.Attacks.Where(a => Combatant.DBAttackIDs.Contains(a.ID)).ToList();
+                        List<Attack> targetAttacks = c.Attacks.Where(a => Sepid.DBAtkID.Contains(a.ID)).ToList();
                         c.Attacks = c.Attacks.Except(targetAttacks).ToList();
                         DBHolder.Attacks.AddRange(targetAttacks);
                         pendingDBCombatants.Add(DBHolder);
@@ -398,22 +383,22 @@ namespace OverParse
                 workingList.AddRange(pendingDBCombatants);
             }
 
-            if (Properties.Settings.Default.SeparateRide)
+            if (Properties.Settings.Default.SeparateLsw)
             {
-                List<Combatant> pendingRideCombatants = new List<Combatant>();
+                List<Combatant> pendingLswCombatants = new List<Combatant>();
                 foreach (Combatant c in workingList)
                 {
                     if (!c.IsAlly) { continue; }
-                    if (c.RideDamage > 0)
-                        {
-                        Combatant RideHolder = new Combatant(c.ID, "Ride|" + c.Name, "Ride");
-                        List<Attack> targetAttacks = c.Attacks.Where(a => Combatant.RideAttackIDs.Contains(a.ID)).ToList();
+                    if (0 < c.LswDamage)
+                    {
+                        Combatant LswHolder = new Combatant(c.ID, "Lsw|" + c.Name, "Lsw");
+                        List<Attack> targetAttacks = c.Attacks.Where(a => Sepid.LswAtkID.Contains(a.ID)).ToList();
                         c.Attacks = c.Attacks.Except(targetAttacks).ToList();
-                        RideHolder.Attacks.AddRange(targetAttacks);
-                        pendingRideCombatants.Add(RideHolder);
+                        LswHolder.Attacks.AddRange(targetAttacks);
+                        pendingLswCombatants.Add(LswHolder);
                     }
                 }
-                workingList.AddRange(pendingRideCombatants);
+                workingList.AddRange(pendingLswCombatants);
             }
 
             if (Properties.Settings.Default.SeparatePwp)
@@ -423,10 +408,10 @@ namespace OverParse
                 foreach (Combatant c in workingList)
                 {
                     if (!c.IsAlly) { continue; }
-                    if (c.PwpDamage > 0)
+                    if (0 < c.PwpDamage)
                     {
                         Combatant PhotonHolder = new Combatant(c.ID, "Pwp|" + c.Name, "Pwp");
-                        List<Attack> targetAttacks = c.Attacks.Where(a => Combatant.PhotonAttackIDs.Contains(a.ID)).ToList();
+                        List<Attack> targetAttacks = c.Attacks.Where(a => Sepid.PwpAtkID.Contains(a.ID)).ToList();
                         c.Attacks = c.Attacks.Except(targetAttacks).ToList();
                         PhotonHolder.Attacks.AddRange(targetAttacks);
                         pendingPwpCombatants.Add(PhotonHolder);
@@ -435,23 +420,42 @@ namespace OverParse
                 workingList.AddRange(pendingPwpCombatants);
             }
 
-            if (Properties.Settings.Default.SeparateLsw)
+            if (Properties.Settings.Default.SeparateAIS)
             {
-                List<Combatant> pendingLswCombatants = new List<Combatant>();
+                List<Combatant> pendingCombatants = new List<Combatant>();
                 foreach (Combatant c in workingList)
                 {
                     if (!c.IsAlly) { continue; }
-                    if (c.LswDamage > 0)
+                    if (0 < c.AisDamage)
                     {
-                        Combatant LswHolder = new Combatant(c.ID, "Lsw|" + c.Name, "Lsw");
-                        List<Attack> targetAttacks = c.Attacks.Where(a => Combatant.LaconiumAttackIDs.Contains(a.ID)).ToList();
+                        Combatant AISHolder = new Combatant(c.ID, "AIS|" + c.Name, "AIS");
+                        List<Attack> targetAttacks = c.Attacks.Where(a => Sepid.AISAtkID.Contains(a.ID)).ToList();
                         c.Attacks = c.Attacks.Except(targetAttacks).ToList();
-                        LswHolder.Attacks.AddRange(targetAttacks);
-                        pendingLswCombatants.Add(LswHolder);
+                        AISHolder.Attacks.AddRange(targetAttacks);
+                        pendingCombatants.Add(AISHolder);
                     }
                 }
-                workingList.AddRange(pendingLswCombatants);
+                workingList.AddRange(pendingCombatants);
             }
+
+            if (Properties.Settings.Default.SeparateRide)
+            {
+                List<Combatant> pendingRideCombatants = new List<Combatant>();
+                foreach (Combatant c in workingList)
+                {
+                    if (!c.IsAlly) { continue; }
+                    if (0 < c.RideDamage)
+                        {
+                        Combatant RideHolder = new Combatant(c.ID, "Ride|" + c.Name, "Ride");
+                        List<Attack> targetAttacks = c.Attacks.Where(a => Sepid.RideAtkID.Contains(a.ID)).ToList();
+                        c.Attacks = c.Attacks.Except(targetAttacks).ToList();
+                        RideHolder.Attacks.AddRange(targetAttacks);
+                        pendingRideCombatants.Add(RideHolder);
+                    }
+                }
+                workingList.AddRange(pendingRideCombatants);
+            }
+
 
             //分けたものを含めて再ソート
             if (SeparateTab.SelectedIndex == 0) { workingList.Sort((x, y) => y.ReadDamage.CompareTo(x.ReadDamage)); }
@@ -466,14 +470,14 @@ namespace OverParse
                 {
                     if (c.IsAlly)
                     {
-                        List<Attack> targetAttacks = c.Attacks.Where(a => Combatant.FinishAttackIDs.Contains(a.ID)).ToList();
+                        List<Attack> targetAttacks = c.Attacks.Where(a => Sepid.HTFAtkID.Contains(a.ID)).ToList();
                         finishHolder.Attacks.AddRange(targetAttacks);
                         c.Attacks = c.Attacks.Except(targetAttacks).ToList();
                     }
                 }
                 workingList.Add(finishHolder);
             }
-
+            
             if (Properties.Settings.Default.SeparateZanverse && 0 < totalZanverse)
             {
                 Combatant zanverseHolder = new Combatant("99999999", "Zanverse", "Zanverse");
@@ -524,7 +528,7 @@ namespace OverParse
                 bool filtered = true;
                 if (Properties.Settings.Default.SeparateAIS || Properties.Settings.Default.SeparateDB || Properties.Settings.Default.SeparateRide || Properties.Settings.Default.SeparatePwp || Properties.Settings.Default.SeparateLsw)
                 {
-                    if (c.IsAlly && c.isTemporary == "no" && !HidePlayers.IsChecked) { filtered = false; }
+                    if (c.IsAlly && c.isTemporary == "raw" && !HidePlayers.IsChecked) { filtered = false; }
                     if (c.IsAlly && c.isTemporary == "AIS" && !HideAIS.IsChecked) { filtered = false; }
                     if (c.IsAlly && c.isTemporary == "DB" && !HideDB.IsChecked) { filtered = false; }
                     if (c.IsAlly && c.isTemporary == "Ride" && !HideRide.IsChecked) { filtered = false; }
@@ -533,22 +537,23 @@ namespace OverParse
                     if (c.IsZanverse) { filtered = false; }
                     if (c.IsFinish) { filtered = false; }
                 } else {
-                    if ((c.IsAlly || c.IsZanverse || c.IsFinish) && (c.Damage > 0)) { filtered = false; }
+                    if (c.IsAlly || c.IsZanverse || c.IsFinish) { filtered = false; }
                 }
 
-                if (!filtered && (c.Damage > 0) && (SeparateTab.SelectedIndex == 0)) { CombatantData.Items.Add(c); }
-                if ((c.AllyDamage > 0) && (SeparateTab.SelectedIndex == 1)) { workingList.Sort((x, y) => y.AllyDamage.CompareTo(x.AllyDamage)); AllyData.Items.Add(c); }
-                if ((c.DBDamage > 0) && (SeparateTab.SelectedIndex == 2) ) { workingList.Sort((x, y) => y.DBDamage.CompareTo(x.DBDamage)); DBData.Items.Add(c); }
-                if ((c.LswDamage > 0) && (SeparateTab.SelectedIndex == 3)) { workingList.Sort((x, y) => y.LswDamage.CompareTo(x.LswDamage)); LswData.Items.Add(c); }
-                if ((c.PwpDamage > 0) && (SeparateTab.SelectedIndex == 4)) { workingList.Sort((x, y) => y.PwpDamage.CompareTo(x.PwpDamage)); PwpData.Items.Add(c); }
-                if ((c.AisDamage > 0) && (SeparateTab.SelectedIndex == 5)) { workingList.Sort((x, y) => y.AisDamage.CompareTo(x.AisDamage)); AisData.Items.Add(c); }
-                if ((c.RideDamage > 0) && (SeparateTab.SelectedIndex == 6)) { workingList.Sort((x, y) => y.RideDamage.CompareTo(x.RideDamage)); RideData.Items.Add(c); }
+                if (!filtered && (0 < c.Damage) && (SeparateTab.SelectedIndex == 0)) { CombatantData.Items.Add(c); }
+                if ((0 < c.AllyDamage) && (SeparateTab.SelectedIndex == 1)) { workingList.Sort((x, y) => y.AllyDamage.CompareTo(x.AllyDamage)); AllyData.Items.Add(c); }
+                if ((0 < c.Damage) && (SeparateTab.SelectedIndex == 2)) { workingList.Sort((x, y) => y.ReadDamage.CompareTo(x.ReadDamage)); HealData.Items.Add(c); }
+                if ((0 < c.DBDamage) && (SeparateTab.SelectedIndex == 3) ) { workingList.Sort((x, y) => y.DBDamage.CompareTo(x.DBDamage)); DBData.Items.Add(c); }
+                if ((0 < c.LswDamage) && (SeparateTab.SelectedIndex == 4)) { workingList.Sort((x, y) => y.LswDamage.CompareTo(x.LswDamage)); LswData.Items.Add(c); }
+                if ((0 < c.PwpDamage) && (SeparateTab.SelectedIndex == 5)) { workingList.Sort((x, y) => y.PwpDamage.CompareTo(x.PwpDamage)); PwpData.Items.Add(c); }
+                if ((0 < c.AisDamage) && (SeparateTab.SelectedIndex == 6)) { workingList.Sort((x, y) => y.AisDamage.CompareTo(x.AisDamage)); AisData.Items.Add(c); }
+                if ((0 < c.RideDamage) && (SeparateTab.SelectedIndex == 7)) { workingList.Sort((x, y) => y.RideDamage.CompareTo(x.RideDamage)); RideData.Items.Add(c); }
             }
 
             // autoend
             if (Properties.Settings.Default.AutoEndEncounters && encounterlog.running)
             {
-                int unixTimestamp = (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+                int unixTimestamp = (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                 if ((unixTimestamp - Log.newTimestamp) >= Properties.Settings.Default.EncounterTimeout) { EndEncounter_Click(null, null); }
             }
         }

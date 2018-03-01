@@ -36,7 +36,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-
+        
         <Style TargetType="ListView">
             <Setter Property="Background" Value="#FF0A0A0A"/>
             <Setter Property="Foreground" Value="White"/>
@@ -187,13 +187,13 @@
                 <MenuItem Header="____" Click="Minimize_Click" Style="{StaticResource topmenu}" />
                 <MenuItem Style="{StaticResource topmenu}" Header="Exit" Click="Exit_Click"/>
             </Menu>
-            <TabControl x:Name="SeparateTab" TabStripPlacement="Right" Grid.Row="1" BorderThickness="0" Padding="0" Margin="0" Background="Transparent">
-                <TabItem Header="All" Width="{Binding ElementName=TabH, Path=ActualWidth}"  Padding="0" Margin="0">
+            <TabControl x:Name="SeparateTab" TabStripPlacement="Right" Grid.Row="1" BorderThickness="0" Padding="0" Margin="0" Background="Transparent" ClipToBounds="True">
+                <TabItem Header="All" Width="{Binding ElementName=CTabH, Path=ActualWidth}"  Padding="0" Margin="0" ClipToBounds="True">
                     <ListView x:Name="CombatantData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True" Margin="-2,0,0,0">
                         <ListView.Background>
                             <SolidColorBrush Opacity="0"/>
                         </ListView.Background>
-
+                        
                         <ListView.View>
                             <GridView x:Name="CombatantView">
                                 <GridView.ColumnHeaderContainerStyle>
@@ -204,74 +204,74 @@
                                     </Style>
                                 </GridView.ColumnHeaderContainerStyle>
 
-                                <GridViewColumn Header="Name" x:Name="NameColumn" Width="{Binding ElementName=NameH, Path=ActualWidth}">
+                                <GridViewColumn Header="Name" x:Name="NameColumn" Width="{Binding ElementName=CNameH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-3,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-3,-1,-5,-1" Padding="0" ClipToBounds="True" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
 
-                                <GridViewColumn Header="%" x:Name="PercentColumn" Width="{Binding ElementName=PercentH, Path=ActualWidth}">
+                                <GridViewColumn Header="%" x:Name="PercentColumn" Width="{Binding ElementName=CPercentH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding RatioPercent}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding RatioPercent}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" ClipToBounds="True"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
 
-                                <GridViewColumn Header="Damage" x:Name="DamageColumn" Width="{Binding ElementName=DmgH, Path=ActualWidth}">
+                                <GridViewColumn Header="Damage" x:Name="DamageColumn" Width="{Binding ElementName=CDmgH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding DamageReadout}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding DamageReadout}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" ClipToBounds="True" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
 
-                                <GridViewColumn Header="{Binding Source={StaticResource resources}, Path=Damaged}" x:Name="DamagedColumn" Width="{Binding ElementName=DmgdH, Path=ActualWidth}">
+                                <GridViewColumn Header="{Binding Source={StaticResource resources}, Path=Damaged}" x:Name="DamagedColumn" Width="{Binding ElementName=CDmgdH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding ReadDamaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding ReadDamaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" ClipToBounds="True" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
 
-                                <GridViewColumn Header="DPS" x:Name="DPSColumn" Width="{Binding ElementName=DPSH, Path=ActualWidth}">
+                                <GridViewColumn Header="DPS" x:Name="DPSColumn" Width="{Binding ElementName=CDPSH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding FDPSReadout}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding FDPSReadout}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" ClipToBounds="True" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
 
-                                <GridViewColumn Header="JA" x:Name="JAColumn" Width="{Binding ElementName=JAH, Path=ActualWidth}">
+                                <GridViewColumn Header="JA" x:Name="JAColumn" Width="{Binding ElementName=CJAH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding JAPercent}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding JAPercent}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" ClipToBounds="True"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
 
-                                <GridViewColumn Header="Critical" x:Name="CriColumn" Width="{Binding ElementName=CriH, Path=ActualWidth}">
+                                <GridViewColumn Header="Critical" x:Name="CriColumn" Width="{Binding ElementName=CCriH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding CRIPercent}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding CRIPercent}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" ClipToBounds="True" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
 
-                                <GridViewColumn Header="Max Hit" x:Name="HColumn" Width="{Binding ElementName=MdmgH, Path=ActualWidth}">
+                                <GridViewColumn Header="Max Hit" x:Name="HColumn" Width="{Binding ElementName=CMdmgH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding MaxHitdmg}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding MaxHitdmg}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" ClipToBounds="True" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
 
-                                <GridViewColumn Header="Attack Name" x:Name="MaxHitColumn" Width="{Binding ElementName=AtkH, Path=ActualWidth}">
+                                <GridViewColumn Header="Attack Name" x:Name="MaxHitColumn" Width="{Binding ElementName=CAtkH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding MaxHit}" TextAlignment="Center" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding MaxHit}" TextAlignment="Center" Margin="-5,-1,-5,-1" Padding="0"  ClipToBounds="True"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -298,7 +298,7 @@
                                 <GridViewColumn Header="Name" x:Name="AllyNameColumn" Width="{Binding ElementName=NameH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-3,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-3,-1,-5,-1" Padding="0" ClipToBounds="True"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -306,7 +306,7 @@
                                 <GridViewColumn Header="%" x:Name="AllyPercentColumn" Width="{Binding ElementName=PercentH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding AllyReadPct}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding AllyReadPct}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" ClipToBounds="True"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -314,7 +314,7 @@
                                 <GridViewColumn Header="Damage" x:Name="AllyDamageColumn" Width="{Binding ElementName=DmgH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding AllyReadDamage}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding AllyReadDamage}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" ClipToBounds="True"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -322,7 +322,7 @@
                                 <GridViewColumn Header="Damaged" x:Name="AllyDamagedColumn" Width="{Binding ElementName=DmgdH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding ReadDamaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding ReadDamaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" ClipToBounds="True"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -330,7 +330,7 @@
                                 <GridViewColumn Header="DPS" x:Name="AllyDPSColumn" Width="{Binding ElementName=DPSH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding AllyDPS}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding AllyDPS}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" ClipToBounds="True"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -338,7 +338,7 @@
                                 <GridViewColumn Header="JA" x:Name="AllyJAColumn" Width="{Binding ElementName=JAH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding AllyJAPct}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding AllyJAPct}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" ClipToBounds="True"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -346,7 +346,7 @@
                                 <GridViewColumn Header="Critical" x:Name="AllyCriColumn" Width="{Binding ElementName=CriH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding AllyCriPct}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding AllyCriPct}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" ClipToBounds="True"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -354,7 +354,7 @@
                                 <GridViewColumn Header="Max Hit" x:Name="AllyHColumn" Width="{Binding ElementName=MdmgH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding AllyMaxHitdmg}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding AllyMaxHitdmg}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" ClipToBounds="True"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -362,7 +362,51 @@
                                 <GridViewColumn Header="Attack Name" x:Name="AllyMaxHitColumn" Width="{Binding ElementName=AtkH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding AllyAtkName}" TextAlignment="Center" Margin="-5,-1,-5,-1" Padding="0" />
+                                            <TextBlock Text="{Binding AllyAtkName}" TextAlignment="Center" Margin="-5,-1,-5,-1" Padding="0" ClipToBounds="True"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </TabItem>
+                <TabItem Header="Heal" Width="{Binding ElementName=HealTabH, Path=ActualWidth}" Padding="0" Margin="0">
+                    <ListView x:Name="HealData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True" Margin="-2,0,0,0">
+                        <ListView.Background>
+                            <SolidColorBrush Opacity="0"/>
+                        </ListView.Background>
+                        
+                        <ListView.View>
+                            <GridView x:Name="HealView">
+                                <GridView.ColumnHeaderContainerStyle>
+                                    <Style TargetType="{x:Type GridViewColumnHeader}">
+                                        <Setter Property="Background" Value="Transparent" />
+                                        <Setter Property="Foreground" Value="#FFFFFFFF" />
+                                        <Setter Property="IsHitTestVisible" Value="False" />
+                                    </Style>
+                                </GridView.ColumnHeaderContainerStyle>
+
+                                <GridViewColumn Header="Name" x:Name="HealNameColumn" Width="{Binding ElementName=HealNameH, Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-3,-1,-5,-1" Padding="0" ClipToBounds="True"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn Header="Heal" x:Name="HealColumn" Width="{Binding ElementName=HealH, Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding ReadHeal}" TextAlignment="Left" Margin="-5,-1,-5,-1" Padding="0" ClipToBounds="True"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn Header="Recovery" x:Name="RecoveryColumn" Width="{Binding ElementName=RecoveryH, Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding ReadRecovery}" TextAlignment="Left" Margin="-5,-1,-5,-1" Padding="0" ClipToBounds="True"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -823,10 +867,35 @@
                     </ListView>
                 </TabItem>
                 <TabItem Header="Info" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
-                    <TextBox Text="OverParse v3.1.3&#xa;" Background="Transparent" Foreground="White" FontSize="16" FontFamily="Noto Sans CJK JP DemiLight" IsHitTestVisible="False" BorderThickness="0" />
+                    <TextBox Text="OverParse v3.1.4&#xa;" x:Name="TabInfo" Background="Transparent" Foreground="White" FontSize="16" FontFamily="Noto Sans CJK JP DemiLight" IsHitTestVisible="False" BorderThickness="0" />
                 </TabItem>
             </TabControl>
-            
+
+            <Grid Visibility="Hidden" Grid.Row="1" Margin="0" Grid.RowSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Name="CNameHC" Width="1*"/>
+                    <ColumnDefinition x:Name="CPercentHC" Width="39"/>
+                    <ColumnDefinition x:Name="CDmgHC" Width="78"/>
+                    <ColumnDefinition x:Name="CDmgDHC" Width="56" />
+                    <ColumnDefinition x:Name="CDPSHC" Width="56"/>
+                    <ColumnDefinition x:Name="CJAHC" Width="39"/>
+                    <ColumnDefinition x:Name="CCriHC" Width="39"/>
+                    <ColumnDefinition x:Name="CMdmgHC" Width="62"/>
+                    <ColumnDefinition x:Name="CAtkHC" Width="1.7*"/>
+                    <ColumnDefinition x:Name="CTabHC" Width="30" />
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" x:Name="CNameH" />
+                <Grid Grid.Column="1" x:Name="CPercentH" />
+                <Grid Grid.Column="2" x:Name="CDmgH" />
+                <Grid Grid.Column="3" x:Name="CDmgdH" />
+                <Grid Grid.Column="4" x:Name="CDPSH" />
+                <Grid Grid.Column="5" x:Name="CJAH" />
+                <Grid Grid.Column="6" x:Name="CCriH" />
+                <Grid Grid.Column="7" x:Name="CMdmgH" />
+                <Grid Grid.Column="8" x:Name="CAtkH" />
+                <Grid Grid.Column="9" x:Name="CTabH" />
+            </Grid>
+
             <Grid Visibility="Hidden" Grid.Row="1" Margin="0" Grid.RowSpan="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition x:Name="NameHC" Width="1*"/>
@@ -852,8 +921,21 @@
                 <Grid Grid.Column="9" x:Name="TabH" />
             </Grid>
 
-            <Rectangle x:Name="EncounterIndicator" Grid.Row="2" Height="2" VerticalAlignment="Top"  Fill="White" IsHitTestVisible="False" />
-            <Label x:Name="EncounterStatus" Grid.Row="2" MinHeight="10" Foreground="White" Padding="2,0,0,0" FontSize="12" FontFamily="Noto Sans CJK JP DemiLight" IsHitTestVisible="False" />
+            <Grid Visibility="Hidden" Grid.Row="1" Margin="0" Grid.RowSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Name="HealNameHC" Width="1*"/>
+                    <ColumnDefinition x:Name="HealHC" Width="100"/>
+                    <ColumnDefinition x:Name="RecoveryHC" Width="100"/>
+                    <ColumnDefinition x:Name="HealTabHC" Width="30" />
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" x:Name="HealNameH" />
+                <Grid Grid.Column="1" x:Name="HealH" />
+                <Grid Grid.Column="2" x:Name="RecoveryH" />
+                <Grid Grid.Column="3" x:Name="HealTabH" />
+            </Grid>
+
+            <Rectangle x:Name="EncounterIndicator" Grid.Row="2" Height="2" VerticalAlignment="Top"  Fill="White" IsHitTestVisible="False" ClipToBounds="True" />
+            <Label x:Name="EncounterStatus" Grid.Row="2" MinHeight="10" Foreground="White" Padding="2,0,0,0" FontSize="12" FontFamily="Noto Sans CJK JP DemiLight" IsHitTestVisible="False" ClipToBounds="True" />
         </Grid>
     </Border>
 </Window>
