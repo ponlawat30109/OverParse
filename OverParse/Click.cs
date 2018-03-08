@@ -492,7 +492,7 @@ namespace OverParse
             {
                 using (System.Net.WebClient client = new System.Net.WebClient())
                 {
-                    Stream stream = client.OpenRead("https://remon-7l.github.io/skills_ja.csv");
+                    Stream stream = client.OpenRead("https://remon-7l.github.io/skills.csv");
                     StreamReader streamReader = new StreamReader(stream);
                     String content = streamReader.ReadToEnd();
                     File.WriteAllText("skills_ja.csv", content);
