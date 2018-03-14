@@ -116,9 +116,6 @@
     <Setting Name="SeparateLsw" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="End" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="Updateinv" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">250</Value>
     </Setting>

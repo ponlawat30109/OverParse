@@ -308,7 +308,7 @@ namespace OverParse
                 if (selectColumn.Hit) { CombatantView.Columns.Add(HColumn); CMdmgHC.Width = new GridLength(62); } else { CMdmgHC.Width = temp; }
             }
             if (selectColumn.Atk) { CombatantView.Columns.Add(MaxHitColumn); CAtkHC.Width = new GridLength(1.7, GridUnitType.Star); } else { CAtkHC.Width = temp; }
-            if (selectColumn.Tab) { TabHC.Width = new GridLength(30); CTabHC.Width = new GridLength(30); HealTabHC.Width = new GridLength(30); } else { TabHC.Width = temp; CTabHC.Width = temp; HealTabHC.Width = temp; }
+            if (selectColumn.Tab) { TabHC.Width = new GridLength(30); CTabHC.Width = new GridLength(30); } else { TabHC.Width = temp; CTabHC.Width = temp; }
             Properties.Settings.Default.ListName = selectColumn.ResultName;
             Properties.Settings.Default.ListPct = selectColumn.Pct;
             Properties.Settings.Default.ListDmg = selectColumn.Dmg;
@@ -426,10 +426,7 @@ namespace OverParse
             Properties.Settings.Default.AutoHideWindow = AutoHideWindow.IsChecked;
         }
 
-        private void ClickthroughToggle(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.ClickthroughEnabled = ClickthroughMode.IsChecked;
-        }
+        private void ClickthroughToggle(object sender, RoutedEventArgs e) => Properties.Settings.Default.ClickthroughEnabled = ClickthroughMode.IsChecked;
 
         private void About_Click(object sender, RoutedEventArgs e)
         {
@@ -505,8 +502,7 @@ namespace OverParse
         private void ResetOverParse(object sender, RoutedEventArgs e)
         {
             MessageBoxResult result = MessageBox.Show("OverParseをリセットしますか？\n設定は消去されますが、ログは消去されません。", "OverParse Setup", MessageBoxButton.YesNo, MessageBoxImage.Information);
-            if (result != MessageBoxResult.Yes)
-                return;
+            if (result != MessageBoxResult.Yes) { return; }
 
             //Resetting
             Properties.Settings.Default.Reset();

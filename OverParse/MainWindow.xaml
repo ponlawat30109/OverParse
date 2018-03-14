@@ -36,19 +36,19 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        
+
         <Style TargetType="ListView">
             <Setter Property="Background" Value="#FF0A0A0A"/>
             <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Padding" Value="0,0,0,0"/>
-            <Setter Property="Margin" Value="0,0,0,0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0"/>
             <Setter Property="FontFamily" Value="Noto Sans CJK JP DemiLight" />
         </Style>
 
         <Style TargetType="Menu">
             <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Padding" Value="0,0,0,0"/>
-            <Setter Property="Margin" Value="0,0,0,0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0"/>
         </Style>
 
         <Style TargetType="MenuItem" x:Key="topmenu">
@@ -88,7 +88,7 @@
 
     </Window.Resources>
 
-    <Border BorderBrush="#FF888888" BorderThickness="1">
+    <Border BorderBrush="#88888888" BorderThickness="1">
         <Grid HorizontalAlignment="Stretch" Margin="0,0,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -193,7 +193,7 @@
                         <ListView.Background>
                             <SolidColorBrush Opacity="0"/>
                         </ListView.Background>
-                        
+
                         <ListView.View>
                             <GridView x:Name="CombatantView">
                                 <GridView.ColumnHeaderContainerStyle>
@@ -279,7 +279,7 @@
                         </ListView.View>
                     </ListView>
                 </TabItem>
-                <TabItem Header="Ally" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
+                <TabItem Header="Ally" Width="{Binding ElementName=TabH, Path=ActualWidth}">
                     <ListView x:Name="AllyData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True" Margin="-2,0,0,0">
                         <ListView.Background>
                             <SolidColorBrush Opacity="0"/>
@@ -371,51 +371,7 @@
                         </ListView.View>
                     </ListView>
                 </TabItem>
-                <TabItem Header="Heal" Width="{Binding ElementName=HealTabH, Path=ActualWidth}" Padding="0" Margin="0">
-                    <ListView x:Name="HealData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True" Margin="-2,0,0,0">
-                        <ListView.Background>
-                            <SolidColorBrush Opacity="0"/>
-                        </ListView.Background>
-                        
-                        <ListView.View>
-                            <GridView x:Name="HealView">
-                                <GridView.ColumnHeaderContainerStyle>
-                                    <Style TargetType="{x:Type GridViewColumnHeader}">
-                                        <Setter Property="Background" Value="Transparent" />
-                                        <Setter Property="Foreground" Value="#FFFFFFFF" />
-                                        <Setter Property="IsHitTestVisible" Value="False" />
-                                    </Style>
-                                </GridView.ColumnHeaderContainerStyle>
-
-                                <GridViewColumn Header="Name" x:Name="HealNameColumn" Width="{Binding ElementName=HealNameH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" Margin="-3,-1,-5,-1" Padding="0" ClipToBounds="True"/>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Heal" x:Name="HealColumn" Width="{Binding ElementName=HealH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding ReadHeal}" TextAlignment="Left" Margin="-5,-1,-5,-1" Padding="0" ClipToBounds="True"/>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                                <GridViewColumn Header="Recovery" x:Name="RecoveryColumn" Width="{Binding ElementName=RecoveryH, Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding ReadRecovery}" TextAlignment="Left" Margin="-5,-1,-5,-1" Padding="0" ClipToBounds="True"/>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </TabItem>
-                <TabItem Header="DB" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
+                <TabItem Header="DB" Width="{Binding ElementName=TabH, Path=ActualWidth}">
                     <ListView x:Name="DBData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True" Margin="-2,0,0,0">
                         <ListView.Background>
                             <SolidColorBrush Opacity="0"/>
@@ -867,7 +823,7 @@
                     </ListView>
                 </TabItem>
                 <TabItem Header="Info" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
-                    <TextBox Text="OverParse v3.1.4&#xa;" x:Name="TabInfo" Background="Transparent" Foreground="White" FontSize="16" FontFamily="Noto Sans CJK JP DemiLight" IsHitTestVisible="False" BorderThickness="0" />
+                    <TextBox Text="OverParse v3.1.5&#xa;" x:Name="TabInfo" Background="Transparent" Foreground="White" FontSize="16" FontFamily="Noto Sans CJK JP DemiLight" IsHitTestVisible="False" BorderThickness="0" />
                 </TabItem>
             </TabControl>
 
@@ -919,19 +875,6 @@
                 <Grid Grid.Column="7" x:Name="MdmgH" />
                 <Grid Grid.Column="8" x:Name="AtkH" />
                 <Grid Grid.Column="9" x:Name="TabH" />
-            </Grid>
-
-            <Grid Visibility="Hidden" Grid.Row="1" Margin="0" Grid.RowSpan="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition x:Name="HealNameHC" Width="1*"/>
-                    <ColumnDefinition x:Name="HealHC" Width="100"/>
-                    <ColumnDefinition x:Name="RecoveryHC" Width="100"/>
-                    <ColumnDefinition x:Name="HealTabHC" Width="30" />
-                </Grid.ColumnDefinitions>
-                <Grid Grid.Column="0" x:Name="HealNameH" />
-                <Grid Grid.Column="1" x:Name="HealH" />
-                <Grid Grid.Column="2" x:Name="RecoveryH" />
-                <Grid Grid.Column="3" x:Name="HealTabH" />
             </Grid>
 
             <Rectangle x:Name="EncounterIndicator" Grid.Row="2" Height="2" VerticalAlignment="Top"  Fill="White" IsHitTestVisible="False" ClipToBounds="True" />

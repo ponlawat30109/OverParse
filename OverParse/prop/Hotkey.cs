@@ -71,9 +71,6 @@ namespace HotKeyFrame
 
     static class Extention
     {
-        public static Int32 ToInt32(this ModifierKeys m)
-        {
-            return (Int32)m;
-        }
+        public static Int32 ToInt32(this ModifierKeys m) => (Int32)m;
     }
 }

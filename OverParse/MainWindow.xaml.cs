@@ -128,7 +128,8 @@ namespace OverParse
             {
                 const string url = "https://api.github.com/repos/remon-7l/overparse/releases/latest";
                 var request = (HttpWebRequest)WebRequest.Create(url);
-                request.UserAgent = "Mozilla / 5.0 OverParse / 3.1.4";
+                request.KeepAlive = false;
+                request.UserAgent = "Mozilla / 5.0 OverParse / 3.1.5";
                 request.GetResponseAsync().ContinueWith(task => {
                     var response = task.Result;
                     using (var reader = new StreamReader(response.GetResponseStream()))
@@ -137,7 +138,7 @@ namespace OverParse
                         var m = Regex.Match(content, @"tag_name.........");
                         var v = Regex.Match(m.Value, @"\d.\d.\d");
                         var newVersion = Version.Parse(v.ToString());
-                        var nowVersion = Version.Parse("3.1.4");
+                        var nowVersion = Version.Parse("3.1.5");
                         if (newVersion <= nowVersion) { updatemsg = ""; }
                         if (nowVersion < newVersion) { updatemsg = " - New version available(" + v.ToString() + ")"; }
                     }
@@ -245,7 +246,7 @@ namespace OverParse
                 if (Properties.Settings.Default.ListHit) { CMdmgHC.Width = new GridLength(62); } else { CombatantView.Columns.Remove(HColumn); CMdmgHC.Width = temp; }
             }
             if (!Properties.Settings.Default.ListAtk) { CombatantView.Columns.Remove(MaxHitColumn); CAtkHC.Width = temp; }
-            if (!Properties.Settings.Default.ListTab) { TabHC.Width = temp; CTabHC.Width = temp; HealTabHC.Width = temp; }
+            if (!Properties.Settings.Default.ListTab) { TabHC.Width = temp; CTabHC.Width = temp; }
         }
 
         private void Panic(object sender, DispatcherUnhandledExceptionEventArgs e)
@@ -346,15 +347,12 @@ namespace OverParse
                 temp.AisDamage = c.AisDamage;
                 temp.RideDamage = c.RideDamage;
                 temp.PercentReadDPS = c.PercentReadDPS;
-                temp.Heal = c.Heal;
-                temp.Recovery = c.Recovery;
                 workingList.Add(temp);
             }
 
             // clear out the list
             CombatantData.Items.Clear();
             AllyData.Items.Clear();
-            HealData.Items.Clear();
             DBData.Items.Clear();
             LswData.Items.Clear();
             PwpData.Items.Clear();
@@ -542,12 +540,11 @@ namespace OverParse
 
                 if (!filtered && (0 < c.Damage) && (SeparateTab.SelectedIndex == 0)) { CombatantData.Items.Add(c); }
                 if ((0 < c.AllyDamage) && (SeparateTab.SelectedIndex == 1)) { workingList.Sort((x, y) => y.AllyDamage.CompareTo(x.AllyDamage)); AllyData.Items.Add(c); }
-                if ((0 < c.Damage) && (SeparateTab.SelectedIndex == 2)) { workingList.Sort((x, y) => y.ReadDamage.CompareTo(x.ReadDamage)); HealData.Items.Add(c); }
-                if ((0 < c.DBDamage) && (SeparateTab.SelectedIndex == 3) ) { workingList.Sort((x, y) => y.DBDamage.CompareTo(x.DBDamage)); DBData.Items.Add(c); }
-                if ((0 < c.LswDamage) && (SeparateTab.SelectedIndex == 4)) { workingList.Sort((x, y) => y.LswDamage.CompareTo(x.LswDamage)); LswData.Items.Add(c); }
-                if ((0 < c.PwpDamage) && (SeparateTab.SelectedIndex == 5)) { workingList.Sort((x, y) => y.PwpDamage.CompareTo(x.PwpDamage)); PwpData.Items.Add(c); }
-                if ((0 < c.AisDamage) && (SeparateTab.SelectedIndex == 6)) { workingList.Sort((x, y) => y.AisDamage.CompareTo(x.AisDamage)); AisData.Items.Add(c); }
-                if ((0 < c.RideDamage) && (SeparateTab.SelectedIndex == 7)) { workingList.Sort((x, y) => y.RideDamage.CompareTo(x.RideDamage)); RideData.Items.Add(c); }
+                if ((0 < c.DBDamage) && (SeparateTab.SelectedIndex == 2) ) { workingList.Sort((x, y) => y.DBDamage.CompareTo(x.DBDamage)); DBData.Items.Add(c); }
+                if ((0 < c.LswDamage) && (SeparateTab.SelectedIndex == 3)) { workingList.Sort((x, y) => y.LswDamage.CompareTo(x.LswDamage)); LswData.Items.Add(c); }
+                if ((0 < c.PwpDamage) && (SeparateTab.SelectedIndex == 4)) { workingList.Sort((x, y) => y.PwpDamage.CompareTo(x.PwpDamage)); PwpData.Items.Add(c); }
+                if ((0 < c.AisDamage) && (SeparateTab.SelectedIndex == 5)) { workingList.Sort((x, y) => y.AisDamage.CompareTo(x.AisDamage)); AisData.Items.Add(c); }
+                if ((0 < c.RideDamage) && (SeparateTab.SelectedIndex == 6)) { workingList.Sort((x, y) => y.RideDamage.CompareTo(x.RideDamage)); RideData.Items.Add(c); }
             }
 
             // autoend

@@ -28,9 +28,5 @@
         <Label x:Name="Max" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" Margin="95,178,0,0" />
         <Label Content="Attack Name" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" Margin="10,199,0,0" />
         <Label x:Name="Atk" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" Margin="95,199,0,0"/>
-        <Label Content="Heal" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" Margin="10,220,0,0" />
-        <Label x:Name="Heal" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" Margin="95,220,0,0"/>
-        <Label Content="Recovery" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" Margin="10,241,0,0" />
-        <Label x:Name="Recovery" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" Margin="95,241,0,0"/>
     </Grid>
 </Window>

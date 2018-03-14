@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace OverParse
 {
-    public class Sepid
+    public static class Sepid
     {
         public static readonly string[] HTFAtkID = new string[] { "2268332858", "170999070", "2268332813", "1266101764", "11556353", "1233721870", "1233722348", "3480338695" };
         public static readonly string[] PwpAtkID = new string[] { "2414748436", "1954812953", "2822784832", "3339644659", "2676260123", "224805109", "1913897098" };
@@ -22,20 +22,12 @@ namespace OverParse
         public string ID, isTemporary;
         public string Name { get; set; }
         public float PercentDPS, PercentReadDPS, AllyPct, DBPct, LswPct, PwpPct, AisPct, RidePct;
-        //public int ActiveTime;
         public static string Log;
         public List<Attack> Attacks, AllyAttacks, DBAttacks, LswAttacks, PwpAttacks, AisAttacks, RideAttacks;
-        public Int64 Damaged, AllyDamage, DBDamage, LswDamage, PwpDamage, AisDamage, RideDamage, Heal, Recovery;
+        public Int64 Damaged, AllyDamage, DBDamage, LswDamage, PwpDamage, AisDamage, RideDamage;
         public static float maxShare = 0;
-
         public bool IsYou => (ID == currentPlayerID);
-        public string DisplayName
-        {
-            get
-            {
-                return Name;
-            }
-        }
+        public string DisplayName => Name;
 
         public string RatioPercent => $"{PercentReadDPS:00.00}";
 
@@ -57,9 +49,6 @@ namespace OverParse
         public string DamageReadout => ReadDamage.ToString("N0");
 
         public string ReadDamaged => Damaged.ToString("N0");
-        public string ReadHeal => Heal.ToString("N0");
-        public string ReadRecovery => Recovery.ToString("N0");
-
 
         public double DPS => Damage / OverParse.Log.ActiveTime;
         public double ReadDPS => Math.Round(ReadDamage / (double)OverParse.Log.ActiveTime);
@@ -161,8 +150,10 @@ namespace OverParse
                 return MaxHitAttack.Damage.ToString(attack);
             }
         }
-
-        #region
+        
+        
+        //Separate
+        #region 
 
         //Ally Data
         public string AllyReadPct => AllyPct.ToString("N2");
@@ -373,8 +364,8 @@ namespace OverParse
                 }
                 else
                 {
-                    if (IsYou && Properties.Settings.Default.HighlightYourDamage)
-                        return new SolidColorBrush(Color.FromArgb(128, 0, 255, 255));
+                    if (IsYou && Properties.Settings.Default.HighlightYourDamage) { return new SolidColorBrush(Color.FromArgb(128, 0, 255, 255)); }
+
                     return new SolidColorBrush(Color.FromArgb(127, 30, 30, 30));
                 }
             }
@@ -390,8 +381,7 @@ namespace OverParse
                 }
                 else
                 {
-                    if (IsYou && Properties.Settings.Default.HighlightYourDamage)
-                        return new SolidColorBrush(Color.FromArgb(128, 0, 64, 64));
+                    if (IsYou && Properties.Settings.Default.HighlightYourDamage) { return new SolidColorBrush(Color.FromArgb(128, 0, 64, 64)); }
                     return new SolidColorBrush(new Color());
                 }
             }
@@ -436,8 +426,6 @@ namespace OverParse
             PwpDamage = 0;
             AisDamage = 0;
             RideDamage = 0;
-            Heal = 0;
-            Recovery = 0;
         }
 
     }
