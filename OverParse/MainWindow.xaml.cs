@@ -1,5 +1,4 @@
-﻿using HotKeyFrame;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;  //ummm....
@@ -13,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
+using HotKeyFrame;
 
 namespace OverParse
 {
@@ -111,94 +111,11 @@ namespace OverParse
 
             try
             {
-                hotkey1 = new HotKey(this);
-                hotkey2 = new HotKey(this);
-                hotkey3 = new HotKey(this);
-                hotkey4 = new HotKey(this);
-                hotkey1.Regist(ModifierKeys.Control | ModifierKeys.Shift, Key.E, new EventHandler(EndEncounter_Key), 0x0071);
-                hotkey2.Regist(ModifierKeys.Control | ModifierKeys.Shift, Key.R, new EventHandler(EndEncounterNoLog_Key), 0x0072);
-                hotkey3.Regist(ModifierKeys.Control | ModifierKeys.Shift, Key.D, new EventHandler(DefaultWindowSize_Key), 0x0073);
-                hotkey4.Regist(ModifierKeys.Control | ModifierKeys.Shift, Key.A, new EventHandler(AlwaysOnTop_Key), 0x0074);
-            } catch {
-                MessageBox.Show("OverParseはホットキーを初期化出来ませんでした。　多重起動していないか確認して下さい！\nプログラムは引き続き使用できますが、ホットキーは反応しません。", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-
-            //new_version_check
-            try
-            {
-                const string url = "https://api.github.com/repos/remon-7l/overparse/releases/latest";
-                var request = (HttpWebRequest)WebRequest.Create(url);
-                request.KeepAlive = false;
-                request.UserAgent = "Mozilla / 5.0 OverParse / 3.1.5";
-                request.GetResponseAsync().ContinueWith(task => {
-                    var response = task.Result;
-                    using (var reader = new StreamReader(response.GetResponseStream()))
-                    {
-                        string content = reader.ReadToEnd();
-                        var m = Regex.Match(content, @"tag_name.........");
-                        var v = Regex.Match(m.Value, @"\d.\d.\d");
-                        var newVersion = Version.Parse(v.ToString());
-                        var nowVersion = Version.Parse("3.1.5");
-                        if (newVersion <= nowVersion) { updatemsg = ""; }
-                        if (nowVersion < newVersion) { updatemsg = " - New version available(" + v.ToString() + ")"; }
-                    }
-                });
-            } catch { }
-
-        //skills.csv
-        string[] skills = new string[0];
-            try
-            {
-                if (Properties.Settings.Default.Language == "ja-JP") { skills = File.ReadAllLines("skills_ja.csv"); }
-                if (Properties.Settings.Default.Language == "en-US") { skills = File.ReadAllLines("skills_en.csv"); }
-            } catch {
-                    MessageBox.Show("skills.csvが存在しません。\n全ての最大ダメージはUnknownとなります。", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-
-            try {
-                jaignoreskill = File.ReadAllLines("jaignoreskills.csv");
-            } catch (Exception e) {
-                MessageBox.Show(e.ToString());
-                jaignoreskill = new string[] { "12345678900" }; //nullだとエラーが出るので適当な値
-            }
-
-            try {
-                critignoreskill = File.ReadAllLines("critignoreskills.csv");
-            } catch (Exception e) {
-                MessageBox.Show(e.ToString());
-                critignoreskill = new string[] { "12345678900" }; //nullだとエラーが出るので適当な値
-            }
-
-            foreach (string s in skills)
-            {
-                string[] split = s.Split(',');
-                if (split.Length > 1)
-                {
-                    skillDict.Add(split[1], split[0]);
-                }
-            }
-
-            //Initializing default log
-            //and installing...
-            encounterlog = new Log(Properties.Settings.Default.Path);
-            UpdateForm(null, null);
-
-            //Initializing damageTimer
-            damageTimer.Tick += new EventHandler(UpdateForm);
-            damageTimer.Interval = new TimeSpan(0, 0, 0, 0, Properties.Settings.Default.Updateinv);
-            damageTimer.Start();
-
-            //Initializing inactiveTimer
-            DispatcherTimer inactiveTimer = new DispatcherTimer();
-            inactiveTimer.Tick += new EventHandler(HideIfInactive);
-            inactiveTimer.Interval = new TimeSpan(0, 0, 1);
-            inactiveTimer.Start();
-
-            //Initializing logCheckTimer
-            DispatcherTimer logCheckTimer = new DispatcherTimer();
-            logCheckTimer.Tick += new EventHandler(CheckForNewLog);
-            logCheckTimer.Interval = new TimeSpan(0, 0, 1);
-            logCheckTimer.Start();
+                CombatantData.FontFamily = new FontFamily(Properties.Settings.Default.Font);
+                CombatantData.FontSize = Properties.Settings.Default.FontSize;
+                Color color = (Color)ColorConverter.ConvertFromString(Properties.Settings.Default.FontColor);
+                CombatantData.Foreground = new SolidColorBrush(color);
+            } catch (Exception e) { MessageBox.Show(e.ToString()); }
         }
 
         private void HideIfInactive(object sender, EventArgs e)
@@ -247,6 +164,111 @@ namespace OverParse
             }
             if (!Properties.Settings.Default.ListAtk) { CombatantView.Columns.Remove(MaxHitColumn); CAtkHC.Width = temp; }
             if (!Properties.Settings.Default.ListTab) { TabHC.Width = temp; CTabHC.Width = temp; }
+        }
+
+        private void TheWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                hotkey1 = new HotKey(this);
+                hotkey2 = new HotKey(this);
+                hotkey3 = new HotKey(this);
+                hotkey4 = new HotKey(this);
+                hotkey1.Regist(ModifierKeys.Control | ModifierKeys.Shift, Key.E, new EventHandler(EndEncounter_Key), 0x0071);
+                hotkey2.Regist(ModifierKeys.Control | ModifierKeys.Shift, Key.R, new EventHandler(EndEncounterNoLog_Key), 0x0072);
+                hotkey3.Regist(ModifierKeys.Control | ModifierKeys.Shift, Key.D, new EventHandler(DefaultWindowSize_Key), 0x0073);
+                hotkey4.Regist(ModifierKeys.Control | ModifierKeys.Shift, Key.A, new EventHandler(AlwaysOnTop_Key), 0x0074);
+            }
+            catch
+            {
+                MessageBox.Show("OverParseはホットキーを初期化出来ませんでした。　多重起動していないか確認して下さい！\nプログラムは引き続き使用できますが、ホットキーは反応しません。", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+
+            //new_version_check
+            try
+            {
+                const string url = "https://api.github.com/repos/remon-7l/overparse/releases/latest";
+                var request = (HttpWebRequest)WebRequest.Create(url);
+                request.KeepAlive = false;
+                request.UserAgent = "Mozilla / 5.0 OverParse / 3.1.5";
+                request.GetResponseAsync().ContinueWith(task => {
+                    var response = task.Result;
+                    using (var reader = new StreamReader(response.GetResponseStream()))
+                    {
+                        string content = reader.ReadToEnd();
+                        var m = Regex.Match(content, @"tag_name.........");
+                        var v = Regex.Match(m.Value, @"\d.\d.\d");
+                        var newVersion = Version.Parse(v.ToString());
+                        var nowVersion = Version.Parse("3.1.6");
+                        if (newVersion <= nowVersion) { updatemsg = ""; }
+                        if (nowVersion < newVersion) { updatemsg = " - New version available(" + v.ToString() + ")"; }
+                    }
+                });
+            }
+            catch { }
+
+            //skills.csv
+            string[] skills = new string[0];
+            try
+            {
+                if (Properties.Settings.Default.Language == "ja-JP") { skills = File.ReadAllLines("skills_ja.csv"); }
+                if (Properties.Settings.Default.Language == "en-US") { skills = File.ReadAllLines("skills_en.csv"); }
+            }
+            catch
+            {
+                MessageBox.Show("skills.csvが存在しません。\n全ての最大ダメージはUnknownとなります。", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+
+            try
+            {
+                jaignoreskill = File.ReadAllLines("jaignoreskills.csv");
+            }
+            catch (Exception error)
+            {
+                MessageBox.Show(error.ToString());
+                jaignoreskill = new string[] { "12345678900" }; //nullだとエラーが出るので適当な値
+            }
+
+            try
+            {
+                critignoreskill = File.ReadAllLines("critignoreskills.csv");
+            }
+            catch (Exception error)
+            {
+                MessageBox.Show(error.ToString());
+                critignoreskill = new string[] { "12345678900" }; //nullだとエラーが出るので適当な値
+            }
+
+            foreach (string s in skills)
+            {
+                string[] split = s.Split(',');
+                if (split.Length > 1)
+                {
+                    skillDict.Add(split[1], split[0]);
+                }
+            }
+
+            //Initializing default log
+            //and installing...
+            encounterlog = new Log(Properties.Settings.Default.Path);
+            UpdateForm(null, null);
+
+            //Initializing damageTimer
+            damageTimer.Tick += new EventHandler(UpdateForm);
+            damageTimer.Interval = new TimeSpan(0, 0, 0, 0, Properties.Settings.Default.Updateinv);
+            damageTimer.Start();
+
+            //Initializing inactiveTimer
+            DispatcherTimer inactiveTimer = new DispatcherTimer();
+            inactiveTimer.Tick += new EventHandler(HideIfInactive);
+            inactiveTimer.Interval = new TimeSpan(0, 0, 1);
+            inactiveTimer.Start();
+
+            //Initializing logCheckTimer
+            DispatcherTimer logCheckTimer = new DispatcherTimer();
+            logCheckTimer.Tick += new EventHandler(CheckForNewLog);
+            logCheckTimer.Interval = new TimeSpan(0, 0, 1);
+            logCheckTimer.Start();
         }
 
         private void Panic(object sender, DispatcherUnhandledExceptionEventArgs e)
@@ -332,13 +354,13 @@ namespace OverParse
             foreach (Combatant c in targetList)
             {
                 Combatant temp = new Combatant(c.ID, c.Name, c.isTemporary);
-                foreach (Attack a in c.Attacks) { temp.Attacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
-                foreach (Attack a in c.AllyAttacks) { temp.AllyAttacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
-                foreach (Attack a in c.DBAttacks) { temp.DBAttacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
-                foreach (Attack a in c.LswAttacks) { temp.LswAttacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
-                foreach (Attack a in c.PwpAttacks) { temp.PwpAttacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
-                foreach (Attack a in c.AisAttacks) { temp.AisAttacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
-                foreach (Attack a in c.RideAttacks) { temp.RideAttacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.Attacks) { temp.Attacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.AllyAttacks) { temp.AllyAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.DBAttacks) { temp.DBAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.LswAttacks) { temp.LswAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.PwpAttacks) { temp.PwpAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.AisAttacks) { temp.AisAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.RideAttacks) { temp.RideAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
                 temp.Damaged = c.Damaged;
                 temp.AllyDamage = c.AllyDamage;
                 temp.DBDamage = c.DBDamage;
@@ -609,7 +631,6 @@ namespace OverParse
             encounterlog.WriteLog();
             Properties.Settings.Default.Save();
         }
-
 
         private void OpenRecentLog_Click(object sender, RoutedEventArgs e)
         {

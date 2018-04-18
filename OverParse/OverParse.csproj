@@ -116,6 +116,9 @@
       <DependentUpon>Detalis.xaml</DependentUpon>
     </Compile>
     <Compile Include="FolderDialog\FolderDialog.cs" />
+    <Compile Include="prop\FontDialog.xaml.cs">
+      <DependentUpon>FontDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="prop\Hotkey.cs" />
     <Compile Include="prop\inputbox.xaml.cs">
       <DependentUpon>inputbox.xaml</DependentUpon>
@@ -138,6 +141,10 @@
     <Page Include="prop\Detalis.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="prop\FontDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="prop\inputbox.xaml">
       <SubType>Designer</SubType>

@@ -3,11 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:properties="clr-namespace:OverParse.Properties"
         mc:Ignorable="d"
         WindowStyle="None" AllowsTransparency="True"
         Activated="Window_Activated" Deactivated="Window_Deactivated"
         ResizeMode="CanResizeWithGrip" StateChanged="Window_StateChanged"
         MouseDown="Window_MouseDown" Closing="Window_Closing"
+        Loaded="TheWindow_Loaded"
         x:Name="TheWindow"
         Title="OverParse" Height="275" Width="670">
 
@@ -19,12 +21,10 @@
 
         <Style TargetType="ListViewItem">
             <Setter Property="Height" Value="Auto"/>
-            <Setter Property="FontSize" Value="12"/>
             <Setter Property="MinHeight" Value="10" />
             <Setter Property="Padding" Value="0,0,0,0"/>
             <Setter Property="Margin" Value="0,0,0,0"/>
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-            <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="0" />
             <EventSetter Event="MouseRightButtonUp" Handler="ListViewItem_MouseRightClick" />
             <Style.Triggers>
@@ -51,7 +51,7 @@
             <Setter Property="Margin" Value="0"/>
         </Style>
 
-        <Style TargetType="MenuItem" x:Key="topmenu">
+        <Style x:Key="topmenu" TargetType="MenuItem" >
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -88,7 +88,7 @@
 
     </Window.Resources>
 
-    <Border BorderBrush="#88888888" BorderThickness="1">
+    <Border BorderBrush="#88888888" BorderThickness="1" x:Name="MainWindowBorder">
         <Grid HorizontalAlignment="Stretch" Margin="0,0,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -97,58 +97,58 @@
             </Grid.RowDefinitions>
             <Menu x:Name="MenuBar"  DockPanel.Dock="Top" HorizontalAlignment="Left" VerticalAlignment="Stretch" FontSize="12" ClipToBounds="True">
                 <MenuItem Style="{StaticResource topmenu}" Header="Logging">
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=EndEncounter}"  x:Name="EndEncounter" InputGestureText="Ctrl+Shift+E" Click="EndEncounter_Click"/>
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=DiscardEncounter}" x:Name="EndEncounterNoLog" InputGestureText="Ctrl+Shift+R" Click="EndEncounterNoLog_Click"/>
+                    <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.EndEncounter}"  x:Name="EndEncounter" InputGestureText="Ctrl+Shift+E" Click="EndEncounter_Click"/>
+                    <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.DiscardEncounter}" x:Name="EndEncounterNoLog" InputGestureText="Ctrl+Shift+R" Click="EndEncounterNoLog_Click"/>
                     <Separator />
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=AutoEnd}" x:Name="AutoEndEncounters" IsCheckable="True" IsChecked="False" Click="AutoEndEncounters_Click"/>
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=TimeOut}" x:Name="SetEncounterTimeout" Click="SetEncounterTimeout_Click"/>
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=ToClip}" x:Name="LogToClipboard" IsCheckable="True" IsChecked="False" Click="LogToClipboard_Click"/>
+                    <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.AutoEnd}" x:Name="AutoEndEncounters" IsCheckable="True" IsChecked="False" Click="AutoEndEncounters_Click"/>
+                    <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.TimeOut}" x:Name="SetEncounterTimeout" Click="SetEncounterTimeout_Click"/>
+                    <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.ToClip}" x:Name="LogToClipboard" IsCheckable="True" IsChecked="False" Click="LogToClipboard_Click"/>
                     <Separator />
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=OpenLog}" Click="OpenLogsFolder_Click"/>
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=SessionLog}" x:Name="SessionLogs">
-                        <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=NoLogs}" x:Name="SessionLogPlaceholder" IsEnabled="False"/>
+                    <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.OpenLog}" Click="OpenLogsFolder_Click"/>
+                    <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.SessionLog}" x:Name="SessionLogs">
+                        <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.NoLogs}" x:Name="SessionLogPlaceholder" IsEnabled="False"/>
                     </MenuItem>
                 </MenuItem>
                 <MenuItem Style="{StaticResource topmenu}" Header="Parsing">
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=Separate}">
-                        <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=SeparateZanverse}" x:Name="SeparateZanverse" IsCheckable="True" IsChecked="False" Click="SeparateZanverse_Click"/>
-                        <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=SeparateHTF}" x:Name="SeparateFinish" IsCheckable="True" IsChecked="False" Click="SeparateFinish_Click"/>
+                    <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.Separate}">
+                        <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.SeparateZanverse}" x:Name="SeparateZanverse" IsCheckable="True" IsChecked="False" Click="SeparateZanverse_Click"/>
+                        <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.SeparateHTF}" x:Name="SeparateFinish" IsCheckable="True" IsChecked="False" Click="SeparateFinish_Click"/>
                     </MenuItem>
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=VSeparate}">
-                        <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=SeparateAIS}" x:Name="SeparateAIS" IsCheckable="True" IsChecked="False" Click="SeparateAIS_Click"/>
-                        <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=SeparateDB}" x:Name="SeparateDB" IsCheckable="True" IsChecked="False" Click="SeparateDB_Click"/>
-                        <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=SeparateRide}" x:Name="SeparateRide" IsCheckable="True" IsChecked="False" Click="SeparateRide_Click" />
-                        <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=SeparatePwp}" x:Name="SeparatePwp" IsCheckable="True" IsChecked="False" Click="SeparatePwp_Click" />
-                        <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=SeparateLsw}" x:Name="SeparateLsw" IsCheckable="True" IsChecked="False" Click="SeparateLsw_Click" />
+                    <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.VSeparate}">
+                        <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.SeparateAIS}" x:Name="SeparateAIS" IsCheckable="True" IsChecked="False" Click="SeparateAIS_Click"/>
+                        <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.SeparateDB}" x:Name="SeparateDB" IsCheckable="True" IsChecked="False" Click="SeparateDB_Click"/>
+                        <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.SeparateRide}" x:Name="SeparateRide" IsCheckable="True" IsChecked="False" Click="SeparateRide_Click" />
+                        <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.SeparatePwp}" x:Name="SeparatePwp" IsCheckable="True" IsChecked="False" Click="SeparatePwp_Click" />
+                        <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.SeparateLsw}" x:Name="SeparateLsw" IsCheckable="True" IsChecked="False" Click="SeparateLsw_Click" />
                         <Separator />
-                        <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=HidePlayer}" x:Name="HidePlayers" IsCheckable="True" IsChecked="False" Click="HidePlayers_Click"/>
-                        <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=HideAIS}" x:Name="HideAIS" IsCheckable="True" IsChecked="False" Click="HideAIS_Click"/>
-                        <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=HideDB}" x:Name="HideDB" IsCheckable="True" IsChecked="False" Click="HideDB_Click"/>
-                        <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=HideRide}" x:Name="HideRide" IsCheckable="True" IsChecked="False" Click="HideRide_Click" />
-                        <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=HidePwp}" x:Name="HidePwp" IsCheckable="True" IsChecked="False" Click="HidePwp_Click" />
-                        <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=HideLsw}" x:Name="HideLsw" IsCheckable="True" IsChecked="False" Click="HideLsw_Click" />
+                        <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.HidePlayer}" x:Name="HidePlayers" IsCheckable="True" IsChecked="False" Click="HidePlayers_Click"/>
+                        <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.HideAIS}" x:Name="HideAIS" IsCheckable="True" IsChecked="False" Click="HideAIS_Click"/>
+                        <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.HideDB}" x:Name="HideDB" IsCheckable="True" IsChecked="False" Click="HideDB_Click"/>
+                        <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.HideRide}" x:Name="HideRide" IsCheckable="True" IsChecked="False" Click="HideRide_Click" />
+                        <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.HidePwp}" x:Name="HidePwp" IsCheckable="True" IsChecked="False" Click="HidePwp_Click" />
+                        <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.HideLsw}" x:Name="HideLsw" IsCheckable="True" IsChecked="False" Click="HideLsw_Click" />
                     </MenuItem>
                     <Separator />
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=ThroughOther}" IsCheckable="True" IsChecked="False" x:Name="Onlyme" Click="Onlyme_Click" />
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=DPSFormat}" IsCheckable="True" IsChecked="False" x:Name="DPSFormat" Click="DPSFormat_Click" />
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=RoundJA}" IsCheckable="True" IsChecked="False" x:Name="Nodecimal" Click="Nodecimal_Click" />
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=Changeinv}" Click="ChangeInterval_Click" />
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=VideoTime}" IsCheckable="True" IsChecked="False" x:Name="QuestTime" Click="QuestTime_Click"/>
+                    <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.ThroughOther}" IsCheckable="True" IsChecked="False" x:Name="Onlyme" Click="Onlyme_Click" />
+                    <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.DPSFormat}" IsCheckable="True" IsChecked="False" x:Name="DPSFormat" Click="DPSFormat_Click" />
+                    <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.RoundJA}" IsCheckable="True" IsChecked="False" x:Name="Nodecimal" Click="Nodecimal_Click" />
+                    <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.Changeinv}" Click="ChangeInterval_Click" />
+                    <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.VideoTime}" IsCheckable="True" IsChecked="False" x:Name="QuestTime" Click="QuestTime_Click"/>
                 </MenuItem>
                 <MenuItem Style="{StaticResource topmenu}" Header="Window">
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=ResizeWindow}" InputGestureText="Ctrl+Shift+D" Click="DefaultWindowSize_Click"/>
+                    <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.ResizeWindow}" InputGestureText="Ctrl+Shift+D" Click="DefaultWindowSize_Click"/>
                     <MenuItem Style="{StaticResource submenu}" Header="Language">
                         <MenuItem Style="{StaticResource submenu}" Header="Japanese" Click="Japanese_Click"/>
                         <MenuItem Style="{StaticResource submenu}" Header="English" Click="English_Click"/>
                     </MenuItem>
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=WinOp}">
+                    <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.WinOp}">
                         <MenuItem Style="{StaticResource submenu}" x:Name="WinOpacity_0" Visibility="Collapsed" IsCheckable="True" IsChecked="False" Header="Transparent" Click="WindowOpacity_0_Click" />
                         <MenuItem Style="{StaticResource submenu}" x:Name="WinOpacity_25" IsCheckable="True" IsChecked="False" Header="25%" Click="WindowOpacity_25_Click" />
                         <MenuItem Style="{StaticResource submenu}" x:Name="Winopacity_50" IsCheckable="True" IsChecked="False" Header="50%" Click="WindowOpacity_50_Click" />
                         <MenuItem Style="{StaticResource submenu}" x:Name="WinOpacity_75" IsCheckable="True" IsChecked="True" Header="75%" Click="WindowOpacity_75_Click" />
                         <MenuItem Style="{StaticResource submenu}" x:Name="WinOpacity_100" IsCheckable="True" IsChecked="False" Header="100%" Click="WindowOpacity_100_Click" />
                     </MenuItem>
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=BackOp}">
+                    <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.BackOp}">
                         <MenuItem Style="{StaticResource submenu}" x:Name="ListOpacity_0" Visibility="Collapsed" IsCheckable="True" IsChecked="False" Header="Transparent" Click="ListOpacity_0_Click" />
                         <MenuItem Style="{StaticResource submenu}" x:Name="ListOpacity_25" IsCheckable="True" IsChecked="False" Header="25%" Click="ListOpacity_25_Click" />
                         <MenuItem Style="{StaticResource submenu}" x:Name="Listopacity_50" IsCheckable="True" IsChecked="False" Header="50%" Click="ListOpacity_50_Click" />
@@ -156,29 +156,29 @@
                         <MenuItem Style="{StaticResource submenu}" x:Name="ListOpacity_100" IsCheckable="True" IsChecked="False" Header="100%" Click="ListOpacity_100_Click" />
                     </MenuItem>
                     <Separator />
-                    <MenuItem Style="{StaticResource submenu}" IsCheckable="True" IsChecked="True" Header="{Binding Source={StaticResource resources}, Path=AlwaysOnTop}" x:Name="AlwaysOnTop" Click="AlwaysOnTop_Click" InputGestureText="Ctrl+Shift+A"/>
-                    <MenuItem Style="{StaticResource submenu}" IsCheckable="True" IsChecked="False" Header="{Binding Source={StaticResource resources}, Path=AutoHide}" x:Name="AutoHideWindow" Click="AutoHideWindow_Click"/>
-                    <MenuItem Style="{StaticResource submenu}" IsCheckable="True" IsChecked="False" Header="{Binding Source={StaticResource resources}, Path=ThroughClick}" x:Name="ClickthroughMode" Click="ClickthroughToggle"/>
+                    <MenuItem Style="{StaticResource submenu}" IsCheckable="True" IsChecked="True" Header="{x:Static properties:Resources.AlwaysOnTop}" x:Name="AlwaysOnTop" Click="AlwaysOnTop_Click" InputGestureText="Ctrl+Shift+A"/>
+                    <MenuItem Style="{StaticResource submenu}" IsCheckable="True" IsChecked="False" Header="{x:Static properties:Resources.AutoHide}" x:Name="AutoHideWindow" Click="AutoHideWindow_Click"/>
+                    <MenuItem Style="{StaticResource submenu}" IsCheckable="True" IsChecked="False" Header="{x:Static properties:Resources.ThroughClick}" x:Name="ClickthroughMode" Click="ClickthroughToggle"/>
                 </MenuItem>
                 <MenuItem Style="{StaticResource topmenu}" Header="List">
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources},Path=SelectColumn}" Click="SelectColumn_Click" />
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=ShowGraph}" IsCheckable="True" IsChecked="False" x:Name="ShowDamageGraph" Click="ShowDamageGraph_Click"/>
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=Highlight}" IsCheckable="True" IsChecked="True" x:Name="HighlightYourDamage" Click="HighlightYourDamage_Click"/>
+                    <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.SelectColumn}" Click="SelectColumn_Click" />
+                    <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.ShowGraph}" IsCheckable="True" IsChecked="False" x:Name="ShowDamageGraph" Click="ShowDamageGraph_Click"/>
+                    <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.Highlight}" IsCheckable="True" IsChecked="True" x:Name="HighlightYourDamage" Click="HighlightYourDamage_Click"/>
+                    <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.ChangeFont}" Click="ChangeFont_Click" />
                 </MenuItem>
                 <MenuItem Style="{StaticResource topmenu}" Header="Other">
                     <MenuItem Style="{StaticResource submenu}" Header="About" x:Name="About" Click="About_Click"/>
                     <Separator />
-                    <MenuItem Header="{Binding Source={StaticResource resources}, Path=LowResources}" Click="LowResources_Click" x:Name="LowResources" IsCheckable="True" IsChecked="False" Style="{StaticResource submenu}" />
-                    <MenuItem Header="{Binding Source={StaticResource resources}, Path=CPUDraw}" Click="CPUdraw_Click" x:Name="CPUdraw" IsCheckable="True" IsChecked="False" Style="{StaticResource submenu}" />
-                    <MenuItem Header="{Binding Source={StaticResource resources}, Path=UpdateTime}" Click="Clock_Click" x:Name="Clock" IsCheckable="True" IsChecked="False" Style="{StaticResource submenu}" />
+                    <MenuItem Header="{x:Static properties:Resources.LowResources}" Click="LowResources_Click" x:Name="LowResources" IsCheckable="True" IsChecked="False" Style="{StaticResource submenu}" />
+                    <MenuItem Header="{x:Static properties:Resources.CPUDraw}" Click="CPUdraw_Click" x:Name="CPUdraw" IsCheckable="True" IsChecked="False" Style="{StaticResource submenu}" />
+                    <MenuItem Header="{x:Static properties:Resources.UpdateTime}" Click="Clock_Click" x:Name="Clock" IsCheckable="True" IsChecked="False" Style="{StaticResource submenu}" />
                     <Separator />
-                    <MenuItem Header="join Discord" Click="Discord_Click" Style="{StaticResource submenu}" />
                     <MenuItem Header="Open github" Click="Github_Click" Style="{StaticResource submenu}" />
                     <Separator />
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=Skipdll}" x:Name="Skipdll" Click="SkipPlugin_Click" />
+                    <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.Skipdll}" x:Name="Skipdll" Click="SkipPlugin_Click" />
                     <MenuItem Style="{StaticResource submenu}" Header="Reselect pso2bin..." x:Name="ResetLogFolder" Click="ResetLogFolder_Click"/>
                     <MenuItem Style="{StaticResource submenu}" Header="Force plugin update..." x:Name="PluginUpdate" Click="UpdatePlugin_Click"/>
-                    <MenuItem Style="{StaticResource submenu}" Header="{Binding Source={StaticResource resources}, Path=Updatecsv}" Click="Updateskills_Click" />
+                    <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.Updatecsv}" Click="Updateskills_Click" />
                     <MenuItem Style="{StaticResource submenu}" Header="Reset OverParse..." x:Name="Reset" Click="ResetOverParse"/>
                 </MenuItem>
             </Menu>
@@ -189,7 +189,7 @@
             </Menu>
             <TabControl x:Name="SeparateTab" TabStripPlacement="Right" Grid.Row="1" BorderThickness="0" Padding="0" Margin="0" Background="Transparent" ClipToBounds="True">
                 <TabItem Header="All" Width="{Binding ElementName=CTabH, Path=ActualWidth}"  Padding="0" Margin="0" ClipToBounds="True">
-                    <ListView x:Name="CombatantData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True" Margin="-2,0,0,0">
+                    <ListView x:Name="CombatantData" FontSize="12" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" ClipToBounds="True" Margin="-2,0,0,0">
                         <ListView.Background>
                             <SolidColorBrush Opacity="0"/>
                         </ListView.Background>
@@ -201,6 +201,8 @@
                                         <Setter Property="Background" Value="Transparent" />
                                         <Setter Property="Foreground" Value="#FFFFFFFF" />
                                         <Setter Property="IsHitTestVisible" Value="False" />
+                                        <Setter Property="FontFamily" Value="Noto Sans CJK JP DemiLight" />
+                                        <Setter Property="FontSize" Value="11" />
                                     </Style>
                                 </GridView.ColumnHeaderContainerStyle>
 
@@ -228,7 +230,7 @@
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
 
-                                <GridViewColumn Header="{Binding Source={StaticResource resources}, Path=Damaged}" x:Name="DamagedColumn" Width="{Binding ElementName=CDmgdH, Path=ActualWidth}">
+                                <GridViewColumn Header="{x:Static properties:Resources.Damaged}" x:Name="DamagedColumn" Width="{Binding ElementName=CDmgdH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding ReadDamaged}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" ClipToBounds="True" />
@@ -280,7 +282,7 @@
                     </ListView>
                 </TabItem>
                 <TabItem Header="Ally" Width="{Binding ElementName=TabH, Path=ActualWidth}">
-                    <ListView x:Name="AllyData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True" Margin="-2,0,0,0">
+                    <ListView x:Name="AllyData" FontSize="12" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" ClipToBounds="True" Margin="-2,0,0,0">
                         <ListView.Background>
                             <SolidColorBrush Opacity="0"/>
                         </ListView.Background>
@@ -292,6 +294,8 @@
                                         <Setter Property="Background" Value="Transparent" />
                                         <Setter Property="Foreground" Value="#FFFFFFFF" />
                                         <Setter Property="IsHitTestVisible" Value="False" />
+                                        <Setter Property="FontFamily" Value="Noto Sans CJK JP DemiLight" />
+                                        <Setter Property="FontSize" Value="11" />
                                     </Style>
                                 </GridView.ColumnHeaderContainerStyle>
 
@@ -372,7 +376,7 @@
                     </ListView>
                 </TabItem>
                 <TabItem Header="DB" Width="{Binding ElementName=TabH, Path=ActualWidth}">
-                    <ListView x:Name="DBData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True" Margin="-2,0,0,0">
+                    <ListView x:Name="DBData" FontSize="12" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" ClipToBounds="True" Margin="-2,0,0,0">
                         <ListView.Background>
                             <SolidColorBrush Opacity="0"/>
                         </ListView.Background>
@@ -383,6 +387,8 @@
                                         <Setter Property="Background" Value="Transparent" />
                                         <Setter Property="Foreground" Value="#FFFFFFFF" />
                                         <Setter Property="IsHitTestVisible" Value="False" />
+                                        <Setter Property="FontFamily" Value="Noto Sans CJK JP DemiLight" />
+                                        <Setter Property="FontSize" Value="11" />
                                     </Style>
                                 </GridView.ColumnHeaderContainerStyle>
 
@@ -462,7 +468,7 @@
                     </ListView>
                 </TabItem>
                 <TabItem Header="Lsw" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
-                    <ListView x:Name="LswData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True" Margin="-2,0,0,0">
+                    <ListView x:Name="LswData" FontSize="12" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" ClipToBounds="True" Margin="-2,0,0,0">
                         <ListView.Background>
                             <SolidColorBrush Opacity="0"/>
                         </ListView.Background>
@@ -473,6 +479,8 @@
                                         <Setter Property="Background" Value="Transparent" />
                                         <Setter Property="Foreground" Value="#FFFFFFFF" />
                                         <Setter Property="IsHitTestVisible" Value="False" />
+                                        <Setter Property="FontFamily" Value="Noto Sans CJK JP DemiLight" />
+                                        <Setter Property="FontSize" Value="11" />
                                     </Style>
                                 </GridView.ColumnHeaderContainerStyle>
 
@@ -552,7 +560,7 @@
                     </ListView>
                 </TabItem>
                 <TabItem Header="Pwp" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
-                    <ListView x:Name="PwpData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True" Margin="-2,0,0,0">
+                    <ListView x:Name="PwpData" FontSize="12" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" ClipToBounds="True" Margin="-2,0,0,0">
                         <ListView.Background>
                             <SolidColorBrush Opacity="0"/>
                         </ListView.Background>
@@ -563,6 +571,8 @@
                                         <Setter Property="Background" Value="Transparent" />
                                         <Setter Property="Foreground" Value="#FFFFFFFF" />
                                         <Setter Property="IsHitTestVisible" Value="False" />
+                                        <Setter Property="FontFamily" Value="Noto Sans CJK JP DemiLight" />
+                                        <Setter Property="FontSize" Value="11" />
                                     </Style>
                                 </GridView.ColumnHeaderContainerStyle>
 
@@ -642,7 +652,7 @@
                     </ListView>
                 </TabItem>
                 <TabItem Header="A.I.S." Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
-                    <ListView x:Name="AisData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True" Margin="-2,0,0,0">
+                    <ListView x:Name="AisData" FontSize="12" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" ClipToBounds="True" Margin="-2,0,0,0">
                         <ListView.Background>
                             <SolidColorBrush Opacity="0"/>
                         </ListView.Background>
@@ -653,6 +663,8 @@
                                         <Setter Property="Background" Value="Transparent" />
                                         <Setter Property="Foreground" Value="#FFFFFFFF" />
                                         <Setter Property="IsHitTestVisible" Value="False" />
+                                        <Setter Property="FontFamily" Value="Noto Sans CJK JP DemiLight" />
+                                        <Setter Property="FontSize" Value="11" />
                                     </Style>
                                 </GridView.ColumnHeaderContainerStyle>
 
@@ -732,7 +744,7 @@
                     </ListView>
                 </TabItem>
                 <TabItem Header="Ride" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
-                    <ListView x:Name="RideData" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" FontSize="11" ClipToBounds="True" Margin="-2,0,0,0">
+                    <ListView x:Name="RideData" FontSize="12" AlternationCount="2" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderThickness="0" ClipToBounds="True" Margin="-2,0,0,0">
                         <ListView.Background>
                             <SolidColorBrush Opacity="0"/>
                         </ListView.Background>
@@ -744,6 +756,8 @@
                                         <Setter Property="Background" Value="Transparent" />
                                         <Setter Property="Foreground" Value="#FFFFFFFF" />
                                         <Setter Property="IsHitTestVisible" Value="False" />
+                                        <Setter Property="FontFamily" Value="Noto Sans CJK JP DemiLight" />
+                                        <Setter Property="FontSize" Value="11" />
                                     </Style>
                                 </GridView.ColumnHeaderContainerStyle>
 
@@ -823,7 +837,7 @@
                     </ListView>
                 </TabItem>
                 <TabItem Header="Info" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
-                    <TextBox Text="OverParse v3.1.5&#xa;" x:Name="TabInfo" Background="Transparent" Foreground="White" FontSize="16" FontFamily="Noto Sans CJK JP DemiLight" IsHitTestVisible="False" BorderThickness="0" />
+                    <TextBox Text="OverParse v3.1.6&#xa;" x:Name="TabInfo" Background="Transparent" Foreground="White" FontSize="16" FontFamily="Noto Sans CJK JP DemiLight" IsHitTestVisible="False" BorderThickness="0" />
                 </TabItem>
             </TabControl>
 

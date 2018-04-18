@@ -1,10 +1,10 @@
-﻿using Ookii.Dialogs.Wpf;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
+using Ookii.Dialogs.Wpf;
 
 namespace OverParse
 {
@@ -336,6 +336,7 @@ namespace OverParse
                         int index = -1;
 
                         if (lineTimestamp == 0 && parts[3] == "YOU") { Combatant.currentPlayerID = parts[2]; continue; }
+                        if (parts[2] == Combatant.currentPlayerID && !Properties.Settings.Default.EndC) { Combatant.currentPlayerName = parts[3]; }
                         if (!instances.Contains(instanceID)) { instances.Add(instanceID); }
                         if (hitDamage < 0) { continue; }
                         if (sourceID == "0" || attackID == "0") { continue; }
@@ -373,13 +374,13 @@ namespace OverParse
                             }
 
                             Combatant source = combatants[index];
-                            if (Sepid.DBAtkID.Contains(attackID)) { source.DBDamage += hitDamage; source.DBAttacks.Add(new Attack(lineTimestamp, attackID, hitDamage, JA, Cri)); }
-                            else if (Sepid.LswAtkID.Contains(attackID)) { source.LswDamage += hitDamage; source.LswAttacks.Add(new Attack(lineTimestamp, attackID, hitDamage, JA, Cri)); }
-                            else if (Sepid.PwpAtkID.Contains(attackID)) { source.PwpDamage += hitDamage; source.PwpAttacks.Add(new Attack(lineTimestamp, attackID, hitDamage, JA, Cri)); }
-                            else if (Sepid.AISAtkID.Contains(attackID)) { source.AisDamage += hitDamage; source.AisAttacks.Add(new Attack(lineTimestamp, attackID, hitDamage, JA, Cri)); }
-                            else if (Sepid.RideAtkID.Contains(attackID)) { source.RideDamage += hitDamage; source.RideAttacks.Add(new Attack(lineTimestamp, attackID, hitDamage, JA, Cri)); }
-                            else { source.AllyDamage += hitDamage; source.AllyAttacks.Add(new Attack(lineTimestamp, attackID, hitDamage, JA, Cri)); }
-                            source.Attacks.Add(new Attack(lineTimestamp, attackID, hitDamage, JA, Cri));
+                            if (Sepid.DBAtkID.Contains(attackID)) { source.DBDamage += hitDamage; source.DBAttacks.Add(new Attack(attackID, hitDamage, JA, Cri)); }
+                            else if (Sepid.LswAtkID.Contains(attackID)) { source.LswDamage += hitDamage; source.LswAttacks.Add(new Attack(attackID, hitDamage, JA, Cri)); }
+                            else if (Sepid.PwpAtkID.Contains(attackID)) { source.PwpDamage += hitDamage; source.PwpAttacks.Add(new Attack(attackID, hitDamage, JA, Cri)); }
+                            else if (Sepid.AISAtkID.Contains(attackID)) { source.AisDamage += hitDamage; source.AisAttacks.Add(new Attack(attackID, hitDamage, JA, Cri)); }
+                            else if (Sepid.RideAtkID.Contains(attackID)) { source.RideDamage += hitDamage; source.RideAttacks.Add(new Attack(attackID, hitDamage, JA, Cri)); }
+                            else { source.AllyDamage += hitDamage; source.AllyAttacks.Add(new Attack(attackID, hitDamage, JA, Cri)); }
+                            source.Attacks.Add(new Attack(attackID, hitDamage, JA, Cri));
                             running = true;
                         }
                         else

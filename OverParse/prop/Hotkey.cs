@@ -37,9 +37,10 @@ namespace HotKeyFrame
 
         public void ComponentDispatcher_ThreadPreprocessMessage(ref MSG msg, ref bool handled)
         {
-            if (msg.message != WM_HOTKEY) return;
+            if (msg.message != WM_HOTKEY) { return; }
+
             var hotkeyID = msg.wParam.ToInt32();
-            if (!_hotkeyEvents.Any((x) => x.Key == hotkeyID)) return;
+            if (!_hotkeyEvents.Any((x) => x.Key == hotkeyID)) { return; }
 
             new ThreadStart(
                 () => _hotkeyEvents[hotkeyID](this, EventArgs.Empty)
@@ -52,7 +53,7 @@ namespace HotKeyFrame
             var imod = modkey.ToInt32();
             var itrg = KeyInterop.VirtualKeyFromKey(trigger);
 
-            while ((++i < 0xc000) && RegisterHotKey(_windowHandle, i, imod, itrg) == 0) ;
+            while ((++i < 0xc000) && RegisterHotKey(_windowHandle, i, imod, itrg) == 0) { ; }
 
             if (i < 0xc000)
             {

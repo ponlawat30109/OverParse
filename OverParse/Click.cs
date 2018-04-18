@@ -27,13 +27,13 @@ namespace OverParse
             foreach (Combatant c in workingList)
             {
                 Combatant temp2 = new Combatant(c.ID, c.Name, c.isTemporary);
-                foreach (Attack a in c.Attacks) { temp2.Attacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
-                foreach (Attack a in c.AllyAttacks) { temp2.AllyAttacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
-                foreach (Attack a in c.DBAttacks) { temp2.DBAttacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
-                foreach (Attack a in c.LswAttacks) { temp2.LswAttacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
-                foreach (Attack a in c.PwpAttacks) { temp2.PwpAttacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
-                foreach (Attack a in c.AisAttacks) { temp2.AisAttacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
-                foreach (Attack a in c.RideAttacks) { temp2.RideAttacks.Add(new Attack(a.TimeID, a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.Attacks) { temp2.Attacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.AllyAttacks) { temp2.AllyAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.DBAttacks) { temp2.DBAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.LswAttacks) { temp2.LswAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.PwpAttacks) { temp2.PwpAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.AisAttacks) { temp2.AisAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
+                foreach (Attack a in c.RideAttacks) { temp2.RideAttacks.Add(new Attack(a.ID, a.Damage, a.JA, a.Cri)); }
                 temp2.Damaged = c.Damaged;
                 temp2.AllyDamage = c.AllyDamage;
                 temp2.DBDamage = c.DBDamage;
@@ -335,6 +335,19 @@ namespace OverParse
             UpdateForm(null, null);
         }
 
+        private void ChangeFont_Click(object sender, RoutedEventArgs e)
+        {
+            FontDialog dialog = new FontDialog() { Owner = this };
+            dialog.ShowDialog();
+            if (dialog.DialogResult == true)
+            {
+                CombatantData.FontFamily = new FontFamily(Properties.Settings.Default.Font);
+                if (double.TryParse(dialog.FontSizeBox.Text, out double resultvalue) && 1 < resultvalue) { CombatantData.FontSize = resultvalue; Properties.Settings.Default.FontSize = resultvalue; }
+                Color color = (Color)ColorConverter.ConvertFromString(dialog.fontcolor);
+                CombatantData.Foreground = new SolidColorBrush(color);
+            }
+        }
+
         private void WindowOpacity_0_Click(object sender, RoutedEventArgs e)
         {
             Properties.Settings.Default.WindowOpacity = 0;
@@ -465,8 +478,6 @@ namespace OverParse
             else { Datetime.Visibility = Visibility.Collapsed; }
         }
 
-        private void Discord_Click(object sender, RoutedEventArgs e) => Process.Start("https://discord.gg/pTCq443");
-
         private void Github_Click(object sender, RoutedEventArgs e) => Process.Start("https://github.com/Remon-7L/OverParse");
 
         private void SkipPlugin_Click(object sender, RoutedEventArgs e) => Properties.Settings.Default.InstalledPluginVersion = 5;
@@ -489,7 +500,7 @@ namespace OverParse
             {
                 using (System.Net.WebClient client = new System.Net.WebClient())
                 {
-                    Stream stream = client.OpenRead("https://remon-7l.github.io/skills.csv");
+                    Stream stream = client.OpenRead("https://remon-7l.github.io/skills_ja.csv");
                     StreamReader streamReader = new StreamReader(stream);
                     String content = streamReader.ReadToEnd();
                     File.WriteAllText("skills_ja.csv", content);
