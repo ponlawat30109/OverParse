@@ -336,7 +336,6 @@ namespace OverParse
                         int index = -1;
 
                         if (lineTimestamp == 0 && parts[3] == "YOU") { Combatant.currentPlayerID = parts[2]; continue; }
-                        if (parts[2] == Combatant.currentPlayerID && !Properties.Settings.Default.EndC) { Combatant.currentPlayerName = parts[3]; }
                         if (!instances.Contains(instanceID)) { instances.Add(instanceID); }
                         if (hitDamage < 0) { continue; }
                         if (sourceID == "0" || attackID == "0") { continue; }

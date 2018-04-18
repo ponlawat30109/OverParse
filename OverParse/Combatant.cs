@@ -17,7 +17,7 @@ namespace OverParse
 
     public class Combatant
     {
-        public static string currentPlayerID,currentPlayerName;
+        public static string currentPlayerID;
         private const float maxBGopacity = 0.6f;
         public string ID, Name, isTemporary;
         public float PercentDPS, PercentReadDPS, AllyPct, DBPct, LswPct, PwpPct, AisPct, RidePct;
