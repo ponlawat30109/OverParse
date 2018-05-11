@@ -158,9 +158,6 @@
     <Setting Name="ListTab" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="EndC" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="Font" Type="System.String" Scope="User">
       <Value Profile="(Default)">Noto Sans CJK JP DemiLight</Value>
     </Setting>

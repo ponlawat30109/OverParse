@@ -43,7 +43,8 @@
     <Prefer32Bit>false</Prefer32Bit>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>7.3</LangVersion>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -56,7 +57,7 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <LangVersion>7.2</LangVersion>
+    <LangVersion>7.3</LangVersion>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup>
@@ -112,6 +113,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Click.cs" />
+    <Compile Include="prop\Checkdll.xaml.cs">
+      <DependentUpon>Checkdll.xaml</DependentUpon>
+    </Compile>
     <Compile Include="prop\Detalis.xaml.cs">
       <DependentUpon>Detalis.xaml</DependentUpon>
     </Compile>
@@ -138,6 +142,10 @@
       <DependentUpon>SelectColumn.xaml</DependentUpon>
     </Compile>
     <Compile Include="prop\WindowsServices.cs" />
+    <Page Include="prop\Checkdll.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="prop\Detalis.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

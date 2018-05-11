@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -21,14 +22,14 @@ namespace OverParse
         public static Dictionary<string, string> skillDict = new Dictionary<string, string>();
         public static string[] jaignoreskill, critignoreskill;
         public DispatcherTimer damageTimer = new DispatcherTimer();
-        private Log encounterlog;
+        public Log encounterlog;
         private List<Combatant> lastCombatants = new List<Combatant>();
         private List<Combatant> workingList = new List<Combatant>();
         private List<string> sessionLogFilenames = new List<string>();
         private string lastStatus = "";
         private HotKey hotkey1, hotkey2, hotkey3, hotkey4;
         private IntPtr hwndcontainer;
-        private string updatemsg = " - Update check Error.";
+        private string updatemsg = " - Update checking...";
         private Process thisProcess = Process.GetCurrentProcess();
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -54,7 +55,6 @@ namespace OverParse
                 MessageBox.Show("OverParseにアクセス権が無く、ログの保存が出来ません！\n管理者としてOverParseを実行してみるか、システムのアクセス権を確認して下さい！\nOverParseを別のフォルダーに移動してみるのも良いかも知れません。", "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Error);
                 Application.Current.Shutdown();
             }
-
             if (Properties.Settings.Default.UpgradeRequired && !Properties.Settings.Default.ResetInvoked)
             {
                 Properties.Settings.Default.Upgrade();
@@ -118,7 +118,7 @@ namespace OverParse
             } catch (Exception e) { MessageBox.Show(e.ToString()); }
         }
 
-        private void HideIfInactive(object sender, EventArgs e)
+        private async void HideIfInactive(object sender, EventArgs e)
         {
             if (!Properties.Settings.Default.AutoHideWindow) { return; }
             string title = WindowsServices.GetActiveWindowTitle();
@@ -129,15 +129,17 @@ namespace OverParse
             } else {
                 HandleWindowOpacity();
             }
+            await Task.CompletedTask;
         }
 
-        private void CheckForNewLog(object sender, EventArgs e)
+        private async void CheckForNewLog(object sender, EventArgs e)
         {
             DirectoryInfo directory = encounterlog.logDirectory;
             if (!directory.Exists) { return; }
             if (directory.GetFiles().Count() == 0) { return; }
             FileInfo log = directory.GetFiles().Where(f => Regex.IsMatch(f.Name, @"\d+\.csv")).OrderByDescending(f => f.Name).First();
             if (log.Name != encounterlog.filename) { encounterlog = new Log(Properties.Settings.Default.Path); }
+            await Task.CompletedTask;
         }
 
         private void LoadListColumn()
@@ -166,7 +168,7 @@ namespace OverParse
             if (!Properties.Settings.Default.ListTab) { TabHC.Width = temp; CTabHC.Width = temp; }
         }
 
-        private void TheWindow_Loaded(object sender, RoutedEventArgs e)
+        private async void TheWindow_Loaded(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -190,8 +192,8 @@ namespace OverParse
                 const string url = "https://api.github.com/repos/remon-7l/overparse/releases/latest";
                 var request = (HttpWebRequest)WebRequest.Create(url);
                 request.KeepAlive = false;
-                request.UserAgent = "Mozilla / 5.0 OverParse / 3.1.5";
-                request.GetResponseAsync().ContinueWith(task => {
+                request.UserAgent = "Mozilla / 5.0 OverParse / 3.1.7";
+                await request.GetResponseAsync().ContinueWith(task => {
                     var response = task.Result;
                     using (var reader = new StreamReader(response.GetResponseStream()))
                     {
@@ -199,7 +201,7 @@ namespace OverParse
                         var m = Regex.Match(content, @"tag_name.........");
                         var v = Regex.Match(m.Value, @"\d.\d.\d");
                         var newVersion = Version.Parse(v.ToString());
-                        var nowVersion = Version.Parse("3.1.6");
+                        var nowVersion = Version.Parse("3.1.7");
                         if (newVersion <= nowVersion) { updatemsg = ""; }
                         if (nowVersion < newVersion) { updatemsg = " - New version available(" + v.ToString() + ")"; }
                     }
@@ -251,7 +253,7 @@ namespace OverParse
             //Initializing default log
             //and installing...
             encounterlog = new Log(Properties.Settings.Default.Path);
-            UpdateForm(null, null);
+            //UpdateForm(null, null);
 
             //Initializing damageTimer
             damageTimer.Tick += new EventHandler(UpdateForm);
@@ -269,6 +271,7 @@ namespace OverParse
             logCheckTimer.Tick += new EventHandler(CheckForNewLog);
             logCheckTimer.Interval = new TimeSpan(0, 0, 1);
             logCheckTimer.Start();
+            await Task.CompletedTask;
         }
 
         private void Panic(object sender, DispatcherUnhandledExceptionEventArgs e)
@@ -341,12 +344,12 @@ namespace OverParse
             if (WindowState == WindowState.Maximized) { WindowState = WindowState.Normal; }
         }
 
-        public void UpdateForm(object sender, EventArgs e)
+        public async void UpdateForm(object sender, EventArgs e)
         {
             if (encounterlog == null) { return; }
             if (Properties.Settings.Default.Clock) { Datetime.Content = DateTime.Now.ToString("HH:mm:ss.ff"); }
 
-            encounterlog.UpdateLog(this, null);
+            await encounterlog.UpdateLog(this, null);
 
             // get a copy of the right combatants
             List<Combatant> targetList = (encounterlog.running ? encounterlog.combatants : lastCombatants);
@@ -380,8 +383,6 @@ namespace OverParse
             PwpData.Items.Clear();
             AisData.Items.Clear();
             RideData.Items.Clear();
-
-            int elapsed = Log.ActiveTime;
 
             //Separate Part
 
@@ -536,7 +537,7 @@ namespace OverParse
             }
 
             // status pane updates
-            StatusUpdate(totalDamage,totalZanverse);
+            await StatusUpdate(totalDamage,totalZanverse);
 
             // damage graph stuff
             Combatant.maxShare = 0;
@@ -575,9 +576,10 @@ namespace OverParse
                 int unixTimestamp = (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                 if ((unixTimestamp - Log.newTimestamp) >= Properties.Settings.Default.EncounterTimeout) { EndEncounter_Click(null, null); }
             }
+            await Task.CompletedTask;
         }
 
-        private void StatusUpdate(Int64 totalReadDamage,Int64 totalZanverse)
+        private async Task StatusUpdate(Int64 totalReadDamage,Int64 totalZanverse)
         {
             if (!encounterlog.running || (encounterlog.valid && encounterlog.notEmpty))
             {
@@ -602,6 +604,7 @@ namespace OverParse
                 if (!Properties.Settings.Default.SeparateZanverse) { EncounterStatus.Content += $" - Zanverse : {totalZanverse.ToString("N0")}"; }
                 lastStatus = EncounterStatus.Content.ToString();
             }
+            await Task.CompletedTask;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

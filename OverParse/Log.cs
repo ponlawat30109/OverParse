@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using Ookii.Dialogs.Wpf;
 
@@ -21,7 +22,7 @@ namespace OverParse
         private List<int> instances = new List<int>();
         public List<Combatant> combatants = new List<Combatant>();
         public List<Combatant> backupCombatants = new List<Combatant>();
-        private const int pluginVersion = 5;
+        private const int pluginVersion = 6;
         public bool valid, notEmpty, running;
         public DirectoryInfo logDirectory;
         private StreamReader logReader;
@@ -136,9 +137,7 @@ namespace OverParse
                 Properties.Settings.Default.InstalledPluginVersion = pluginVersion;
                 MessageBox.Show(Properties.Resources.Donedll, "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Information);
                 return true;
-            }
-            catch
-            {
+            } catch {
                 MessageBox.Show(Properties.Resources.Errordll, "OverParse Setup", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
@@ -164,7 +163,9 @@ namespace OverParse
             try
             {
                 Clipboard.SetText(log);
-            } catch {
+            }
+            catch
+            {
                 MessageBox.Show(Properties.Resources.Cantclip);
             }
 
@@ -307,102 +308,95 @@ namespace OverParse
             return encounterData;
         }
 
-        public void UpdateLog(object sender, EventArgs e)
+        public async Task UpdateLog(object sender, EventArgs e)
         {
             if (!valid || !notEmpty) { return; }
+
             string newLines = logReader.ReadToEnd();
+            if (newLines == "") { await Task.CompletedTask; return; }
 
-            if (newLines != "")
+            string[] result = newLines.Split('\n');
+            foreach (string str in result)
             {
-                string[] result = newLines.Split('\n');
-                foreach (string str in result)
+                if (str == "") { continue; }
+                string[] parts = str.Split(',');
+                int lineTimestamp = int.Parse(parts[0]);
+                int instanceID = int.Parse(parts[1]);
+                string sourceID = parts[2];
+                string sourceName = parts[3];
+                string targetID = parts[4];
+                string targetName = parts[5];
+                string attackID = parts[6]; //WriteLog()にてID<->Nameの相互変換がある為int化が無理
+                Int64 hitDamage = Int64.Parse(parts[7]);
+                int JA = int.Parse(parts[8]);
+                int Cri = int.Parse(parts[9]);
+                //string isMultiHit = parts[10];
+                //string isMisc = parts[11];
+                //string isMisc2 = parts[12];
+                int index = -1;
+
+                if (parts[0] == "0" && parts[3] == "YOU") { Combatant.currentPlayerID = parts[2]; continue; }
+                if (!instances.Contains(instanceID)) { instances.Add(instanceID); }
+                if (hitDamage < 0) { continue; }
+                if (sourceID == "0" || attackID == "0") { continue; }
+                if (Properties.Settings.Default.Onlyme && sourceID != Combatant.currentPlayerID) { continue; }
+
+                //処理スタート
+                if (10000000 < int.Parse(sourceID)) //Player->Enemy
                 {
-                    if (str != "")
+                    newTimestamp = lineTimestamp;
+                    if (startTimestamp == 0)
                     {
-                        string[] parts = str.Split(',');
-                        int lineTimestamp = int.Parse(parts[0]);
-                        int instanceID = int.Parse(parts[1]);
-                        string sourceID = parts[2];
-                        string sourceName = parts[3];
-                        string targetID = parts[4];
-                        string targetName = parts[5];
-                        string attackID = parts[6]; //WriteLog部分にてID<->Nameの相互変換がある為int化が無理
-                        Int64 hitDamage = Int64.Parse(parts[7]);
-                        int JA = int.Parse(parts[8]);
-                        int Cri = int.Parse(parts[9]);
-                        //string isMultiHit = parts[10];
-                        //string isMisc = parts[11];
-                        //string isMisc2 = parts[12];
-                        int index = -1;
+                        startTimestamp = newTimestamp;
+                        nowTimestamp = newTimestamp;
+                    }
 
-                        if (lineTimestamp == 0 && parts[3] == "YOU") { Combatant.currentPlayerID = parts[2]; continue; }
-                        if (!instances.Contains(instanceID)) { instances.Add(instanceID); }
-                        if (hitDamage < 0) { continue; }
-                        if (sourceID == "0" || attackID == "0") { continue; }
-                        if (Properties.Settings.Default.Onlyme && sourceID != Combatant.currentPlayerID) { continue; }
 
-                        //処理スタート
-                        if (10000000 < int.Parse(sourceID))
+                    if (newTimestamp - nowTimestamp >= 1)
+                    {
+                        diffTime = diffTime + 1;
+                        nowTimestamp = newTimestamp;
+                    }
+
+                    if (Properties.Settings.Default.QuestTime) { ActiveTime = diffTime; }
+                    else { ActiveTime = newTimestamp - startTimestamp; }
+
+                    foreach (Combatant x in combatants) { if (x.ID == sourceID && x.isTemporary == "raw") { index = combatants.IndexOf(x); } }
+                    if (index == -1)
+                    {
+                        combatants.Add(new Combatant(sourceID, sourceName, "raw"));
+                        index = combatants.Count - 1;
+                    }
+
+                    Combatant source = combatants[index];
+                    if (Sepid.DBAtkID.Contains(attackID)) { source.DBDamage += hitDamage; source.DBAttacks.Add(new Attack(attackID, hitDamage, JA, Cri)); }
+                    else if (Sepid.LswAtkID.Contains(attackID)) { source.LswDamage += hitDamage; source.LswAttacks.Add(new Attack(attackID, hitDamage, JA, Cri)); }
+                    else if (Sepid.PwpAtkID.Contains(attackID)) { source.PwpDamage += hitDamage; source.PwpAttacks.Add(new Attack(attackID, hitDamage, JA, Cri)); }
+                    else if (Sepid.AISAtkID.Contains(attackID)) { source.AisDamage += hitDamage; source.AisAttacks.Add(new Attack(attackID, hitDamage, JA, Cri)); }
+                    else if (Sepid.RideAtkID.Contains(attackID)) { source.RideDamage += hitDamage; source.RideAttacks.Add(new Attack(attackID, hitDamage, JA, Cri)); }
+                    else { source.AllyDamage += hitDamage; source.AllyAttacks.Add(new Attack(attackID, hitDamage, JA, Cri)); }
+                    source.Attacks.Add(new Attack(attackID, hitDamage, JA, Cri));
+                    running = true;
+                } else {
+                    if (10000000 < int.Parse(targetID)) //Enemy->Player
+                    {
+                        foreach (Combatant x in combatants) { if (x.ID == targetID && x.isTemporary == "raw") { index = combatants.IndexOf(x); } }
+                        if (index == -1)
                         {
-                            newTimestamp = lineTimestamp;
-                            if (startTimestamp == 0)
-                            {
-                                startTimestamp = newTimestamp;
-                                nowTimestamp = newTimestamp;
-                            }
-
-
-                            if (newTimestamp - nowTimestamp >= 1)
-                            {
-                                diffTime = diffTime + 1;
-                                nowTimestamp = newTimestamp;
-                            }
-
-                            if (Properties.Settings.Default.QuestTime) { ActiveTime = diffTime; }
-                            else { ActiveTime = newTimestamp - startTimestamp; }
-
-                            foreach (Combatant x in combatants)
-                            {
-                                if (x.ID == sourceID && x.isTemporary == "raw") { index = combatants.IndexOf(x); }
-                            }
-
-                            if (index == -1)
-                            {
-                                combatants.Add(new Combatant(sourceID, sourceName, "raw"));
-                                index = combatants.Count - 1;
-                            }
-
-                            Combatant source = combatants[index];
-                            if (Sepid.DBAtkID.Contains(attackID)) { source.DBDamage += hitDamage; source.DBAttacks.Add(new Attack(attackID, hitDamage, JA, Cri)); }
-                            else if (Sepid.LswAtkID.Contains(attackID)) { source.LswDamage += hitDamage; source.LswAttacks.Add(new Attack(attackID, hitDamage, JA, Cri)); }
-                            else if (Sepid.PwpAtkID.Contains(attackID)) { source.PwpDamage += hitDamage; source.PwpAttacks.Add(new Attack(attackID, hitDamage, JA, Cri)); }
-                            else if (Sepid.AISAtkID.Contains(attackID)) { source.AisDamage += hitDamage; source.AisAttacks.Add(new Attack(attackID, hitDamage, JA, Cri)); }
-                            else if (Sepid.RideAtkID.Contains(attackID)) { source.RideDamage += hitDamage; source.RideAttacks.Add(new Attack(attackID, hitDamage, JA, Cri)); }
-                            else { source.AllyDamage += hitDamage; source.AllyAttacks.Add(new Attack(attackID, hitDamage, JA, Cri)); }
-                            source.Attacks.Add(new Attack(attackID, hitDamage, JA, Cri));
-                            running = true;
+                            combatants.Add(new Combatant(targetID, targetName, "raw"));
+                            index = combatants.Count - 1;
                         }
-                        else
-                        {
-                            if (10000000 < int.Parse(targetID))
-                            {
-                                foreach (Combatant x in combatants) { if (x.ID == targetID && x.isTemporary == "raw") { index = combatants.IndexOf(x); } }
-                                if (index == -1)
-                                {
-                                    combatants.Add(new Combatant(targetID, targetName, "raw"));
-                                    index = combatants.Count - 1;
-                                }
-                                Combatant source = combatants[index];
-                                source.Damaged += hitDamage;
-                                running = true;
-                            }
-                        }
+                        Combatant source = combatants[index];
+                        source.Damaged += hitDamage;
+                        running = true;
                     }
                 }
-
-                combatants.Sort((x, y) => y.ReadDamage.CompareTo(x.ReadDamage));
-                if (startTimestamp != 0) { encounterData = "0:00:00 - ∞ DPS"; }
             }
+
+            combatants.Sort((x, y) => y.ReadDamage.CompareTo(x.ReadDamage));
+            if (startTimestamp != 0) { encounterData = "0:00:00 - ∞ DPS"; }
+
+            await Task.CompletedTask;
         }
     }
 }

@@ -434,7 +434,6 @@ namespace OverParse
         public string ID;
         public Int64 Damage;
         public int JA, Cri;
-
         public Attack(string initID, Int64 initDamage,int ja,int cri)
         {
             ID = initID;
@@ -443,5 +442,4 @@ namespace OverParse
             Cri = cri;
         }
     }
-
 }

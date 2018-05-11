@@ -18,7 +18,7 @@ namespace OverParse
             //Ending encounter
             bool temp = Properties.Settings.Default.AutoEndEncounters;
             Properties.Settings.Default.AutoEndEncounters = false;
-            UpdateForm(null, null); // I'M FUCKING STUPID
+            //UpdateForm(null, null); // I'M FUCKING STUPID
             Properties.Settings.Default.AutoEndEncounters = temp;
             encounterlog.backupCombatants = encounterlog.combatants;
             Log.backupTime = Log.ActiveTime;
@@ -447,6 +447,12 @@ namespace OverParse
             MessageBox.Show($"OverParse v{version}\n簡易的な自己監視ツール。\n\nShoutouts to WaifuDfnseForce.\nAdditional shoutouts to Variant, AIDA, and everyone else who makes the Tweaker plugin possible.\n\nPlease use damage information responsibly.", "OverParse");
         }
 
+        private void Checkdll_Click(object sender, RoutedEventArgs e)
+        {
+            Checkdll checkdll = new Checkdll { Owner = this };
+            checkdll.Show();
+        }
+
         private void LowResources_Click(object sender, RoutedEventArgs e)
         {
             Properties.Settings.Default.LowResources = LowResources.IsChecked;
@@ -480,7 +486,7 @@ namespace OverParse
 
         private void Github_Click(object sender, RoutedEventArgs e) => Process.Start("https://github.com/Remon-7L/OverParse");
 
-        private void SkipPlugin_Click(object sender, RoutedEventArgs e) => Properties.Settings.Default.InstalledPluginVersion = 5;
+        private void SkipPlugin_Click(object sender, RoutedEventArgs e) => Properties.Settings.Default.InstalledPluginVersion = 6;
 
         private void ResetLogFolder_Click(object sender, RoutedEventArgs e)
         {
