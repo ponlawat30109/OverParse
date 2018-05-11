@@ -631,7 +631,7 @@ namespace OverParse
                 }
             }
 
-            encounterlog.WriteLog();
+            if (encounterlog.running) { encounterlog.WriteLog(); }
             Properties.Settings.Default.Save();
         }
 
