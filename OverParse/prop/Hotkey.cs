@@ -9,13 +9,14 @@ using System.Windows.Interop;
 
 //sourcecode from
 //https://gist.github.com/EmissaryFromSunday/1308531
+//いつか書き直す
 
 namespace HotKeyFrame
 {
     class HotKey
     {
         private const int WM_HOTKEY = 0x0312;
-        private IntPtr _windowHandle;
+        private readonly IntPtr _windowHandle;
         private Dictionary<int, EventHandler> _hotkeyEvents;
 
         [DllImport("user32.dll")]
@@ -28,10 +29,7 @@ namespace HotKeyFrame
         {
             WindowInteropHelper _host = new WindowInteropHelper(window);
             _windowHandle = _host.Handle;
-
-            ComponentDispatcher.ThreadPreprocessMessage
-                += ComponentDispatcher_ThreadPreprocessMessage;
-
+            ComponentDispatcher.ThreadPreprocessMessage += ComponentDispatcher_ThreadPreprocessMessage;
             _hotkeyEvents = new Dictionary<int, EventHandler>();
         }
 

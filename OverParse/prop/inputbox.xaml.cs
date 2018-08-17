@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Input;
 
 namespace OverParse
 {
@@ -6,28 +7,37 @@ namespace OverParse
     {
         public string ResultText = "";
 
-        public Inputbox(string title ="", string text="", string defalutvalue = "")
+        public Inputbox(string title = "", string text = "", string defalutvalue = "")
         {
             InitializeComponent();
 
             Title = title;
             Description.Content = text;
             InputBox.Text = defalutvalue;
+            OnActivated(null);
         }
 
-        private void OK_button_Click(object sender, RoutedEventArgs e)
+        private void Close_Click(object sender, RoutedEventArgs e) => SystemCommands.CloseWindow(this);
+
+        private void OK_Click(object sender, RoutedEventArgs e)
         {
             ResultText = InputBox.Text;
             DialogResult = true;
         }
 
-        private void InputBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void InputBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == System.Windows.Input.Key.Enter)
+            if (e.Key == Key.Enter)
             {
                 ResultText = InputBox.Text;
                 DialogResult = true;
             }
+            if (e.Key == Key.Escape) { SystemCommands.CloseWindow(this); }
+        }
+
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed) { DragMove(); }
         }
     }
 }

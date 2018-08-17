@@ -97,6 +97,15 @@ namespace OverParse.Properties {
         }
         
         /// <summary>
+        ///   はい、インストールを続けます に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string BanCheck {
+            get {
+                return ResourceManager.GetString("BanCheck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   OverParse is a 3rd-party tool that breaks PSO2&apos;s Terms and Conditions.
         ///SEGA has confirmed in an official announcement that accounts found using parsing tools may be banned.
         ///If account safety is your first priority, do NOT use OverParse. You use this tool entirely at your own risk.
@@ -285,6 +294,44 @@ namespace OverParse.Properties {
         public static string Installdll {
             get {
                 return ResourceManager.GetString("Installdll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   PSO2DamageDump
+        ///- - - - - - -
+        ///PSO2DamageDump
+        ///https://github.com/VariantXYZ/PSO2DamageDump
+        ///
+        ///
+        ///OverParse
+        ///- - - - - - -
+        ///OverParse
+        ///https://github.com/TyroneSama/OverParse
+        ///
+        ///
+        ///
+        ///ColorPickerWPF / MIT License
+        ///- - - - - - -
+        ///ColorPickerWPF
+        ///https://github.com/drogoganor/ColorPickerWPF
+        ///
+        ///Copyright (c) 2017 drogoganor
+        ///
+        ///https://opensource.org/licenses/MIT
+        ///
+        ///
+        ///
+        ///Google Noto Fonts / SIL Open Font License
+        ///- - - - - - -
+        ///Noto fonts
+        ///https://github.com/googlei18n/noto-fonts
+        ///
+        ///https://www.google.com/get/noto/ [残りの文字列は切り詰められました]&quot;; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string License1 {
+            get {
+                return ResourceManager.GetString("License1", resourceCulture);
             }
         }
         
@@ -535,6 +582,15 @@ namespace OverParse.Properties {
         }
         
         /// <summary>
+        ///   TScore に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string TScore {
+            get {
+                return ResourceManager.GetString("TScore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Update skills.csv に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string Updatecsv {
@@ -585,6 +641,15 @@ namespace OverParse.Properties {
         public static string WinOp {
             get {
                 return ResourceManager.GetString("WinOp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Write the TScore to the log に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string WriteTScore {
+            get {
+                return ResourceManager.GetString("WriteTScore", resourceCulture);
             }
         }
     }

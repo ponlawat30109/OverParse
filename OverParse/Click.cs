@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
-using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace OverParse
 {
@@ -20,10 +21,10 @@ namespace OverParse
             Properties.Settings.Default.AutoEndEncounters = false;
             //UpdateForm(null, null); // I'M FUCKING STUPID
             Properties.Settings.Default.AutoEndEncounters = temp;
-            encounterlog.backupCombatants = encounterlog.combatants;
-            Log.backupTime = Log.ActiveTime;
+            backup = current;
+            backup.players = new List<Player>(current.players);
 
-            List<Combatant> workingListCopy = new List<Combatant>();
+            /*List<Combatant> workingListCopy = new List<Combatant>();
             foreach (Combatant c in workingList)
             {
                 Combatant temp2 = new Combatant(c.ID, c.Name, c.isTemporary);
@@ -42,45 +43,55 @@ namespace OverParse
                 temp2.AisDamage = c.AisDamage;
                 temp2.RideDamage = c.RideDamage;
                 temp2.PercentReadDPS = c.PercentReadDPS;
+                temp2.TScore = c.TScore;
                 workingListCopy.Add(temp2);
-            }
+            }*/
             //Saving last combatant list"
-            lastCombatants = encounterlog.combatants;
-            encounterlog.combatants = workingListCopy;
-            string filename = encounterlog.WriteLog();
+
+            string filename = WriteLog();
             if (filename != null)
             {
                 if ((SessionLogs.Items[0] as MenuItem).Name == "SessionLogPlaceholder") { SessionLogs.Items.Clear(); }
                 int items = SessionLogs.Items.Count;
                 string prettyName = filename.Split('/').LastOrDefault();
-                sessionLogFilenames.Add(filename);
+                //sessionLogFilenames.Add(filename);
                 var menuItem = new MenuItem() { Name = "SessionLog_" + items.ToString(), Header = prettyName };
                 menuItem.Click += OpenRecentLog_Click;
                 SessionLogs.Items.Add(menuItem);
             }
-            if (Properties.Settings.Default.LogToClipboard) { encounterlog.WriteClipboard(); }
-
-            encounterlog = new Log(Properties.Settings.Default.Path);
-            UpdateForm(null, null);
-            Log.startTimestamp = Log.nowTimestamp = Log.diffTime = 0;
+            //if (Properties.Settings.Default.LogToClipboard) { encounterlog.WriteClipboard(); }
+            IsRunning = false;
+            UpdateForm(this, null);
+            speechcount = 1;
+            GC.Collect();
         }
 
         public void EndEncounter_Key(object sender, EventArgs e) => EndEncounter_Click(null, null);
 
         private void EndEncounterNoLog_Click(object sender, RoutedEventArgs e)
         {
-            Log.ActiveTime = Log.backupTime;
-            bool temp = Properties.Settings.Default.AutoEndEncounters;
+            /*
+            current.ActiveTime = backup.ActiveTime; //一つ前のDPS計算用
+            bool temp = Properties.Settings.Default.AutoEndEncounters; 
             Properties.Settings.Default.AutoEndEncounters = false;
             UpdateForm(null, null);
             Properties.Settings.Default.AutoEndEncounters = temp;
             //Reinitializing log
             encounterlog = new Log(Properties.Settings.Default.Path);
-            UpdateForm(null, null);
             Log.startTimestamp = Log.nowTimestamp = Log.diffTime = 0;
+            totalDamage = totalAllyDamage = totalDBDamage = totalLswDamage = totalPwpDamage = totalAisDamage = totalRideDamage = totalZanverse = totalFinish = 0;
+            totalSD = 0;
+            UpdateForm(null, null);
+            */
+            current = backup;
+            current.players = new List<Player>(backup.players);
+            IsRunning = false;
+            UpdateForm(this, null);
+            speechcount = 1;
+            GC.Collect();
         }
 
-        private void EndEncounterNoLog_Key(object sender, EventArgs e) => EndEncounterNoLog_Click(null, null);
+        private void EndEncounterNoLog_Key(object sender, EventArgs e) => EndEncounterNoLog_Click(sender, null);
 
         private void AutoEndEncounters_Click(object sender, RoutedEventArgs e)
         {
@@ -95,18 +106,17 @@ namespace OverParse
             input.ShowDialog();
             if (Int32.TryParse(input.ResultText, out int x))
             {
-                if (0 < x) { Properties.Settings.Default.EncounterTimeout = x; }
-                else { MessageBox.Show("Error"); }
-            }
-            else
+                if (0 < x) { Properties.Settings.Default.EncounterTimeout = x; } else { MessageBox.Show("Error"); }
+            } else
             {
                 if (input.ResultText.Length > 0) { MessageBox.Show("Couldn't parse your input. Enter only a number."); }
             }
-
             AlwaysOnTop.IsChecked = Properties.Settings.Default.AlwaysOnTop;
         }
 
         private void LogToClipboard_Click(object sender, RoutedEventArgs e) => Properties.Settings.Default.LogToClipboard = LogToClipboard.IsChecked;
+
+        private void IsWriteTS_Click(object sender, RoutedEventArgs e) => Properties.Settings.Default.IsWriteTS = IsWriteTS.IsChecked;
 
         private void OpenLogsFolder_Click(object sender, RoutedEventArgs e) => Process.Start(Directory.GetCurrentDirectory() + "\\Logs");
 
@@ -210,12 +220,6 @@ namespace OverParse
             UpdateForm(null, null);
         }
 
-        private void DPSFormat_Click(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.DPSformat = DPSFormat.IsChecked;
-            UpdateForm(null, null);
-        }
-
         private void Nodecimal_Click(object sender, RoutedEventArgs e)
         {
             Properties.Settings.Default.Nodecimal = Nodecimal.IsChecked;
@@ -233,9 +237,9 @@ namespace OverParse
                 {
                     damageTimer.Interval = new TimeSpan(0, 0, 0, 0, x);
                     Properties.Settings.Default.Updateinv = x;
-                }
-                else { MessageBox.Show("Error"); }
-            } else {
+                } else { MessageBox.Show("Error"); }
+            } else
+            {
                 if (input.ResultText.Length > 0) { MessageBox.Show("Couldn't parse your input. Enter only a number."); }
             }
 
@@ -245,11 +249,12 @@ namespace OverParse
         private void QuestTime_Click(object sender, RoutedEventArgs e)
         {
             Properties.Settings.Default.QuestTime = QuestTime.IsChecked;
-            if(Properties.Settings.Default.QuestTime)
+            if (Properties.Settings.Default.QuestTime)
             {
-                Log.ActiveTime = Log.diffTime;
-            } else {
-                Log.ActiveTime = Log.newTimestamp - Log.startTimestamp;
+                current.ActiveTime = current.diffTime;
+            } else
+            {
+                current.ActiveTime = current.newTimestamp - current.startTimestamp;
             }
         }
 
@@ -263,150 +268,32 @@ namespace OverParse
             Height = 275; Width = 670;
         }
 
-        private void Japanese_Click(object sender, RoutedEventArgs e) => Properties.Settings.Default.Language = "ja-JP";
-
-        private void English_Click(object sender, RoutedEventArgs e) => Properties.Settings.Default.Language = "en-US";
-
-        private void SelectColumn_Click(object sender, RoutedEventArgs e)
+        private void SettingWindow_Click(object sender, RoutedEventArgs e)
         {
-            GridLength temp = new GridLength(0);
-            bool Name, Pct, Dmg, Dmgd, DPS, JA, Cri, Hit, Atk, Tab, Vrb;
-            Name = Pct = Dmg = Dmgd = DPS = JA = Cri = Hit = Atk = Tab = true;
-            Vrb = Properties.Settings.Default.Variable; 
-            if (CNameHC.Width == temp) { Name = false; }
-            if (CPercentHC.Width == temp) { Pct = false; }
-            if (CDmgHC.Width == temp) { Dmg = false; }
-            if (CDmgDHC.Width == temp) { Dmgd = false; }
-            if (CDPSHC.Width == temp) { DPS = false; }
-            if (CJAHC.Width == temp) { JA = false; }
-            if (CCriHC.Width == temp) { Cri = false; }
-            if (CMdmgHC.Width == temp) { Hit = false; }
-            if (CAtkHC.Width == temp) { Atk = false; }
-            if (TabHC.Width == temp) { Tab = false; }
-            SelectColumn selectColumn = new SelectColumn(Name, Pct, Dmg, Dmgd, DPS, JA, Cri, Hit, Atk, Tab, Vrb) { Owner = this };
-            selectColumn.ShowDialog();
-            if (!(bool)selectColumn.DialogResult) { return; }
-            CombatantView.Columns.Clear();
-
-            if (selectColumn.ResultName) { CombatantView.Columns.Add(NameColumn); CNameHC.Width = new GridLength(1, GridUnitType.Star); } else { CNameHC.Width = temp; }
-            if (selectColumn.Vrb)
-            {
-                if (selectColumn.Pct) { CombatantView.Columns.Add(PercentColumn); CPercentHC.Width = new GridLength(0.4, GridUnitType.Star); } else { CPercentHC.Width = temp; }
-                if (selectColumn.Dmg) { CombatantView.Columns.Add(DamageColumn); CDmgHC.Width = new GridLength(0.8, GridUnitType.Star); } else { CDmgHC.Width = temp; }
-                if (selectColumn.Dmgd) { CombatantView.Columns.Add(DamagedColumn); CDmgDHC.Width = new GridLength(0.6, GridUnitType.Star); } else { CDmgDHC.Width = temp; }
-                if (selectColumn.DPS) { CombatantView.Columns.Add(DPSColumn); CDPSHC.Width = new GridLength(0.6, GridUnitType.Star); } else { CDPSHC.Width = temp; }
-                if (selectColumn.JA) { CombatantView.Columns.Add(JAColumn); CJAHC.Width = new GridLength(0.4, GridUnitType.Star); } else { CJAHC.Width = temp; }
-                if (selectColumn.Cri) { CombatantView.Columns.Add(CriColumn); CCriHC.Width = new GridLength(0.4, GridUnitType.Star); } else { CCriHC.Width = temp; }
-                if (selectColumn.Hit) { CombatantView.Columns.Add(HColumn); CMdmgHC.Width = new GridLength(0.6, GridUnitType.Star); } else { CMdmgHC.Width = temp; }
-            } else {
-                if (selectColumn.Pct) { CombatantView.Columns.Add(PercentColumn); CPercentHC.Width = new GridLength(39); } else { CPercentHC.Width = temp; }
-                if (selectColumn.Dmg) { CombatantView.Columns.Add(DamageColumn); CDmgHC.Width = new GridLength(78); } else { CDmgHC.Width = temp; }
-                if (selectColumn.Dmgd) { CombatantView.Columns.Add(DamagedColumn); CDmgDHC.Width = new GridLength(56); } else { CDmgDHC.Width = temp; }
-                if (selectColumn.DPS) { CombatantView.Columns.Add(DPSColumn); CDPSHC.Width = new GridLength(56); } else { CDPSHC.Width = temp; }
-                if (selectColumn.JA) { CombatantView.Columns.Add(JAColumn); CJAHC.Width = new GridLength(39); } else { CJAHC.Width = temp; }
-                if (selectColumn.Cri) { CombatantView.Columns.Add(CriColumn); CCriHC.Width = new GridLength(39); } else { CCriHC.Width = temp; }
-                if (selectColumn.Hit) { CombatantView.Columns.Add(HColumn); CMdmgHC.Width = new GridLength(62); } else { CMdmgHC.Width = temp; }
-            }
-            if (selectColumn.Atk) { CombatantView.Columns.Add(MaxHitColumn); CAtkHC.Width = new GridLength(1.7, GridUnitType.Star); } else { CAtkHC.Width = temp; }
-            if (selectColumn.Tab) { TabHC.Width = new GridLength(30); CTabHC.Width = new GridLength(30); } else { TabHC.Width = temp; CTabHC.Width = temp; }
-            Properties.Settings.Default.ListName = selectColumn.ResultName;
-            Properties.Settings.Default.ListPct = selectColumn.Pct;
-            Properties.Settings.Default.ListDmg = selectColumn.Dmg;
-            Properties.Settings.Default.ListDmgd = selectColumn.Dmgd;
-            Properties.Settings.Default.ListDPS = selectColumn.DPS;
-            Properties.Settings.Default.ListJA = selectColumn.JA;
-            Properties.Settings.Default.ListCri = selectColumn.Cri;
-            Properties.Settings.Default.ListHit = selectColumn.Hit;
-            Properties.Settings.Default.ListAtk = selectColumn.Atk;
-            Properties.Settings.Default.ListHit = selectColumn.Hit;
-            Properties.Settings.Default.ListTab = selectColumn.Tab;
-            Properties.Settings.Default.Variable = selectColumn.Vrb;
-        }
-
-        private void ShowDamageGraph_Click(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.ShowDamageGraph = ShowDamageGraph.IsChecked;
-            UpdateForm(null, null);
-        }
-
-        private void HighlightYourDamage_Click(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.HighlightYourDamage = HighlightYourDamage.IsChecked;
-            UpdateForm(null, null);
-        }
-
-        private void ChangeFont_Click(object sender, RoutedEventArgs e)
-        {
-            FontDialog dialog = new FontDialog() { Owner = this };
+            SettingWindow dialog = new SettingWindow() { Owner = this };
             dialog.ShowDialog();
             if (dialog.DialogResult == true)
             {
-                CombatantData.FontFamily = new FontFamily(Properties.Settings.Default.Font);
+                CombatantData.FontFamily = new System.Windows.Media.FontFamily(Properties.Settings.Default.Font);
                 if (double.TryParse(dialog.FontSizeBox.Text, out double resultvalue) && 1 < resultvalue) { CombatantData.FontSize = resultvalue; Properties.Settings.Default.FontSize = resultvalue; }
-                Color color = (Color)ColorConverter.ConvertFromString(dialog.fontcolor);
-                CombatantData.Foreground = new SolidColorBrush(color);
             }
         }
 
-        private void WindowOpacity_0_Click(object sender, RoutedEventArgs e)
+        private void Bouyomi_Click(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.WindowOpacity = 0;
-            HandleWindowOpacity();
+            if (0 < Process.GetProcessesByName("BouyomiChan").Length)
+            {
+                IsConnect = true;
+                BouyomiEnable.IsChecked = true;
+            }else
+            {
+                MessageBox.Show(this, "BouyomiChan.exeの起動を検出できませんでした。");
+                IsConnect = false;
+                BouyomiEnable.IsChecked = false;
+            }
         }
 
-        private void WindowOpacity_25_Click(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.WindowOpacity = .25;
-            HandleWindowOpacity();
-        }
-
-        private void WindowOpacity_50_Click(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.WindowOpacity = .50;
-            HandleWindowOpacity();
-        }
-
-        private void WindowOpacity_75_Click(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.WindowOpacity = .75;
-            HandleWindowOpacity();
-        }
-
-        private void WindowOpacity_100_Click(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.WindowOpacity = 1;
-            HandleWindowOpacity();
-        }
-
-        private void ListOpacity_0_Click(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.ListOpacity = 0;
-            HandleListOpacity();
-        }
-
-        private void ListOpacity_25_Click(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.ListOpacity = .25;
-            HandleListOpacity();
-        }
-
-        private void ListOpacity_50_Click(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.ListOpacity = .50;
-            HandleListOpacity();
-        }
-
-        private void ListOpacity_75_Click(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.ListOpacity = .75;
-            HandleListOpacity();
-        }
-
-        private void ListOpacity_100_Click(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.ListOpacity = 1;
-            HandleListOpacity();
-        }
+        private void Bouyomi_Key(object sender, EventArgs e) => Bouyomi_Click(sender, null);
 
         private void AlwaysOnTop_Click(object sender, RoutedEventArgs e)
         {
@@ -441,63 +328,9 @@ namespace OverParse
 
         private void ClickthroughToggle(object sender, RoutedEventArgs e) => Properties.Settings.Default.ClickthroughEnabled = ClickthroughMode.IsChecked;
 
-        private void About_Click(object sender, RoutedEventArgs e)
+        private void OpenInstall_Click(object sender, RoutedEventArgs e)
         {
-            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            MessageBox.Show($"OverParse v{version}\n簡易的な自己監視ツール。\n\nShoutouts to WaifuDfnseForce.\nAdditional shoutouts to Variant, AIDA, and everyone else who makes the Tweaker plugin possible.\n\nPlease use damage information responsibly.", "OverParse");
-        }
-
-        private void Checkdll_Click(object sender, RoutedEventArgs e)
-        {
-            Checkdll checkdll = new Checkdll { Owner = this };
-            checkdll.Show();
-        }
-
-        private void LowResources_Click(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.LowResources = LowResources.IsChecked;
-            if (Properties.Settings.Default.LowResources)
-            {
-                thisProcess.PriorityClass = ProcessPriorityClass.Idle;
-                MessageBox.Show("OverParseの基本優先度を低に設定しました。\n殆どのCPUではあまり影響ありませんが、CPU使用率が100%になるようなPCスペックの場合にOverParseの動作を止め、PSO2や画面キャプチャ等の他のプログラムを優先させます。\nOverParseが応答不能になる可能性があることを覚えておいて下さい。","OverParse");
-            } else {
-                thisProcess.PriorityClass = ProcessPriorityClass.Normal;
-            }
-        }
-
-        private void CPUdraw_Click(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.CPUdraw = CPUdraw.IsChecked;
-            if (Properties.Settings.Default.CPUdraw)
-            {
-                RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
-                MessageBox.Show("OverParseの画面描画をCPU処理(ソフトウェアレンダリング)に変更しました。\nグラフィックボード搭載のPCでは逆効果ですが、CPUのみ高性能で内蔵GPUを使用する大部分の日本メーカー製ノートPCではある程度効果があります。\nIntel HD Graphicsを使用している場合や0.1%でもGPUの負荷を減らしたい場合これを有効にして下さい。", "OverParse");
-            } else {
-                RenderOptions.ProcessRenderMode = RenderMode.Default;
-            }
-        }
-
-        private void Clock_Click(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.Clock = Clock.IsChecked;
-            if (Properties.Settings.Default.Clock) { Datetime.Visibility = Visibility.Visible; }
-            else { Datetime.Visibility = Visibility.Collapsed; }
-        }
-
-        private void Github_Click(object sender, RoutedEventArgs e) => Process.Start("https://github.com/Remon-7L/OverParse");
-
-        private void SkipPlugin_Click(object sender, RoutedEventArgs e) => Properties.Settings.Default.InstalledPluginVersion = 6;
-
-        private void ResetLogFolder_Click(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.Path = "A://BROKEN/FILE/PATH";
-            EndEncounterNoLog_Click(this, null);
-        }
-
-        private void UpdatePlugin_Click(object sender, RoutedEventArgs e)
-        {
-            encounterlog.UpdatePlugin(Properties.Settings.Default.Path);
-            EndEncounterNoLog_Click(this, null);
+            Launcher launcher = new Launcher(){ Owner = this }; launcher.ShowDialog();
         }
 
         private void Updateskills_Click(object sender, RoutedEventArgs e)
@@ -511,24 +344,44 @@ namespace OverParse
                     String content = streamReader.ReadToEnd();
                     File.WriteAllText("skills_ja.csv", content);
                 }
-                } catch {
+            } catch
+            {
                 MessageBox.Show("skills.csvの取得に失敗しました。");
             }
         }
 
-        private void ResetOverParse(object sender, RoutedEventArgs e)
+#if DEBUG
+        private void DebugWindow_Key(object sender, EventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("OverParseをリセットしますか？\n設定は消去されますが、ログは消去されません。", "OverParse Setup", MessageBoxButton.YesNo, MessageBoxImage.Information);
-            if (result != MessageBoxResult.Yes) { return; }
-
-            //Resetting
-            Properties.Settings.Default.Reset();
-            Properties.Settings.Default.ResetInvoked = true;
-            Properties.Settings.Default.Save();
-
-            Process.Start(Application.ResourceAssembly.Location);
-            Application.Current.Shutdown();
+            DebugWindow debugWindow = new DebugWindow();
+            debugWindow.Show();
         }
+#endif
+
+        private void Debug_Click(object sender, RoutedEventArgs e)
+        {
+            AtkLogWindow window = new AtkLogWindow() { Owner = this };
+            window.Show();
+        }
+
+        private void Capture(object sender, RoutedEventArgs e)
+        {
+            BitmapSource bitmap;
+
+            System.Windows.Point point = CombatantData.PointToScreen(new System.Windows.Point(0.0d, 0.0d));
+            Rect target = new Rect(point.X + 2.0, point.Y + 1.0, CombatantData.ActualWidth - 3.0, CombatantData.ActualHeight + 17.0);
+            using (Bitmap screen = new Bitmap((int)target.Width, (int)target.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
+            {
+                using (Graphics bmp = Graphics.FromImage(screen))
+                {
+                    bmp.CopyFromScreen((int)target.X, (int)target.Y, 0, 0, screen.Size);
+                    bitmap = Imaging.CreateBitmapSourceFromHBitmap(screen.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                }
+            }
+            Clipboard.SetImage(bitmap);
+        }
+
+        private void Capture_Key(object sender, EventArgs e) => Capture(sender, null);
 
     }
 }

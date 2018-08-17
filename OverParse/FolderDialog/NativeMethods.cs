@@ -12,21 +12,9 @@ namespace Ookii.Dialogs.Wpf
     {
         public const int ErrorFileNotFound = 2;
 
-        public static bool IsWindowsVistaOrLater
-        {
-            get
-            {
-                return Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version >= new Version(6, 0, 6000);
-            }
-        }
+        public static bool IsWindowsVistaOrLater => Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version >= new Version(6, 0, 6000);
 
-        public static bool IsWindowsXPOrLater
-        {
-            get
-            {
-                return Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version >= new Version(5, 1, 2600);
-            }
-        }
+        public static bool IsWindowsXPOrLater => Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version >= new Version(5, 1, 2600);
 
         #region LoadLibrary
 
@@ -376,8 +364,8 @@ namespace Ookii.Dialogs.Wpf
         {
             Guid guid = new Guid("43826d1e-e718-42ee-bc55-a1e261c37bfe"); // IID_IShellItem
             int hr = NativeMethods.SHCreateItemFromParsingName(path, IntPtr.Zero, ref guid, out object item);
-            if( hr != 0 )
-                throw new System.ComponentModel.Win32Exception(hr);
+            if( hr != 0 ) { throw new System.ComponentModel.Win32Exception(hr); }
+
             return (Interop.IShellItem)item;
         }
 

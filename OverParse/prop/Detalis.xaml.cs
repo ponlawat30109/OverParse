@@ -7,7 +7,7 @@ namespace OverParse
     /// </summary>
     public partial class Detalis : Window
     {
-        public Detalis(Combatant data)
+        public Detalis(Player data)
         {
             InitializeComponent();
             //Testing...
@@ -15,7 +15,7 @@ namespace OverParse
             PlayerName.Content = data.Name;
             Percent.Content = data.RatioPercent;
             Damage.Content = data.ReadDamage;
-            Damaged.Content = data.ReadDamaged;
+            Damaged.Content = data.BindDamaged;
             DPS.Content = data.ReadDPS;
             JA.Content = data.WJAPercent;
             Critical.Content = data.WCRIPercent;

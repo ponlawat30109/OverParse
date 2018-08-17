@@ -12,7 +12,7 @@ namespace OverParse.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.7.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.8.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -32,18 +32,6 @@ namespace OverParse.Properties {
             }
             set {
                 this["Path"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5")]
-        public int InstalledPluginVersion {
-            get {
-                return ((int)(this["InstalledPluginVersion"]));
-            }
-            set {
-                this["InstalledPluginVersion"] = value;
             }
         }
         
@@ -145,18 +133,6 @@ namespace OverParse.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool BanWarning {
-            get {
-                return ((bool)(this["BanWarning"]));
-            }
-            set {
-                this["BanWarning"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool SeparateZanverse {
             get {
@@ -188,18 +164,6 @@ namespace OverParse.Properties {
             }
             set {
                 this["NeedsPluginUpdate"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ResetInvoked {
-            get {
-                return ((bool)(this["ResetInvoked"]));
-            }
-            set {
-                this["ResetInvoked"] = value;
             }
         }
         
@@ -422,12 +386,12 @@ namespace OverParse.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool DPSformat {
+        public bool DPSSI {
             get {
-                return ((bool)(this["DPSformat"]));
+                return ((bool)(this["DPSSI"]));
             }
             set {
-                this["DPSformat"] = value;
+                this["DPSSI"] = value;
             }
         }
         
@@ -680,6 +644,246 @@ namespace OverParse.Properties {
             }
             set {
                 this["FontColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ListTS {
+            get {
+                return ((bool)(this["ListTS"]));
+            }
+            set {
+                this["ListTS"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsWriteTS {
+            get {
+                return ((bool)(this["IsWriteTS"]));
+            }
+            set {
+                this["IsWriteTS"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool BanChecked {
+            get {
+                return ((bool)(this["BanChecked"]));
+            }
+            set {
+                this["BanChecked"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DamageSI {
+            get {
+                return ((bool)(this["DamageSI"]));
+            }
+            set {
+                this["DamageSI"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Color")]
+        public string BackContent {
+            get {
+                return ((string)(this["BackContent"]));
+            }
+            set {
+                this["BackContent"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FF0A0A0A")]
+        public string BackColor {
+            get {
+                return ((string)(this["BackColor"]));
+            }
+            set {
+                this["BackColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Path")]
+        public string ImagePath {
+            get {
+                return ((string)(this["ImagePath"]));
+            }
+            set {
+                this["ImagePath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFFFFF")]
+        public string Foreground {
+            get {
+                return ((string)(this["Foreground"]));
+            }
+            set {
+                this["Foreground"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#88888888")]
+        public string BorderColor {
+            get {
+                return ((string)(this["BorderColor"]));
+            }
+            set {
+                this["BorderColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string WaitingFill {
+            get {
+                return ((string)(this["WaitingFill"]));
+            }
+            set {
+                this["WaitingFill"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string RunningFill {
+            get {
+                return ((string)(this["RunningFill"]));
+            }
+            set {
+                this["RunningFill"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool MaxSI {
+            get {
+                return ((bool)(this["MaxSI"]));
+            }
+            set {
+                this["MaxSI"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Bouyomi {
+            get {
+                return ((bool)(this["Bouyomi"]));
+            }
+            set {
+                this["Bouyomi"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("60")]
+        public int BouyomiSpan {
+            get {
+                return ((int)(this["BouyomiSpan"]));
+            }
+            set {
+                this["BouyomiSpan"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool BouyomiStartup {
+            get {
+                return ((bool)(this["BouyomiStartup"]));
+            }
+            set {
+                this["BouyomiStartup"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string BouyomiPath {
+            get {
+                return ((string)(this["BouyomiPath"]));
+            }
+            set {
+                this["BouyomiPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("127.0.0.1")]
+        public string BouyomiIP {
+            get {
+                return ((string)(this["BouyomiIP"]));
+            }
+            set {
+                this["BouyomiIP"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50001")]
+        public int BouyomiPort {
+            get {
+                return ((int)(this["BouyomiPort"]));
+            }
+            set {
+                this["BouyomiPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool BouyomiFormat {
+            get {
+                return ((bool)(this["BouyomiFormat"]));
+            }
+            set {
+                this["BouyomiFormat"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int EndVer {
+            get {
+                return ((int)(this["EndVer"]));
+            }
+            set {
+                this["EndVer"] = value;
             }
         }
     }

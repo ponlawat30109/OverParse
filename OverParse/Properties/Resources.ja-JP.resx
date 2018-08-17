@@ -359,9 +359,117 @@ OverParseはダメージログを読み込みます。</value>
   </data>
   <data name="Damaged" xml:space="preserve">
     <value>Damaged</value>
-    <comment>UI01</comment>
+    <comment>UI02</comment>
   </data>
   <data name="VideoTime" xml:space="preserve">
     <value>非戦闘時間をDPSの計算から除外</value>
+  </data>
+  <data name="TScore" xml:space="preserve">
+    <value>偏差値</value>
+    <comment>UI01</comment>
+  </data>
+  <data name="WriteTScore" xml:space="preserve">
+    <value>偏差値をログに出力する</value>
+  </data>
+  <data name="BanCheck" xml:space="preserve">
+    <value>はい、インストールを続けます</value>
+    <comment>L10</comment>
+  </data>
+  <data name="License1" xml:space="preserve">
+    <value>PSO2DamageDump
+- - - - - - -
+PSO2DamageDump
+https://github.com/VariantXYZ/PSO2DamageDump
+
+
+OverParse
+- - - - - - -
+OverParse
+https://github.com/TyroneSama/OverParse
+
+
+
+ColorPickerWPF / MIT License
+- - - - - - -
+ColorPickerWPF
+https://github.com/drogoganor/ColorPickerWPF
+
+Copyright (c) 2017 drogoganor
+
+https://opensource.org/licenses/MIT
+
+
+
+Google Noto Fonts / SIL Open Font License
+- - - - - - -
+Noto fonts
+https://github.com/googlei18n/noto-fonts
+
+https://www.google.com/get/noto/
+
+Google Internationalization Team
+
+https://scripts.sil.org/OFL_web
+
+
+
+.NET Framework 4.7.2  Reference Source / Microsoft Reference Source License
+- - - - - - -
+Reference Source
+https://referencesource.microsoft.com/
+
+https://referencesource.microsoft.com/license.html
+
+
+
+ScreenCapture
+- - - - - - -
+ScreenCapture
+https://github.com/Kuwayoshi/ScreenCapture
+
+
+
+Custom path of the user.config / Creative Commons Attribution-ShareAlike License
+- - - - - - -
+https://stackoverflow.com/questions/2265271/custom-path-of-the-user-config
+
+Chuck Rostance
+https://stackoverflow.com/users/810915/
+
+https://creativecommons.org/licenses/by-sa/4.0/legalcode
+
+
+
+TransparentImageBox
+- - - - - - -
+https://www.rainorshine.asia/2013/06/11/post2437.html
+
+https://twitter.com/surface0
+
+
+
+OverParse Icon / ICOON MONO License
+- - - - - - -
+http://icooon-mono.com/14431-%E6%9C%9B%E9%81%A0%E9%8F%A1%E3%81%AE%E3%83%95%E3%83%AA%E3%83%BC%E3%82%A4%E3%83%A9%E3%82%B9%E3%83%883/
+
+http://icooon-mono.com/license/
+
+http://kage-design.com/
+https://twitter.com/topeconheroes
+
+
+
+MetroRadiance / MIT License
+- - - - - - -
+MetroRadiance
+https://github.com/Grabacr07/MetroRadiance
+
+http://grabacr.net/archives/480
+http://grabacr.net/archives/507
+
+Copyright (c) 2014 Manato KAMEYA
+https://twitter.com/Grabacr07
+
+https://opensource.org/licenses/MIT</value>
   </data>
 </root>

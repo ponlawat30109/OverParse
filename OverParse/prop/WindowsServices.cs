@@ -25,7 +25,6 @@ namespace OverParse
             StringBuilder buff = new StringBuilder(chars);
             IntPtr handle = GetForegroundWindow();
             if (GetWindowText(handle, buff, chars) > 0) { return buff.ToString(); }
-
             return null;
         }
 

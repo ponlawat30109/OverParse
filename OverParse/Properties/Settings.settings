@@ -5,9 +5,6 @@
     <Setting Name="Path" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\Program Files (x86)\SEGA\PHANTASYSTARONLINE2\pso2_bin</Value>
     </Setting>
-    <Setting Name="InstalledPluginVersion" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">5</Value>
-    </Setting>
     <Setting Name="EncounterTimeout" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">60</Value>
     </Setting>
@@ -32,9 +29,6 @@
     <Setting Name="FirstRun" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="BanWarning" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
     <Setting Name="SeparateZanverse" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
@@ -42,9 +36,6 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="NeedsPluginUpdate" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="ResetInvoked" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="AutoHideWindow" Type="System.Boolean" Scope="User">
@@ -101,7 +92,7 @@
     <Setting Name="Clock" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="DPSformat" Type="System.Boolean" Scope="User">
+    <Setting Name="DPSSI" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="Nodecimal" Type="System.Boolean" Scope="User">
@@ -166,6 +157,66 @@
     </Setting>
     <Setting Name="FontColor" Type="System.String" Scope="User">
       <Value Profile="(Default)">#FFFFFFFF</Value>
+    </Setting>
+    <Setting Name="ListTS" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="IsWriteTS" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="BanChecked" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="DamageSI" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="BackContent" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Color</Value>
+    </Setting>
+    <Setting Name="BackColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FF0A0A0A</Value>
+    </Setting>
+    <Setting Name="ImagePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Path</Value>
+    </Setting>
+    <Setting Name="Foreground" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FFFFFFFF</Value>
+    </Setting>
+    <Setting Name="BorderColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#88888888</Value>
+    </Setting>
+    <Setting Name="WaitingFill" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RunningFill" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="MaxSI" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Bouyomi" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="BouyomiSpan" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="BouyomiStartup" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="BouyomiPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="BouyomiIP" Type="System.String" Scope="User">
+      <Value Profile="(Default)">127.0.0.1</Value>
+    </Setting>
+    <Setting Name="BouyomiPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">50001</Value>
+    </Setting>
+    <Setting Name="BouyomiFormat" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="EndVer" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>
 </SettingsFile>
