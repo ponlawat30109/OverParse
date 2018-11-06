@@ -886,5 +886,17 @@ namespace OverParse.Properties {
                 this["EndVer"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DamagedSI {
+            get {
+                return ((bool)(this["DamagedSI"]));
+            }
+            set {
+                this["DamagedSI"] = value;
+            }
+        }
     }
 }

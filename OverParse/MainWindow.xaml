@@ -15,12 +15,14 @@
         StateChanged="Window_StateChanged"
         Background="#FF0A0A0A"
         x:Name="TheWindow"
-        Title="OverParse" Height="275" Width="670">
+        Title="OverParse"
+        Height="{Binding Source={x:Static properties:Settings.Default},Path=Height}" 
+        Width="{Binding Source={x:Static properties:Settings.Default},Path=Width}">
 
     <Window.BindingGroup>
         <BindingGroup Name="ForegroundUpdate" NotifyOnValidationError="True"/>
     </Window.BindingGroup>
-    
+
     <Window.Resources>
         <Style x:Key="ExitStyle" TargetType="{x:Type Button}">
             <Setter Property="Background" Value="Transparent" />
@@ -117,7 +119,7 @@
         </Style>
 
     </Window.Resources>
-    
+
     <Border BorderBrush="#88888888" BorderThickness="1" x:Name="MainWindowBorder">
         <Grid HorizontalAlignment="Stretch" Margin="0,0,0,0">
             <Grid.RowDefinitions>
@@ -132,7 +134,7 @@
                     <Separator />
                     <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.AutoEnd}" x:Name="AutoEndEncounters" IsCheckable="True" Click="AutoEndEncounters_Click"/>
                     <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.TimeOut}" x:Name="SetEncounterTimeout" Click="SetEncounterTimeout_Click"/>
-                    <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.ToClip}" x:Name="LogToClipboard" IsCheckable="True" IsChecked="False" Click="LogToClipboard_Click"/>
+                    <!--<MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.ToClip}" x:Name="LogToClipboard" IsCheckable="True" IsChecked="False" Click="LogToClipboard_Click"/>-->
                     <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.WriteTScore}" x:Name="IsWriteTS" IsCheckable="True" IsChecked="False" Click="IsWriteTS_Click" />
                     <Separator />
                     <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.OpenLog}" Click="OpenLogsFolder_Click"/>
@@ -140,7 +142,7 @@
                         <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.NoLogs}" x:Name="SessionLogPlaceholder" IsEnabled="False"/>
                     </MenuItem>
                 </MenuItem>
-                <MenuItem Style="{StaticResource topmenu}" Header="Parsing">
+                <MenuItem Header="Parsing" Style="{StaticResource topmenu}">
                     <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.Separate}">
                         <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.SeparateZanverse}" x:Name="SeparateZanverse" IsCheckable="True" IsChecked="False" Click="SeparateZanverse_Click"/>
                         <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.SeparateHTF}" x:Name="SeparateFinish" IsCheckable="True" IsChecked="False" Click="SeparateFinish_Click"/>
@@ -162,7 +164,6 @@
                     <Separator />
                     <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.ThroughOther}" IsCheckable="True" IsChecked="False" x:Name="Onlyme" Click="Onlyme_Click" />
                     <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.RoundJA}" IsCheckable="True" IsChecked="False" x:Name="Nodecimal" Click="Nodecimal_Click" />
-                    <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.Changeinv}" Click="ChangeInterval_Click" />
                     <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.VideoTime}" IsCheckable="True" IsChecked="False" x:Name="QuestTime" Click="QuestTime_Click"/>
                 </MenuItem>
                 <MenuItem Style="{StaticResource topmenu}" Header="Setting">
@@ -175,7 +176,7 @@
                     <MenuItem Style="{StaticResource submenu}" IsCheckable="True" IsChecked="False" Header="{x:Static properties:Resources.ThroughClick}" x:Name="ClickthroughMode" Click="ClickthroughToggle"/>
                     <Separator />
                     <MenuItem Style="{StaticResource submenu}" Header="インストール設定を開く" x:Name="OpenInstall" Click="OpenInstall_Click"/>
-                    <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.Updatecsv}" Click="Updateskills_Click" />
+                    <MenuItem Style="{StaticResource submenu}" Header="{x:Static properties:Resources.Updatecsv}" Click="Updateskills_Click" StaysOpenOnClick="False" />
                 </MenuItem>
                 <MenuItem Header="AtkLog" Click="Debug_Click" Style="{StaticResource topmenu}"/>
             </Menu>
@@ -245,7 +246,7 @@
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
 
-                                <GridViewColumn Header="偏差値" x:Name="TScoreColumn" Width="{Binding ElementName=CTScoreH, Path=ActualWidth}">
+                                <GridViewColumn Header="偏差" x:Name="TScoreColumn" Width="{Binding ElementName=CTScoreH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding ReadTScore}" TextAlignment="Center" Margin="-5,-1,-5,-1" Padding="0" ClipToBounds="True" />
@@ -253,7 +254,7 @@
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
 
-                                <GridViewColumn Header="Damage" x:Name="DamageColumn" Width="{Binding ElementName=CDmgH, Path=ActualWidth}">
+                                <GridViewColumn Header="Dmg" x:Name="DamageColumn" Width="{Binding ElementName=CDmgH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding BindDamage}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" ClipToBounds="True" />
@@ -285,7 +286,7 @@
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
 
-                                <GridViewColumn Header="Critical" x:Name="CriColumn" Width="{Binding ElementName=CCriH, Path=ActualWidth}">
+                                <GridViewColumn Header="Crtcl" x:Name="CriColumn" Width="{Binding ElementName=CCriH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding CRIPercent}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" ClipToBounds="True" />
@@ -293,7 +294,7 @@
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
 
-                                <GridViewColumn Header="Max Hit" x:Name="HColumn" Width="{Binding ElementName=CMdmgH, Path=ActualWidth}">
+                                <GridViewColumn Header="Max" x:Name="HColumn" Width="{Binding ElementName=CMdmgH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding MaxHitdmg}" TextAlignment="Right" Margin="-5,-1,-5,-1" Padding="0" ClipToBounds="True" />
@@ -301,7 +302,7 @@
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
 
-                                <GridViewColumn Header="Attack Name" x:Name="MaxHitColumn" Width="{Binding ElementName=CAtkH, Path=ActualWidth}">
+                                <GridViewColumn Header="Atk Name" x:Name="MaxHitColumn" Width="{Binding ElementName=CAtkH, Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding MaxHit}" TextAlignment="Center" Margin="-5,-1,-5,-1" Padding="0"  ClipToBounds="True"/>
@@ -875,13 +876,13 @@
             <Grid Visibility="Hidden" Grid.Row="1" Margin="0" Grid.RowSpan="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition x:Name="CNameHC" Width="1*"/>
-                    <ColumnDefinition x:Name="CPercentHC" Width="39"/>
-                    <ColumnDefinition x:Name="CTScoreHC" Width="39"/>
+                    <ColumnDefinition x:Name="CPercentHC" Width="40"/>
+                    <ColumnDefinition x:Name="CTScoreHC" Width="40"/>
                     <ColumnDefinition x:Name="CDmgHC" Width="78"/>
-                    <ColumnDefinition x:Name="CDmgDHC" Width="56" />
+                    <ColumnDefinition x:Name="CDmgDHC" Width="50" />
                     <ColumnDefinition x:Name="CDPSHC" Width="56"/>
-                    <ColumnDefinition x:Name="CJAHC" Width="39"/>
-                    <ColumnDefinition x:Name="CCriHC" Width="39"/>
+                    <ColumnDefinition x:Name="CJAHC" Width="40"/>
+                    <ColumnDefinition x:Name="CCriHC" Width="40"/>
                     <ColumnDefinition x:Name="CMdmgHC" Width="62"/>
                     <ColumnDefinition x:Name="CAtkHC" Width="1.7*"/>
                     <ColumnDefinition x:Name="CTabHC" Width="30" />

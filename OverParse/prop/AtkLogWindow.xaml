@@ -11,7 +11,7 @@
         MouseDown="Window_MouseDown"
         WindowStyle="None" AllowsTransparency="True"
         ResizeMode="CanResizeWithGrip"
-        Title="AtkLogWindow" Height="250" Width="360">
+        Title="AtkLog" Height="250" Width="360">
 
     <Window.Resources>
         <Style x:Key="ExitStyle" TargetType="{x:Type Button}">
@@ -32,10 +32,12 @@
             </Grid.RowDefinitions>
 
             <StackPanel Orientation="Horizontal">
-                <Button Content="Reset" Click="Reset_Click" Background="Transparent" Foreground="White" BorderThickness="0" Padding="0"/>
+                <Button Content="Reset" Click="Reset_Click" Background="Transparent" Foreground="White" BorderThickness="0" Padding="5,0,5,0"/>
+                <Button x:Name="AutoDel" Click="AutoDel_Click" Content="7" ToolTip="AutoDelete Enabled" Style="{StaticResource ExitStyle}" />
+                <Label x:Name="AtkCount" Content="0" Margin="10,0,0,0" Foreground="White" Padding="0" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="0" Style="{StaticResource ExitStyle}"/>
+                <Button Content="0" Click="Minimize_Click" Style="{StaticResource ExitStyle}"/>
                 <Button Content="r" Click="Close_Click" Style="{StaticResource ExitStyle}"/>
             </StackPanel>
 

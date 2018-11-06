@@ -358,7 +358,7 @@ OverParseはダメージログを読み込みます。</value>
     <comment>37</comment>
   </data>
   <data name="Damaged" xml:space="preserve">
-    <value>Damaged</value>
+    <value>Dmgd</value>
     <comment>UI02</comment>
   </data>
   <data name="VideoTime" xml:space="preserve">

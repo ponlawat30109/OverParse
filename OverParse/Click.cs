@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
@@ -48,18 +49,19 @@ namespace OverParse
             }*/
             //Saving last combatant list"
 
+            //ExportWriteLog();
             string filename = WriteLog();
             if (filename != null)
             {
                 if ((SessionLogs.Items[0] as MenuItem).Name == "SessionLogPlaceholder") { SessionLogs.Items.Clear(); }
                 int items = SessionLogs.Items.Count;
                 string prettyName = filename.Split('/').LastOrDefault();
-                //sessionLogFilenames.Add(filename);
+                sessionLogFilenames.Add(filename);
                 var menuItem = new MenuItem() { Name = "SessionLog_" + items.ToString(), Header = prettyName };
                 menuItem.Click += OpenRecentLog_Click;
                 SessionLogs.Items.Add(menuItem);
             }
-            //if (Properties.Settings.Default.LogToClipboard) { encounterlog.WriteClipboard(); }
+            // (Properties.Settings.Default.LogToClipboard) { WriteClipboard(); }
             IsRunning = false;
             UpdateForm(this, null);
             speechcount = 1;
@@ -114,7 +116,7 @@ namespace OverParse
             AlwaysOnTop.IsChecked = Properties.Settings.Default.AlwaysOnTop;
         }
 
-        private void LogToClipboard_Click(object sender, RoutedEventArgs e) => Properties.Settings.Default.LogToClipboard = LogToClipboard.IsChecked;
+        //private void LogToClipboard_Click(object sender, RoutedEventArgs e) => Properties.Settings.Default.LogToClipboard = LogToClipboard.IsChecked;
 
         private void IsWriteTS_Click(object sender, RoutedEventArgs e) => Properties.Settings.Default.IsWriteTS = IsWriteTS.IsChecked;
 
@@ -184,67 +186,13 @@ namespace OverParse
             UpdateForm(null, null);
         }
 
-        private void HideAIS_Click(object sender, RoutedEventArgs e)
-        {
-            if (HideAIS.IsChecked) { HidePlayers.IsChecked = false; }
-            UpdateForm(null, null);
-        }
-
-        private void HideDB_Click(object sender, RoutedEventArgs e)
-        {
-            if (HideDB.IsChecked) { HidePlayers.IsChecked = false; }
-            UpdateForm(null, null);
-        }
-
-        private void HideRide_Click(object sender, RoutedEventArgs e)
-        {
-            if (HideRide.IsChecked) { HidePlayers.IsChecked = false; }
-            UpdateForm(null, null);
-        }
-
-        private void HidePwp_Click(object sender, RoutedEventArgs e)
-        {
-            if (HidePwp.IsChecked) { HidePlayers.IsChecked = false; }
-            UpdateForm(null, null);
-        }
-
-        private void HideLsw_Click(object sender, RoutedEventArgs e)
-        {
-            if (HideLsw.IsChecked) { HidePlayers.IsChecked = false; }
-            UpdateForm(null, null);
-        }
-
-        private void Onlyme_Click(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.Onlyme = Onlyme.IsChecked;
-            UpdateForm(null, null);
-        }
-
-        private void Nodecimal_Click(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.Nodecimal = Nodecimal.IsChecked;
-            UpdateForm(null, null);
-        }
-
-        private void ChangeInterval_Click(object sender, RoutedEventArgs e)
-        {
-            AlwaysOnTop.IsChecked = false;
-            Inputbox input = new Inputbox("OverParse", ".csvファイルの読み取り間隔を変更します... (単位:ms)", Properties.Settings.Default.Updateinv.ToString()) { Owner = this };
-            input.ShowDialog();
-            if (Int32.TryParse(input.ResultText, out int x))
-            {
-                if (x > 49)
-                {
-                    damageTimer.Interval = new TimeSpan(0, 0, 0, 0, x);
-                    Properties.Settings.Default.Updateinv = x;
-                } else { MessageBox.Show("Error"); }
-            } else
-            {
-                if (input.ResultText.Length > 0) { MessageBox.Show("Couldn't parse your input. Enter only a number."); }
-            }
-
-            AlwaysOnTop.IsChecked = Properties.Settings.Default.AlwaysOnTop;
-        }
+        private void HideAIS_Click(object sender, RoutedEventArgs e) { if (HideAIS.IsChecked) { HidePlayers.IsChecked = false; } UpdateForm(null, null); }
+        private void HideDB_Click(object sender, RoutedEventArgs e) { if (HideDB.IsChecked) { HidePlayers.IsChecked = false; } UpdateForm(null, null); }
+        private void HideRide_Click(object sender, RoutedEventArgs e) { if (HideRide.IsChecked) { HidePlayers.IsChecked = false; } UpdateForm(null, null); }
+        private void HidePwp_Click(object sender, RoutedEventArgs e) { if (HidePwp.IsChecked) { HidePlayers.IsChecked = false; } UpdateForm(null, null); }
+        private void HideLsw_Click(object sender, RoutedEventArgs e) { if (HideLsw.IsChecked) { HidePlayers.IsChecked = false; } UpdateForm(null, null); }
+        private void Onlyme_Click(object sender, RoutedEventArgs e) { Properties.Settings.Default.Onlyme = Onlyme.IsChecked; UpdateForm(null, null); }
+        private void Nodecimal_Click(object sender, RoutedEventArgs e) { Properties.Settings.Default.Nodecimal = Nodecimal.IsChecked; UpdateForm(null, null); }
 
         private void QuestTime_Click(object sender, RoutedEventArgs e)
         {
@@ -258,25 +206,13 @@ namespace OverParse
             }
         }
 
-        private void DefaultWindowSize_Click(object sender, RoutedEventArgs e)
-        {
-            Height = 275; Width = 670;
-        }
-
-        private void DefaultWindowSize_Key(object sender, EventArgs e)
-        {
-            Height = 275; Width = 670;
-        }
+        private void DefaultWindowSize_Click(object sender, RoutedEventArgs e) { Height = 275; Width = 670; }
+        private void DefaultWindowSize_Key(object sender, EventArgs e) { Height = 275; Width = 670; }
 
         private void SettingWindow_Click(object sender, RoutedEventArgs e)
         {
             SettingWindow dialog = new SettingWindow() { Owner = this };
             dialog.ShowDialog();
-            if (dialog.DialogResult == true)
-            {
-                CombatantData.FontFamily = new System.Windows.Media.FontFamily(Properties.Settings.Default.Font);
-                if (double.TryParse(dialog.FontSizeBox.Text, out double resultvalue) && 1 < resultvalue) { CombatantData.FontSize = resultvalue; Properties.Settings.Default.FontSize = resultvalue; }
-            }
         }
 
         private void Bouyomi_Click(object sender, RoutedEventArgs e)
@@ -285,7 +221,7 @@ namespace OverParse
             {
                 IsConnect = true;
                 BouyomiEnable.IsChecked = true;
-            }else
+            } else
             {
                 MessageBox.Show(this, "BouyomiChan.exeの起動を検出できませんでした。");
                 IsConnect = false;
@@ -330,19 +266,27 @@ namespace OverParse
 
         private void OpenInstall_Click(object sender, RoutedEventArgs e)
         {
-            Launcher launcher = new Launcher(){ Owner = this }; launcher.ShowDialog();
+            Launcher launcher = new Launcher() { Owner = this }; launcher.ShowDialog();
         }
 
-        private void Updateskills_Click(object sender, RoutedEventArgs e)
+        private async void Updateskills_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                using (System.Net.WebClient client = new System.Net.WebClient())
+                using (HttpClient client = new HttpClient())
                 {
-                    Stream stream = client.OpenRead("https://remon-7l.github.io/skills_ja.csv");
-                    StreamReader streamReader = new StreamReader(stream);
-                    String content = streamReader.ReadToEnd();
-                    File.WriteAllText("skills_ja.csv", content);
+                    client.DefaultRequestHeaders.Add("User-Agent", "Mozilla / 5.0 OverParse / 4.0.0");
+                    client.DefaultRequestHeaders.Add("Connection", "close");
+                    client.Timeout = TimeSpan.FromSeconds(20.0);
+                    var content = await client.GetAsync("https://remon-7l.github.io/ovp/skills_ja.csv");
+                    using (var fileStream = File.Create(@"./prop/skills_ja.csv"))
+                    {
+                        using (var httpStream = await content.Content.ReadAsStreamAsync())
+                        {
+                            httpStream.CopyTo(fileStream);
+                            await fileStream.FlushAsync();
+                        }
+                    }
                 }
             } catch
             {
@@ -382,6 +326,5 @@ namespace OverParse
         }
 
         private void Capture_Key(object sender, EventArgs e) => Capture(sender, null);
-
     }
 }

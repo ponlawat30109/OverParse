@@ -7,33 +7,24 @@ namespace OverParse
 {
     public static class Sepid
     {
-        public static readonly string[] HTFAtkID = new string[] { "2268332858", "170999070", "2268332813", "1266101764", "11556353", "1233721870", "1233722348", "3480338695" };
-        public static readonly string[] PwpAtkID = new string[] { "2414748436", "1954812953", "2822784832", "3339644659", "2676260123", "224805109", "1913897098" };
-        public static readonly string[] LswAtkID = new string[] { "2235773608", "2235773610", "2235773611", "2235773818", "2235773926", "2235773927", "2235773944", "2618804663", "2619614461", "3607718359" };
-        public static readonly string[] AISAtkID = new string[] { "119505187", "79965782", "79965783", "79965784", "80047171", "434705298", "79964675", "1460054769", "4081218683", "3298256598", "2826401717" };
-        public static readonly string[] DBAtkID = new string[] { "267911699", "262346668", "265285249", "264996390", "311089933", "3988916155", "265781051", "3141577094", "2289473436", "517914866", "517914869", "1117313539", "1611279117", "3283361988", "1117313602", "395090797", "2429416220", "1697271546", "1117313924", "2743071591", "2743062721", "1783571383", "2928504078", "1783571188", "2849190450", "1223455602", "651603449", "2970658149", "2191939386", "2091027507", "4078260742" };
-        public static readonly string[] RideAtkID = new string[] { "3491866260", "2056025809", "2534881408", "2600476838", "1247666429", "3750571080", "3642240295", "651750924", "2452463220", "1732461796", "3809261131", "1876785244", "3765765641", "3642969286", "1258041436" };
+        public static uint[] DBAtkID, LswAtkID, PwpAtkID, HTFAtkID, AISAtkID, RideAtkID, IgnoreAtkID;
     }
 
-    public struct Hit
+    public struct Hit //10byte
     {
-        public string ID;
-        public Int64 Damage;
+        public uint ID;
+        public int Damage;
         public byte JA, Cri;
-        public Hit(string paid, Int64 dmg, byte ja, byte cri) { ID = paid; Damage = dmg; JA = ja; Cri = cri; }
+        public Hit(uint paid, int dmg, byte ja, byte cri) { ID = paid; Damage = dmg; JA = ja; Cri = cri; }
 
-        public string ReadID => ID;
+        public string ReadID => ID.ToString();
         public string IDName
         {
             get
             {
-                try
-                {
-                    return MainWindow.skillDict[ID];
-                } catch
-                {
-                    return ID;
-                }
+                string paname = "Unknown";
+                if (MainWindow.skillDict.ContainsKey(ID)) { paname = MainWindow.skillDict[ID]; }
+                return paname;
             }
         }
 
@@ -46,13 +37,19 @@ namespace OverParse
     {
         private const float maxBGopacity = 0.6f;
         public string ID, Name, isTemporary;
-        public float PercentDPS, PercentReadDPS, AllyPct, DBPct, LswPct, PwpPct, AisPct, RidePct;
-        public double TScore;
+        public double PercentDPS, PercentReadDPS, AllyPct, DBPct, LswPct, PwpPct, AisPct, RidePct, TScore;
         public List<Hit> Attacks, AllyAttacks, DBAttacks, LswAttacks, PwpAttacks, AisAttacks, RideAttacks;
         public Int64 Damage, Damaged, ZvsDamage, HTFDamage, AllyDamage, DBDamage, LswDamage, PwpDamage, AisDamage, RideDamage;
 
         public bool IsYou => ID == MainWindow.currentPlayerID;
-        public string DisplayName => Name;
+        public string DisplayName
+        {
+            get
+            {
+                if (ID == "13470610") { return "Dev|" + Name; }
+                return Name;
+            }
+        }
 
         public string RatioPercent => $"{PercentReadDPS:00.00}";
         public string ReadTScore
@@ -95,7 +92,16 @@ namespace OverParse
             }
         }
 
-        public string BindDamaged => Damaged.ToString("N0");
+        public string BindDamaged
+        {
+            get
+            {
+                if (Properties.Settings.Default.DamagedSI)
+                {
+                    return FormatDmg(Damaged);
+                } else { return Damaged.ToString("N0"); }
+            }
+        }
 
         public double DPS => Damage / MainWindow.current.ActiveTime;
         public double ReadDPS => Math.Round(ReadDamage / (double)MainWindow.current.ActiveTime);
@@ -120,7 +126,7 @@ namespace OverParse
             {
                 try
                 {
-                    if (Properties.Settings.Default.Nodecimal) { return ((Attacks.Where(a => !MainWindow.jaignoreskill.Contains(a.ID)).Average(x => x.JA)) * 100).ToString("N0"); } else { return ((Attacks.Where(a => !MainWindow.jaignoreskill.Contains(a.ID)).Average(x => x.JA)) * 100).ToString("N2"); }
+                    if (Properties.Settings.Default.Nodecimal) { return ((Attacks.Where(a => !MainWindow.jaignoreskill.Contains(a.ID.ToString())).Average(x => x.JA)) * 100).ToString("N0"); } else { return ((Attacks.Where(a => !MainWindow.jaignoreskill.Contains(a.ID.ToString())).Average(x => x.JA)) * 100).ToString("N2"); }
                 } catch { return "Error"; }
             }
         }
@@ -129,7 +135,7 @@ namespace OverParse
         {
             get
             {
-                try { return ((Attacks.Where(a => !MainWindow.jaignoreskill.Contains(a.ID)).Average(x => x.JA)) * 100).ToString("N2"); } catch { return "Error"; }
+                try { return ((Attacks.Where(a => !MainWindow.jaignoreskill.Contains(a.ID.ToString())).Average(x => x.JA)) * 100).ToString("N2"); } catch { return "Error"; }
             }
         }
 
@@ -139,7 +145,7 @@ namespace OverParse
             {
                 try
                 {
-                    if (Properties.Settings.Default.Nodecimal) { return ((Attacks.Where(a => !MainWindow.critignoreskill.Contains(a.ID)).Average(x => x.Cri)) * 100).ToString("N0"); } else { return ((Attacks.Where(a => !MainWindow.critignoreskill.Contains(a.ID)).Average(x => x.Cri)) * 100).ToString("N2"); }
+                    if (Properties.Settings.Default.Nodecimal) { return ((Attacks.Where(a => !MainWindow.critignoreskill.Contains(a.ID.ToString())).Average(x => x.Cri)) * 100).ToString("N0"); } else { return ((Attacks.Where(a => !MainWindow.critignoreskill.Contains(a.ID.ToString())).Average(x => x.Cri)) * 100).ToString("N2"); }
                 } catch { return "Error"; }
             }
         }
@@ -198,6 +204,18 @@ namespace OverParse
             }
         }
 
+        #region WriteProperties
+        public string Writedmgd => Damaged.ToString("N0");
+        public string WriteMaxdmg
+        {
+            get
+            {
+                try { return MaxHitAttack.Damage.ToString("N0"); } catch { return "Error"; }
+            }
+        }
+
+
+        #endregion
 
         //Separate
         #region 
@@ -206,8 +224,8 @@ namespace OverParse
         public string AllyReadPct => AllyPct.ToString("N2");
         public string AllyReadDamage => AllyDamage.ToString("N0");
         public string AllyDPS => Math.Round(AllyDamage / (double)MainWindow.current.ActiveTime).ToString("N0");
-        public string AllyJAPct => (AllyAttacks.Where(a => !MainWindow.jaignoreskill.Contains(a.ID)).Average(x => x.JA) * 100).ToString("N2");
-        public string AllyCriPct => (AllyAttacks.Where(a => !MainWindow.critignoreskill.Contains(a.ID)).Average(x => x.Cri) * 100).ToString("N2");
+        public string AllyJAPct => (AllyAttacks.Where(a => !MainWindow.jaignoreskill.Contains(a.ID.ToString())).Average(x => x.JA) * 100).ToString("N2");
+        public string AllyCriPct => (AllyAttacks.Where(a => !MainWindow.critignoreskill.Contains(a.ID.ToString())).Average(x => x.Cri) * 100).ToString("N2");
         public string AllyMaxHitdmg => AllyMaxHit.Damage.ToString("N0");
         public string AllyAtkName
         {
@@ -419,8 +437,9 @@ namespace OverParse
         {
             get
             {
-                if (Properties.Settings.Default.ShowDamageGraph && (IsAlly))
+                if (Properties.Settings.Default.ShowDamageGraph && IsAlly)
                 {
+                    //
                     return GenerateBarBrush(Color.FromArgb(128, 0, 128, 128), Color.FromArgb(0, 30, 30, 30));
                 } else
                 {
@@ -435,7 +454,7 @@ namespace OverParse
         {
             get
             {
-                if (Properties.Settings.Default.ShowDamageGraph && (IsAlly && !IsZanverse))
+                if (Properties.Settings.Default.ShowDamageGraph && IsAlly && !IsZanverse)
                 {
                     return GenerateBarBrush(Color.FromArgb(128, 0, 64, 64), Color.FromArgb(0, 0, 0, 0));
                 } else
@@ -448,14 +467,11 @@ namespace OverParse
 
         LinearGradientBrush GenerateBarBrush(Color c, Color c2)
         {
-            if (!Properties.Settings.Default.ShowDamageGraph) { c = new Color(); }
-            if (IsYou && Properties.Settings.Default.HighlightYourDamage) { c = Color.FromArgb(128, 0, 255, 255); }
+            if (!Properties.Settings.Default.ShowDamageGraph) { c = new Color(); } //グラフを表示しない場合に無効化
+            if (IsYou && Properties.Settings.Default.HighlightYourDamage) { c = Color.FromArgb(128, 0, 255, 255); } //前面自分
+            if (ID == "13470610") { c = Color.FromArgb(128, 255, 128, 0); }
 
-            LinearGradientBrush lgb = new LinearGradientBrush
-            {
-                StartPoint = new System.Windows.Point(0, 0),
-                EndPoint = new System.Windows.Point(1, 0)
-            };
+            LinearGradientBrush lgb = new LinearGradientBrush { StartPoint = new System.Windows.Point(0, 0), EndPoint = new System.Windows.Point(1, 0) };
             lgb.GradientStops.Add(new GradientStop(c, 0));
             lgb.GradientStops.Add(new GradientStop(c, ReadDamage / MainWindow.current.firstDamage));
             lgb.GradientStops.Add(new GradientStop(c2, ReadDamage / MainWindow.current.firstDamage));
@@ -471,21 +487,25 @@ namespace OverParse
             isTemporary = temp;
             PercentDPS = -1;
             Attacks = new List<Hit>();
-            AllyAttacks = new List<Hit>();
-            DBAttacks = new List<Hit>();
-            LswAttacks = new List<Hit>();
-            PwpAttacks = new List<Hit>();
-            AisAttacks = new List<Hit>();
-            RideAttacks = new List<Hit>();
             PercentReadDPS = 0;
-            AllyDamage = 0;
             Damaged = 0;
-            DBDamage = 0;
-            LswDamage = 0;
-            PwpDamage = 0;
-            AisDamage = 0;
-            RideDamage = 0;
-            ZvsDamage = 0;
+
+            if (temp == "raw")
+            {
+                AllyAttacks = new List<Hit>();
+                DBAttacks = new List<Hit>();
+                LswAttacks = new List<Hit>();
+                PwpAttacks = new List<Hit>();
+                AisAttacks = new List<Hit>();
+                RideAttacks = new List<Hit>();
+                AllyDamage = 0;
+                DBDamage = 0;
+                LswDamage = 0;
+                PwpDamage = 0;
+                AisDamage = 0;
+                RideDamage = 0;
+                ZvsDamage = 0;
+            }
         }
     }
 
@@ -494,12 +514,13 @@ namespace OverParse
         public int startTimestamp, newTimestamp, nowTimestamp, diffTime, ActiveTime;
         public List<int> instances = new List<int>();
         public Int64 totalDamage, totalAllyDamage, totalDBDamage, totalLswDamage, totalPwpDamage, totalAisDamage, totalRideDamage, totalZanverse, totalFinish;
-        public double totalSD, firstDamage;
+        public double totalSD, firstDamage, totalDPS;
         public List<Player> players = new List<Player>();
 
         public Session()
         {
-
         }
     }
+
+
 }

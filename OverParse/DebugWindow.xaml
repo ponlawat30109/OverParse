@@ -10,22 +10,25 @@
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="VerticalAlignment" Value="Top" />
-            <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="Width" Value="100" />
+            <Setter Property="Margin" Value="0,0,0,5" />
         </Style>
     </Window.Resources>
     <Grid>
-        <!--
-        <Button Content="AddAttack" Click="AddAttack_Click" Margin="10,10,0,0" />
-        <Button Content="Debug_Click" Click="Debug_Click" Margin="10,35,0,0" />
-        <Button Content="AddDBAttack" Click="AddDBAttack_Click" Margin="10,60,0,0" />
-        <Button Content="AddLswAttack" Click="AddLswAttack_Click" Margin="10,85,0,0" />
-        <Button Content="ShowSettingPath" Click="ShowSettingPath" Margin="10,110,0,0" />
-        <Button Content="FunctionA" Click="FunctionA_Click" Margin="115,10,0,0" />
-        <Button Content="FunctionB" Click="FunctionB_Click" Margin="115,35,0,0" />
-        <Button Content="Resize PSO2" Click="Resize_Click" Margin="115,60,0,0" />
-        <Button Content="CopyHash" Click="Hash_Click" Margin="115,85,0,0" />
-        <Button Content="SendData" Click="Send_Click" Margin="115,110,0,0" />
-        -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0" Margin="10">
+            <Button Content="AddAttack" Click="AddAttack_Click" />
+            <Button Content="AddDBAttack" Click="AddDBAttack_Click" />
+            <Button Content="AddLswAttack" Click="AddLswAttack_Click" />
+            <Button Content="ShowColorBox" Click="ShowColorBox" />
+            <Button Content="LoadCSVFile" Click="LoadCsvFile" />
+        </StackPanel>
+        <StackPanel Grid.Column="1" Margin="10">
+            <Button Content="AddAttack512" Click="AddAttack512_Click" />
+        </StackPanel>
     </Grid>
 </Window>

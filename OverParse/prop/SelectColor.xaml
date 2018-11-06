@@ -11,6 +11,7 @@
         WindowStyle="None" AllowsTransparency="True"
         WindowStartupLocation="CenterOwner"
         Loaded="Window_Loaded"
+        Title="Color"
         Height="270" Width="640">
 
     <Window.Resources>

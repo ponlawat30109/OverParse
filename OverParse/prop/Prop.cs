@@ -9,6 +9,7 @@ using System.IO;
 
 namespace OverParse
 {
+    //@override SettingsProvider
     class CustomSettingsProvider : SettingsProvider
     {
         const string NAME = "name";

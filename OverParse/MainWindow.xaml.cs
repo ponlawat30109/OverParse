@@ -29,19 +29,20 @@ namespace OverParse
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static bool IsRunning, IsConnect, DebugMode;
+        public static bool IsRunning, IsConnect;
         public static StreamReader logReader;
         public static string currentPlayerID = null;
         public static string currentPlayerName = null;
-        public static string[] jaignoreskill, critignoreskill;
-        public static Dictionary<string, string> skillDict = new Dictionary<string, string>();
+        public static string[] jaignoreskill, critignoreskill, playerid;
+        public static Dictionary<uint, string> skillDict = new Dictionary<uint, string>();
         public static DirectoryInfo damagelogs;
         public static FileInfo damagelogcsv;
         private List<Player> workingList = new List<Player>();
         public static Session current = new Session();
         public static Session backup = new Session();
         public static List<Hit> userattacks = new List<Hit>();
-        public DispatcherTimer damageTimer = new DispatcherTimer();
+        public static bool Isautodel = true;
+        public DispatcherTimer damageTimer, logCheckTimer, inactiveTimer;
         private string updatemsg = " - Update checking...";
         private List<string> sessionLogFilenames = new List<string>();
         private IntPtr hwndcontainer;
@@ -56,10 +57,10 @@ namespace OverParse
             Properties.Resources.Culture = CultureInfo.GetCultureInfo(Properties.Settings.Default.Language);
             InitializeComponent();
             Dispatcher.UnhandledException += ErrorToLog;
-            if (IsInstalled() == false)
+            if (!IsInstalled())
             {
                 Launcher launcher = new Launcher(); launcher.ShowDialog();
-                if (launcher.DialogResult != true && Application.Current != null ) { Application.Current.Shutdown(); return; }
+                if (launcher.DialogResult != true && Application.Current != null) { Application.Current.Shutdown(); return; }
             }
 
             //if (Properties.Settings.Default.BouyomiStartup) { Process.Start(Properties.Settings.Default.BouyomiPath); }
@@ -124,27 +125,27 @@ namespace OverParse
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             damagelogs = new DirectoryInfo(Properties.Settings.Default.Path + "\\damagelogs");
-            damagelogcsv = damagelogs.GetFiles().Where(f => Regex.IsMatch(f.Name, @"\d+\.")).OrderByDescending(f => f.Name).FirstOrDefault();
             if (damagelogs.GetFiles().Any())
             {
+                damagelogcsv = damagelogs.GetFiles().Where(f => Regex.IsMatch(f.Name, @"\d+\.")).OrderByDescending(f => f.Name).FirstOrDefault();
                 FileStream fileStream = File.Open(damagelogcsv.DirectoryName + "\\" + damagelogcsv.Name, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 fileStream.Seek(0, SeekOrigin.Begin);
                 logReader = new StreamReader(fileStream);
 
-                while (currentPlayerID == null)
+                try
                 {
-                    try
+                    while (currentPlayerID == null && !logReader.EndOfStream)
                     {
                         string line = logReader.ReadLine();
                         if (line == "") { continue; }
                         string[] parts = line.Split(',');
                         if (parts[0] == "0" && parts[3] == "YOU") { currentPlayerID = parts[2]; }
-                    } catch
-                    {
-                        currentPlayerID = "12345678";
-                        break;
                     }
+                } catch
+                {
+                    currentPlayerID = "12345678";
                 }
+
                 fileStream.Seek(0, SeekOrigin.End);
                 logReader = new StreamReader(fileStream);
             }
@@ -155,73 +156,60 @@ namespace OverParse
 
             await Task.WhenAll(SkillLoad, VerCheck);
 
+            damageTimer = new DispatcherTimer();
+            logCheckTimer = new DispatcherTimer();
+            inactiveTimer = new DispatcherTimer();
             damageTimer.Tick += new EventHandler(UpdateForm);
             damageTimer.Interval = new TimeSpan(0, 0, 0, 0, Properties.Settings.Default.Updateinv);
-            damageTimer.Start();
-
-            /*
-            DispatcherTimer inactiveTimer = new DispatcherTimer();
+            logCheckTimer.Tick += new EventHandler(CheckNewCsv);
+            logCheckTimer.Interval = new TimeSpan(0, 0, 20);
             inactiveTimer.Tick += new EventHandler(HideIfInactive);
             inactiveTimer.Interval = new TimeSpan(0, 0, 1);
-            inactiveTimer.Start();
-            */
-
-            DispatcherTimer logCheckTimer = new DispatcherTimer();
-            logCheckTimer.Tick += new EventHandler(CheckNewCsv);
-            logCheckTimer.Interval = new TimeSpan(0, 0, 5);
+            damageTimer.Start();
             logCheckTimer.Start();
+            inactiveTimer.Start();
         }
 
         private void HideIfInactive(object sender, EventArgs e)
         {
-            /*
             if (!Properties.Settings.Default.AutoHideWindow) { return; }
             string title = WindowsServices.GetActiveWindowTitle();
-            string[] relevant = { "OverParse", "OverParse Setup", "OverParse Error", "Encounter Timeout", "Phantasy Star Online 2" };
+            string[] relevant = { "OverParse", "OverParse Setup", "OverParse Error", "Encounter Timeout", "Phantasy Star Online 2", "Settings", "AtkLog", "Detalis", "Color", "OverParse Install" };
             if (!relevant.Contains(title))
             {
                 Opacity = 0;
-            }
-            else
+            } else
             {
                 TheWindow.Opacity = Properties.Settings.Default.WindowOpacity;
             }
-            */
         }
 
         private void CheckNewCsv(object sender, EventArgs e)
         {
-            /*
             if (!damagelogs.GetFiles().Any()) { return; }
-            damagelogcsv = damagelogs.GetFiles().Where(f => Regex.IsMatch(f.Name, @"\d+\.")).OrderByDescending(f => f.Name).FirstOrDefault();
+            FileInfo curornewcsv = damagelogs.GetFiles().Where(f => Regex.IsMatch(f.Name, @"\d+\.")).OrderByDescending(f => f.Name).FirstOrDefault();
+            if (damagelogcsv != null && curornewcsv.LastWriteTimeUtc < damagelogcsv.LastWriteTimeUtc) { return; }
+            damagelogcsv = curornewcsv;
             FileStream fileStream = File.Open(damagelogcsv.DirectoryName + "\\" + damagelogcsv.Name, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             fileStream.Seek(0, SeekOrigin.Begin);
             logReader = new StreamReader(fileStream);
 
-            while (currentPlayerID == null)
+            try
             {
-                try
+                while (currentPlayerID == null && !logReader.EndOfStream)
                 {
                     string line = logReader.ReadLine();
                     if (line == "") { continue; }
                     string[] parts = line.Split(',');
                     if (parts[0] == "0" && parts[3] == "YOU") { currentPlayerID = parts[2]; }
                 }
-                catch
-                {
-                    currentPlayerID = "12345678";
-                    break;
-                }
+
+            } catch
+            {
+                currentPlayerID = "12345678";
             }
             fileStream.Seek(0, SeekOrigin.End);
             logReader = new StreamReader(fileStream);
-
-
-
-            if ()
-            if (!directory.Exists || directory.GetFiles().Count() == 0) { return; }
-            FileInfo  = directory.GetFiles().Where(f => Regex.IsMatch(f.Name, @"\d+\.csv")).OrderByDescending(f => f.Name).First();
-            if (log.Name != encounterlog.filename) { encounterlog = new Log(Properties.Settings.Default.Path); } */
         }
 
 
@@ -316,3 +304,4 @@ namespace OverParse
 
     }
 }
+

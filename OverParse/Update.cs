@@ -8,16 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
-using System.Management;
-using System.Net.Http;
-using System.Security.Cryptography;
-using System.Globalization;
 
 namespace OverParse
 {
     public partial class MainWindow : Window
     {
         public static string lastStatus = "";
+        public static byte noUpdateCount = 0;
         public static int speechcount = 1;
 
         //Session.current
@@ -26,40 +23,35 @@ namespace OverParse
             string newLines = await logReader.ReadToEndAsync();
             if (newLines == "") { return false; }
 
-            if (!IsRunning) { current = new Session(); }
-
             string[] dataLine = newLines.Split('\n');
             foreach (string line in dataLine)
             {
                 if (line == "") { continue; }
                 string[] parts = line.Split(',');
+                if (parts[0] == "0" && parts[3] == "YOU") { currentPlayerID = parts[2]; continue; }
+                if (!current.instances.Contains(int.Parse(parts[1]))) { current.instances.Add(int.Parse(parts[1])); }
+                if (int.Parse(parts[7]) < 0) { continue; }
+                if (parts[2] == "0" || uint.Parse(parts[6]) == 0) { continue; }
+                if (Sepid.IgnoreAtkID.Contains(uint.Parse(parts[6]))) { continue; }
+                if (Properties.Settings.Default.Onlyme && parts[2] != currentPlayerID) { continue; }
+
                 int lineTimestamp = int.Parse(parts[0]);
-                int instanceID = int.Parse(parts[1]);
                 string sourceID = parts[2];
                 string sourceName = parts[3];
                 string targetID = parts[4];
                 string targetName = parts[5];
-                string attackID = parts[6]; //WriteLog()にてID<->Nameの相互変換がある為int化が無理
-                Int64 hitDamage = Int64.Parse(parts[7]);
+                uint attackID = uint.Parse(parts[6]); //WriteLog()にてID<->Nameの相互変換がある為int化が無理.......なはずだった
+                int hitDamage = int.Parse(parts[7]);
                 byte JA = byte.Parse(parts[8]);
                 byte Cri = byte.Parse(parts[9]);
-                //string isMultiHit = parts[10];
-                //string isMisc = parts[11];
-                //string isMisc2 = parts[12];
                 int index = -1;
 
-                if (sourceID == currentPlayerID || targetID == currentPlayerID) { userattacks.Add(new Hit(attackID, hitDamage, JA, Cri)); }
-                if (parts[0] == "0" && parts[3] == "YOU") { currentPlayerID = parts[2]; continue; }
-                if (!current.instances.Contains(instanceID)) { current.instances.Add(instanceID); }
-                if (hitDamage < 0) { continue; }
-                if (sourceID == "0" || attackID == "0") { continue; }
-                if (attackID == "685554228") { continue; } //Unknown Enemy Attack(server bug hack)
-                if (Properties.Settings.Default.Onlyme && sourceID != currentPlayerID) { continue; }
+                if (sourceID == currentPlayerID) { userattacks.Add(new Hit(attackID, hitDamage, JA, Cri)); }
 
                 //処理スタート
                 if (10000000 < int.Parse(sourceID)) //Player->Enemy
                 {
-
+                    if (!IsRunning) { current = new Session(); }
                     current.newTimestamp = lineTimestamp; //newTimestampは常に最新
                     if (current.startTimestamp == 0) //初期が0だった場合
                     {
@@ -84,7 +76,7 @@ namespace OverParse
 
                     Player source = current.players[index];
                     if (Sepid.DBAtkID.Contains(attackID)) { source.DBDamage += hitDamage; current.totalDBDamage += hitDamage; source.DBAttacks.Add(new Hit(attackID, hitDamage, JA, Cri)); } else if (Sepid.LswAtkID.Contains(attackID)) { source.LswDamage += hitDamage; current.totalLswDamage += hitDamage; source.LswAttacks.Add(new Hit(attackID, hitDamage, JA, Cri)); } else if (Sepid.PwpAtkID.Contains(attackID)) { source.PwpDamage += hitDamage; current.totalPwpDamage += hitDamage; source.PwpAttacks.Add(new Hit(attackID, hitDamage, JA, Cri)); } else if (Sepid.AISAtkID.Contains(attackID)) { source.AisDamage += hitDamage; current.totalAisDamage += hitDamage; source.AisAttacks.Add(new Hit(attackID, hitDamage, JA, Cri)); } else if (Sepid.RideAtkID.Contains(attackID)) { source.RideDamage += hitDamage; current.totalRideDamage += hitDamage; source.RideAttacks.Add(new Hit(attackID, hitDamage, JA, Cri)); } else { source.AllyDamage += hitDamage; current.totalAllyDamage += hitDamage; source.AllyAttacks.Add(new Hit(attackID, hitDamage, JA, Cri)); }
-                    if (attackID == "2106601422") { source.ZvsDamage += hitDamage; current.totalZanverse += hitDamage; }
+                    if (attackID == 2106601422) { source.ZvsDamage += hitDamage; current.totalZanverse += hitDamage; }
                     if (Sepid.HTFAtkID.Contains(attackID)) { source.HTFDamage += hitDamage; current.totalFinish += hitDamage; }
                     current.totalDamage += hitDamage;
                     source.Damage += hitDamage;
@@ -117,12 +109,13 @@ namespace OverParse
         public async void UpdateForm(object sender, EventArgs e)
         {
             if (current.players == null) { return; }
+            damageTimer.Stop();
             if (Properties.Settings.Default.Clock) { Datetime.Content = DateTime.Now.ToString("HH:mm:ss.ff"); }
 
             bool IsLogContain = await UpdateLog(this, null);
-            if (IsLogContain == false && DebugMode == false) { StatusUpdate(); return; }
-            damageTimer.Stop();
+            if (IsLogContain == false && 10 < noUpdateCount) { noUpdateCount++; StatusUpdate(); damageTimer.Start(); return; }
 
+            noUpdateCount = 0;
             // get a copy of the right combatants
             workingList = new List<Player>(current.players);
 
@@ -148,16 +141,16 @@ namespace OverParse
 
             // dps calcs!
             /* (Combatant c in workingList) */
-            Parallel.ForEach(workingList, c =>
+            Parallel.ForEach(workingList, p =>
             {
-                c.PercentReadDPS = c.ReadDamage / (float)totalReadDamage * 100;
-                c.AllyPct = c.AllyDamage / (float)current.totalAllyDamage * 100;
-                c.DBPct = c.DBDamage / (float)current.totalDBDamage * 100;
-                c.LswPct = c.LswDamage / (float)current.totalLswDamage * 100;
-                c.PwpPct = c.PwpDamage / (float)current.totalPwpDamage * 100;
-                c.AisPct = c.AisDamage / (float)current.totalAisDamage * 100;
-                c.RidePct = c.RideDamage / (float)current.totalRideDamage * 100;
-                c.TScore = Math.Pow(Math.Abs(c.ReadDamage - totalAVG), 2);
+                p.PercentReadDPS = p.ReadDamage / (double)totalReadDamage * 100;
+                p.AllyPct = p.AllyDamage / (double)current.totalAllyDamage * 100;
+                p.DBPct = p.DBDamage / (double)current.totalDBDamage * 100;
+                p.LswPct = p.LswDamage / (double)current.totalLswDamage * 100;
+                p.PwpPct = p.PwpDamage / (double)current.totalPwpDamage * 100;
+                p.AisPct = p.AisDamage / (double)current.totalAisDamage * 100;
+                p.RidePct = p.RideDamage / (double)current.totalRideDamage * 100;
+                p.TScore = Math.Pow(Math.Abs(p.ReadDamage - totalAVG), 2);
             });
 
             if (workingList.Where(p => p.isTemporary == "raw").Any())
@@ -173,7 +166,7 @@ namespace OverParse
             // status pane updates
             StatusUpdate();
 
-            // damage graph stuff
+            //damage graph stuff
             current.firstDamage = 0;
             // clear out the list
             CombatantData.Items.Clear();
@@ -213,7 +206,7 @@ namespace OverParse
                 if ((0 < c.RideDamage) && (SeparateTab.SelectedIndex == 6)) { workingList.Sort((x, y) => y.RideDamage.CompareTo(x.RideDamage)); RideData.Items.Add(c); }
             }
 
-            //Bouyomi
+            //TTS
             if (Properties.Settings.Default.Bouyomi && IsConnect && IsRunning)
             {
                 Player me = workingList.Where(p => p.ID == currentPlayerID && p.isTemporary == "raw").FirstOrDefault();
@@ -237,6 +230,8 @@ namespace OverParse
                 }
 
             }
+
+            if (150 < userattacks.Count && Isautodel) { userattacks.RemoveRange(49, 100); }
 
 
             // autoend
@@ -266,53 +261,14 @@ namespace OverParse
                 string timer = timespan.ToString(@"h\:mm\:ss");
                 EncounterStatus.Content = $"{timer}";
 
-                float totalDPS = current.totalDamage / (float)current.ActiveTime;
+                double totalDPS = current.totalDamage / (double)current.ActiveTime;
                 if (totalDPS > 0) { EncounterStatus.Content += $" - Total : {current.totalDamage.ToString("N0")}" + $" - {totalDPS.ToString("N0")} DPS"; }
                 if (!Properties.Settings.Default.SeparateZanverse) { EncounterStatus.Content += $" - Zanverse : {current.totalZanverse.ToString("N0")}"; }
                 lastStatus = EncounterStatus.Content.ToString();
             }
         }
 
-        /*
-        private void Separate()
-        {
-            foreach (Player c in workingList)
-            {
-                if (c.isTemporary != "raw") { continue; }
-                if (Properties.Settings.Default.SeparateDB && 0 < c.DBDamage)
-                {
-                    int dbindex = -1;
-                    foreach (Player x in workingList) { if (x.ID == c.ID && x.isTemporary == "DB") { dbindex = workingList.IndexOf(x); } }
-                    if (dbindex == -1)
-                    {
-                        current.players.Add(new Player(sourceID, sourceName, "raw"));
-                        index = current.players.Count - 1;
-                    }
-
-                    Player dbplayer = new Player(c.ID, "DB|" + c.Name, "DB");
-                    List<Hit> targetAttacks = c.Attacks.Where(a => Sepid.DBAtkID.Contains(a.ID)).ToList();
-                    c.Attacks = c.Attacks.Except(targetAttacks).ToList();
-                    dbplayer.Attacks = c.DBAttacks;
-                    dbplayers.Add(dbplayer);
-                }
-            }
-                workingList.AddRange(dbplayers);
-
-            Player source = current.players[index];
-        }
-
-        private void Method(Player c,string type)
-        {
-            int index = -1;
-            foreach (Player x in workingList) { if (x.ID == c.ID && x.isTemporary == type) { index = workingList.IndexOf(x); } }
-            if (index == -1) { workingList.Add(new Player(c.ID, type + "|" + c.Name, type)); index = workingList.Count - 1; }
-            Player separate = workingList[index];
-            List<Hit> targetAttacks = c.Attacks.Where(a => Sepid.DBAtkID.Contains(a.ID)).ToList();
-            c.Attacks = c.Attacks.Except(targetAttacks).ToList();
-
-        }*/
-
-        #region 
+        #region Separate
         private void SeparateDBMethod()
         {
             List<Player> addDBPlayer = new List<Player>();
@@ -367,8 +323,6 @@ namespace OverParse
                     separate.Damage = p.PwpDamage;
                     separate.Damaged = p.Damaged;
                     separate.Attacks = p.PwpAttacks;
-                    //p.PwpDamage = 0;
-                    //p.PwpAttacks = new List<Hit>();
                     addPwpPlayer.Add(separate);
                 }
             }
@@ -439,7 +393,7 @@ namespace OverParse
                 if (p.isTemporary != "raw") { continue; }
                 if (0 < current.totalZanverse)
                 {
-                    List<Hit> targetAttacks = p.Attacks.Where(a => a.ID == "2106601422").ToList();
+                    List<Hit> targetAttacks = p.Attacks.Where(a => a.ID == 2106601422).ToList();
                     addZvsPlayer.Damage += p.ZvsDamage;
                     addZvsPlayer.Attacks.AddRange(targetAttacks);
                 }
@@ -453,20 +407,20 @@ namespace OverParse
             if (current.players.Count == 0) { return null; }
             if (current.ActiveTime == 0) { current.ActiveTime = 1; }
             string timer = TimeSpan.FromSeconds(current.ActiveTime).ToString(@"mm\:ss");
-            string log = DateTime.Now.ToString("F") + " | " + timer + " | TotalDamage : " + current.totalDamage.ToString("N0") + " | 標準偏差 : " + current.totalSD.ToString("00.00") + Environment.NewLine + Environment.NewLine;
+            string log = DateTime.Now.ToString("F") + " | " + timer + " | TotalDamage : " + current.totalDamage.ToString("N0") + " | TotalDPS : " + current.totalDPS.ToString("N0") + " | 標準偏差 : " + current.totalSD.ToString("00.00") + Environment.NewLine + Environment.NewLine;
 
             foreach (Player c in workingList)
             {
                 try
                 {
-                    if (Properties.Settings.Default.IsWriteTS && (c.IsAlly || c.IsZanverse || c.IsFinish))
+                    if (Properties.Settings.Default.IsWriteTS)
                     {
-                        log += $"{c.Name} | {c.RatioPercent}% | 偏差値:{c.ReadTScore} | {c.ReadDamage.ToString("N0")} dmg | {c.BindDamaged} dmgd | {c.DPS} DPS | JA: {c.WJAPercent}% | Critical: {c.WCRIPercent}% | Max: {c.MaxHitdmg} ({c.MaxHit})" + Environment.NewLine;
+                        log += $"{c.Name} | {c.RatioPercent}% | 偏差値:{c.ReadTScore} | {c.ReadDamage.ToString("N0")} dmg | {c.Writedmgd} dmgd | {c.DPS} DPS | JA: {c.WJAPercent}% | Critical: {c.WCRIPercent}% | Max: {c.WriteMaxdmg} ({c.MaxHit})" + Environment.NewLine;
                     }
 
-                    if (!Properties.Settings.Default.IsWriteTS && (c.IsAlly || c.IsZanverse || c.IsFinish))
+                    if (!Properties.Settings.Default.IsWriteTS)
                     {
-                        log += $"{c.Name} | {c.RatioPercent}% | {c.ReadDamage.ToString("N0")} dmg | {c.BindDamaged} dmgd | {c.DPS} DPS | JA: {c.WJAPercent}% | Critical: {c.WCRIPercent}% | Max: {c.MaxHitdmg} ({c.MaxHit})" + Environment.NewLine;
+                        log += $"{c.Name} | {c.RatioPercent}% | {c.ReadDamage.ToString("N0")} dmg | {c.Writedmgd} dmgd | {c.DPS} DPS | JA: {c.WJAPercent}% | Critical: {c.WCRIPercent}% | Max: {c.WriteMaxdmg} ({c.MaxHit})" + Environment.NewLine;
                     }
                 } catch {/* 今の所何もしないっぽい */}
             }
@@ -475,99 +429,93 @@ namespace OverParse
 
             foreach (Player c in workingList)
             {
-                if (c.IsAlly || c.IsZanverse || c.IsFinish)
+                List<string> attackNames = new List<string>();
+                List<string> finishNames = new List<string>();
+                List<Tuple<string, List<int>, List<byte>, List<byte>>> attackData = new List<Tuple<string, List<int>, List<byte>, List<byte>>>();
+
+                log += $"[ {c.Name} - {c.RatioPercent}% - {c.ReadDamage.ToString("N0")} dmg ]" + Environment.NewLine + Environment.NewLine;
+
+                if (Properties.Settings.Default.SeparateZanverse && c.IsZanverse)
                 {
-                    string header = $"[ {c.Name} - {c.RatioPercent}% - {c.ReadDamage.ToString("N0")} dmg ]";
-                    log += header + Environment.NewLine + Environment.NewLine;
-
-                    List<string> attackNames = new List<string>();
-                    List<string> finishNames = new List<string>();
-                    List<Tuple<string, List<Int64>, List<byte>, List<byte>>> attackData = new List<Tuple<string, List<Int64>, List<byte>, List<byte>>>();
-
-                    if (Properties.Settings.Default.SeparateZanverse && c.IsZanverse)
+                    foreach (Player zvs in current.players) { if (0 < zvs.ZvsDamage) { attackNames.Add(zvs.ID); } }
+                    foreach (string s in attackNames)
                     {
-                        foreach (Player zvs in current.players) { if (0 < zvs.ZvsDamage) { attackNames.Add(zvs.ID); } }
-                        foreach (string s in attackNames)
-                        {
-                            Player zvsPlayer = current.players.First(x => x.ID == s);
-                            List<Int64> matchingAttacks = zvsPlayer.Attacks.Where(atk => atk.ID == "2106601422").Select(a => a.Damage).ToList();
-                            List<byte> jaPercents = new List<byte> { 0 }; List<byte> criPercents = c.Attacks.Where(a => a.ID == "2106601422").Select(a => a.Cri).ToList();
-                            attackData.Add(new Tuple<string, List<Int64>, List<byte>, List<byte>>(zvsPlayer.Name, matchingAttacks, jaPercents, criPercents));
-                        }
-                    } else if (Properties.Settings.Default.SeparateFinish && c.IsFinish)
+                        Player zvsPlayer = current.players.First(x => x.ID == s);
+                        List<int> matchingAttacks = zvsPlayer.Attacks.Where(atk => atk.ID == 2106601422).Select(a => a.Damage).ToList();
+                        List<byte> jaPercents = new List<byte> { 0 }; List<byte> criPercents = c.Attacks.Where(a => a.ID == 2106601422).Select(a => a.Cri).ToList();
+                        attackData.Add(new Tuple<string, List<int>, List<byte>, List<byte>>(zvsPlayer.Name, matchingAttacks, jaPercents, criPercents));
+                    }
+                } else if (Properties.Settings.Default.SeparateFinish && c.IsFinish)
+                {
+                    foreach (Player htf in current.players) { if (0 < htf.HTFDamage) { finishNames.Add(htf.ID); } }
+                    foreach (string htf in finishNames)
                     {
-                        foreach (Player htf in current.players) { if (0 < htf.HTFDamage) { finishNames.Add(htf.ID); } }
-                        foreach (string htf in finishNames)
-                        {
-                            Player htfPlayer = current.players.First(x => x.ID == htf);
-                            List<Int64> fmatchingAttacks = current.players.Where(a => Sepid.HTFAtkID.Contains(a.ID)).Select(a => a.Damage).ToList();
-                            List<byte> jaPercents = c.Attacks.Where(a => Sepid.HTFAtkID.Contains(a.ID)).Select(a => a.JA).ToList();
-                            List<byte> criPercents = c.Attacks.Where(a => Sepid.HTFAtkID.Contains(a.ID)).Select(a => a.Cri).ToList();
-                            attackData.Add(new Tuple<string, List<Int64>, List<byte>, List<byte>>(htfPlayer.Name, fmatchingAttacks, jaPercents, criPercents));
-                        }
+                        Player htfPlayer = current.players.First(x => x.ID == htf);
+                        List<int> fmatchingAttacks = htfPlayer.Attacks.Where(a => Sepid.HTFAtkID.Contains(a.ID)).Select(a => a.Damage).ToList();
+                        List<byte> jaPercents = c.Attacks.Where(a => Sepid.HTFAtkID.Contains(a.ID)).Select(a => a.JA).ToList();
+                        List<byte> criPercents = c.Attacks.Where(a => Sepid.HTFAtkID.Contains(a.ID)).Select(a => a.Cri).ToList();
+                        attackData.Add(new Tuple<string, List<int>, List<byte>, List<byte>>(htfPlayer.Name, fmatchingAttacks, jaPercents, criPercents));
+                    }
+                } else
+                {
+                    List<PAHit> temphits = new List<PAHit>();
+                    foreach (Hit atk in c.Attacks)
+                    {
+                        //PAID -> PAName
+                        string temp = atk.ID.ToString();
+                        if ((Properties.Settings.Default.SeparateZanverse && atk.ID == 2106601422) || (Properties.Settings.Default.SeparateFinish && Sepid.HTFAtkID.Contains(atk.ID))) { continue; } //ザンバースの場合に何もしない
+                        if (skillDict.ContainsKey(atk.ID)) { temp = skillDict[atk.ID]; } // these are getting disposed anyway, no 1 cur
+                        if (!attackNames.Contains(temp)) { attackNames.Add(temp); }
+                        temphits.Add(new PAHit(temp, atk.Damage, atk.JA, atk.Cri));
+                    }
 
+                    foreach (string paname in attackNames)
+                    {
+                        //マッチングアタックからダメージを選択するだけ
+                        List<int> matchingAttacks = temphits.Where(a => a.Name == paname).Select(a => a.Damage).ToList();
+                        List<byte> jaPercents = temphits.Where(a => a.Name == paname).Select(a => a.JA).ToList();
+                        List<byte> criPercents = temphits.Where(a => a.Name == paname).Select(a => a.Cri).ToList();
+                        attackData.Add(new Tuple<string, List<int>, List<byte>, List<byte>>(paname, matchingAttacks, jaPercents, criPercents));
+                    }
+                }
+
+                attackData = attackData.OrderByDescending(x => x.Item2.Sum()).ToList();
+
+                foreach (var i in attackData)
+                {
+                    List<int> exja = i.Item3.ConvertAll(x => (int)x);
+                    List<int> excri = i.Item4.ConvertAll(x => (int)x);
+
+                    string min, max, avg, ja, cri;
+                    double percent = i.Item2.Sum() * 100d / c.Damage;
+                    string spacer = (percent >= 9) ? "" : " ";
+
+                    string paddedPercent = percent.ToString("00.00").Substring(0, 5);
+                    string hits = i.Item2.Count().ToString("N0");
+                    string sum = i.Item2.Sum().ToString("N0");
+                    if (i.Item2.Any())
+                    {
+                        min = i.Item2.Min().ToString("N0");
+                        max = i.Item2.Max().ToString("N0");
+                        avg = i.Item2.Average().ToString("N0");
+                        ja = (exja.Average() * 100).ToString("N2");
+                        cri = (excri.Average() * 100).ToString("N2");
                     } else
                     {
-                        List<Hit> temphits = new List<Hit>();
-                        foreach (Hit atk in c.Attacks)
-                        {
-                            //PAID -> PAName
-                            string temp = atk.ID;
-                            if ((Properties.Settings.Default.SeparateZanverse && atk.ID == "2106601422") || (Properties.Settings.Default.SeparateFinish && Sepid.HTFAtkID.Contains(atk.ID))) { continue; } //ザンバースの場合に何もしない
-                            if (skillDict.ContainsKey(temp)) { temp = skillDict[temp]; } // these are getting disposed anyway, no 1 cur
-                            if (!attackNames.Contains(temp)) { attackNames.Add(temp); }
-                            temphits.Add(new Hit(temp, atk.Damage, atk.JA, atk.Cri));
-                        }
-
-                        foreach (string paname in attackNames)
-                        {
-                            //マッチングアタックからダメージを選択するだけ
-                            List<Int64> matchingAttacks = temphits.Where(a => a.ID == paname).Select(a => a.Damage).ToList();
-                            List<byte> jaPercents = temphits.Where(a => a.ID == paname).Select(a => a.JA).ToList();
-                            List<byte> criPercents = temphits.Where(a => a.ID == paname).Select(a => a.Cri).ToList();
-                            attackData.Add(new Tuple<string, List<Int64>, List<byte>, List<byte>>(paname, matchingAttacks, jaPercents, criPercents));
-                        }
+                        min = "0";
+                        max = "0";
+                        avg = "0";
+                        ja = "0.00";
+                        cri = "0.00";
                     }
 
-                    attackData = attackData.OrderByDescending(x => x.Item2.Sum()).ToList();
-
-                    foreach (var i in attackData)
-                    {
-                        List<int> exja = i.Item3.ConvertAll(x => (int)x);
-                        List<int> excri = i.Item4.ConvertAll(x => (int)x);
-
-                        string min, max, avg, ja, cri;
-                        double percent = i.Item2.Sum() * 100d / c.Damage;
-                        string spacer = (percent >= 9) ? "" : " ";
-
-                        string paddedPercent = percent.ToString("00.00").Substring(0, 5);
-                        string hits = i.Item2.Count().ToString("N0");
-                        string sum = i.Item2.Sum().ToString("N0");
-                        if (i.Item2.Any())
-                        {
-                            min = i.Item2.Min().ToString("N0");
-                            max = i.Item2.Max().ToString("N0");
-                            avg = i.Item2.Average().ToString("N0");
-                            ja = (exja.Average() * 100).ToString("N2");
-                            cri = (excri.Average() * 100).ToString("N2");
-                        } else
-                        {
-                            min = "0";
-                            max = "0";
-                            avg = "0";
-                            ja = "0.00";
-                            cri = "0.00";
-                        }
-
-                        log += $"{paddedPercent}%	| {i.Item1} - {sum} dmg";
-                        log += $" - JA : {ja}% - Critical : {cri}%";
-                        log += Environment.NewLine;
-                        log += $"	|   {hits} hits - {min} min, {avg} avg, {max} max" + Environment.NewLine;
-                    }
-
-
+                    log += $"{paddedPercent}%	| {i.Item1} - {sum} dmg";
+                    log += $" - JA : {ja}% - Critical : {cri}%";
                     log += Environment.NewLine;
+                    log += $"	|   {hits} hits - {min} min, {avg} avg, {max} max" + Environment.NewLine;
                 }
+
+                log += Environment.NewLine;
             }
 
 
@@ -584,135 +532,46 @@ namespace OverParse
             return filename;
         }
 
-        /*
-        public void WriteLogExport()
+        public string ExportWriteLog()
         {
-            if (current.players.Count == 0) { return; }
+            return "";
+            /*
+            if (current.players.Count == 0) { return null; }
             if (current.ActiveTime == 0) { current.ActiveTime = 1; }
             string timer = TimeSpan.FromSeconds(current.ActiveTime).ToString(@"mm\:ss");
-            string log = " | " + timer + " | TotalDamage : " + current.totalDamage.ToString("N0") + " | 標準偏差 : " + current.totalSD.ToString("00.00") + Environment.NewLine + Environment.NewLine;
+            string log = timer + " | TotalDamage : " + current.totalDamage.ToString("N0") + " | TotalDPS : " + current.totalDPS.ToString("N0") + " | 標準偏差 : " + current.totalSD.ToString("00.00") + Environment.NewLine + Environment.NewLine;
+            log += "Num/Ratio/Dmg/Dmgd/DPS/JA/Cri/Max" + Environment.NewLine;
+            byte rankcount = 0;
 
-            foreach (Player c in current.players)
+            foreach (Player p in workingList)
             {
-                try
-                {
-                    if (c.IsAlly || c.IsZanverse || c.IsFinish)
-                    {
-                        log += $"{c.RatioPercent}% | 偏差値:{c.ReadTScore} | {c.ReadDamage.ToString("N0")} dmg | {c.BindDamaged} dmgd | {c.DPS} DPS | JA: {c.WJAPercent}% | Critical: {c.WCRIPercent}% | Max: {c.MaxHitdmg} ({c.MaxHit})" + Environment.NewLine;
-                    }
-
-                }
-                catch {/* 今の所何もしないっぽい }
+                rankcount++;
+                log += $"#{rankcount.ToString("X")} {p.RatioPercent}% {p.ReadTScore} {p.ReadDamage.ToString("N0")} {p.BindDamaged} {p.DPS} {p.WJAPercent} {p.WCRIPercent} {p.MaxHitdmg} ({p.MaxHit})" + Environment.NewLine;
             }
 
             log += Environment.NewLine + Environment.NewLine;
 
-            foreach (Player c in current.players)
-            {
-                if (c.IsAlly || c.IsZanverse || c.IsFinish)
-                {
-                    string header = $"[ {c.Name} - {c.RatioPercent}% - {c.ReadDamage.ToString("N0")} dmg ]";
-                    log += header + Environment.NewLine + Environment.NewLine;
-
-                    List<string> attackNames = new List<string>();
-                    List<string> finishNames = new List<string>();
-                    List<Tuple<string, List<Int64>, List<int>, List<int>>> attackData = new List<Tuple<string, List<Int64>, List<int>, List<int>>>();
-
-                    if (Properties.Settings.Default.SeparateZanverse && c.IsZanverse)
-                    {
-                        foreach (Player zvs in current.players) { attackNames.Add(zvs.ID); }
-                        foreach (string s in attackNames)
-                        {
-                            Player zvsPlayer = current.players.First(x => x.ID == s);
-                            List<Int64> matchingAttacks = current.players.Where(atk => atk.ID == "2106601422").Select(a => a.Damage).ToList();
-                            List<int> jaPercents = c.Attacks.Where(a => a.ID == "2106601422").Select(a => a.JA).ToList();
-                            List<int> criPercents = c.Attacks.Where(a => a.ID == "2106601422").Select(a => a.Cri).ToList();
-                            attackData.Add(new Tuple<string, List<Int64>, List<int>, List<int>>(zvsPlayer.Name, matchingAttacks, jaPercents, criPercents));
-                        }
-                    }
-
-                    else if (Properties.Settings.Default.SeparateFinish && c.IsFinish)
-                    {
-                        foreach (Player htf in current.players) { if (0 < htf.HTFDamage) { finishNames.Add(htf.ID); } }
-                        foreach (string htf in finishNames)
-                        {
-                            Player htfPlayer = current.players.First(x => x.ID == htf);
-                            List<Int64> fmatchingAttacks = current.players.Where(a => Sepid.HTFAtkID.Contains(a.ID)).Select(a => a.Damage).ToList();
-                            List<int> jaPercents = c.Attacks.Where(a => Sepid.HTFAtkID.Contains(a.ID)).Select(a => a.JA).ToList();
-                            List<int> criPercents = c.Attacks.Where(a => Sepid.HTFAtkID.Contains(a.ID)).Select(a => a.Cri).ToList();
-                            attackData.Add(new Tuple<string, List<Int64>, List<int>, List<int>>(htfPlayer.Name, fmatchingAttacks, jaPercents, criPercents));
-                        }
-
-                    }
-
-                    else
-                    {
-                        foreach (Hit atk in c.Attacks)
-                        {
-                            //PAID -> PAName
-                            if ((Properties.Settings.Default.SeparateZanverse && atk.ID == "2106601422") || (Properties.Settings.Default.SeparateFinish && Sepid.HTFAtkID.Contains(atk.ID))) { continue; } //ザンバースの場合に何もしない
-                            if (skillDict.ContainsKey(atk.ID)) { atk.ID = skillDict[atk.ID]; } // these are getting disposed anyway, no 1 cur
-                            if (!attackNames.Contains(atk.ID.ToString())) { attackNames.Add(atk.ID); }
-                        }
-
-                        foreach (string paname in attackNames)
-                        {
-                            //マッチングアタックからダメージを選択するだけ
-                            List<Int64> matchingAttacks = c.Attacks.Where(a => a.ID == paname).Select(a => a.Damage).ToList();
-                            List<int> jaPercents = c.Attacks.Where(a => a.ID == paname).Select(a => a.JA).ToList();
-                            List<int> criPercents = c.Attacks.Where(a => a.ID == paname).Select(a => a.Cri).ToList();
-                            attackData.Add(new Tuple<string, List<Int64>, List<int>, List<int>>(paname, matchingAttacks, jaPercents, criPercents));
-                        }
-                    }
-
-                    attackData = attackData.OrderByDescending(x => x.Item2.Sum()).ToList();
-
-                    foreach (var i in attackData)
-                    {
-                        double percent = i.Item2.Sum() * 100d / c.Damage;
-                        string spacer = (percent >= 9) ? "" : " ";
-
-                        string paddedPercent = percent.ToString("00.00").Substring(0, 5);
-                        string hits = i.Item2.Count().ToString("N0");
-                        string sum = i.Item2.Sum().ToString("N0");
-                        string min = i.Item2.Min().ToString("N0");
-                        string max = i.Item2.Max().ToString("N0");
-                        string avg = i.Item2.Average().ToString("N0");
-                        string ja = (i.Item3.Average() * 100).ToString("N2");
-                        string cri = (i.Item4.Average() * 100).ToString("N2");
-                        log += $"{paddedPercent}%	| {i.Item1} - {sum} dmg";
-                        log += $" - JA : {ja}% - Critical : {cri}%";
-                        log += Environment.NewLine;
-                        log += $"	|   {hits} hits - {min} min, {avg} avg, {max} max" + Environment.NewLine;
-                    }
-
-
-                    log += Environment.NewLine;
-                }
-            }
-
-
-            log += "Instance IDs: " + String.Join(", ", current.instances.ToArray());
+            log += "Instance IDs: " + string.Join(", ", current.instances.ToArray());
 
             DateTime thisDate = DateTime.Now;
             string directory = string.Format("{0:yyyy-MM-dd}", DateTime.Now);
-            Directory.CreateDirectory($"Logs/{directory}");
+            Directory.CreateDirectory($"Export/{directory}");
             string datetime = string.Format("{0:yyyy-MM-dd_HH-mm-ss}", DateTime.Now);
-            string filename = $"Logs/{directory}/OverParse - {datetime}.txt";
+            string filename = $"Export/{directory}/Export - {datetime}.txt";
             File.WriteAllText(filename, log);
 
-
+            return filename;
+            */
         }
-    */
 
         private void ReadUp(string text)
         {
             byte bCode = 0;
-            Int16 iVoice = 1;
-            Int16 iVolume = -1;
-            Int16 iSpeed = -1;
-            Int16 iTone = -1;
-            Int16 iCommand = 0x0001;
+            short iVoice = 1;
+            short iVolume = -1;
+            short iSpeed = -1;
+            short iTone = -1;
+            short iCommand = 0x0001;
 
             byte[] bMessage = Encoding.UTF8.GetBytes(text);
             Int32 iLength = bMessage.Length;
@@ -757,6 +616,14 @@ namespace OverParse
 
             }
 
+        }
+
+        public struct PAHit //Use WriteLog Only
+        {
+            public string Name;
+            public int Damage;
+            public byte JA, Cri;
+            public PAHit(string paname, int dmg, byte ja, byte cri) { Name = paname; Damage = dmg; JA = ja; Cri = cri; }
         }
 
 
