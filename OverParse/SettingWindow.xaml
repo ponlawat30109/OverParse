@@ -247,7 +247,7 @@
                         </Grid.RowDefinitions>
 
                         <StackPanel Grid.Row="0" Margin="10">
-                            <Label Content="OverParse v4.0.0" FontSize="14"/>
+                            <Label Content="OverParse v4.0.1" FontSize="14"/>
                             <Label Content="簡易的な自己監視ツール。&#xa;&#xa;Additional shoutouts to Variant, AIDA, and everyone else who makes the Tweaker plugin possible.&#xa;&#xa;Please use damage information responsibly." />
                         </StackPanel>
 

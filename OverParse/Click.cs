@@ -275,7 +275,7 @@ namespace OverParse
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    client.DefaultRequestHeaders.Add("User-Agent", "Mozilla / 5.0 OverParse / 4.0.0");
+                    client.DefaultRequestHeaders.Add("User-Agent", "Mozilla / 5.0 OverParse / 4.0.1");
                     client.DefaultRequestHeaders.Add("Connection", "close");
                     client.Timeout = TimeSpan.FromSeconds(20.0);
                     var content = await client.GetAsync("https://remon-7l.github.io/ovp/skills_ja.csv");

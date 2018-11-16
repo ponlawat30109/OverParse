@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Management;
+using System.Net.Http;
 using System.Net.Sockets;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -15,11 +19,13 @@ namespace OverParse
     {
         public static string lastStatus = "";
         public static byte noUpdateCount = 0;
+        public static byte UpdateCount = 0;
         public static int speechcount = 1;
 
         //Session.current
         public async Task<bool> UpdateLog(object sender, EventArgs e)
         {
+            if (logReader == null) { return false; }
             string newLines = await logReader.ReadToEndAsync();
             if (newLines == "") { return false; }
 
@@ -47,6 +53,7 @@ namespace OverParse
                 int index = -1;
 
                 if (sourceID == currentPlayerID) { userattacks.Add(new Hit(attackID, hitDamage, JA, Cri)); }
+                if (currentPlayerName == null && sourceID == currentPlayerID) { currentPlayerName = sourceName; }
 
                 //処理スタート
                 if (10000000 < int.Parse(sourceID)) //Player->Enemy
@@ -105,7 +112,6 @@ namespace OverParse
             return true;
         }
 
-
         public async void UpdateForm(object sender, EventArgs e)
         {
             if (current.players == null) { return; }
@@ -116,6 +122,7 @@ namespace OverParse
             if (IsLogContain == false && 10 < noUpdateCount) { noUpdateCount++; StatusUpdate(); damageTimer.Start(); return; }
 
             noUpdateCount = 0;
+
             // get a copy of the right combatants
             workingList = new List<Player>(current.players);
 
@@ -245,7 +252,7 @@ namespace OverParse
 
         private void StatusUpdate()
         {
-            if (!damagelogs.GetFiles().Any())
+            if (!Directory.Exists(Properties.Settings.Default.Path + "\\damagelogs") || !damagelogs.GetFiles().Any())
             {
                 EncounterIndicator.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 128, 128));
                 EncounterStatus.Content = "Directory No Logs : (Re)Start PSO2, Attack Enemy  or  Failed dll plugin Install";

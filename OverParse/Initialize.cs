@@ -149,7 +149,7 @@ namespace OverParse
                 string content;
                 using (HttpClient client = new HttpClient())
                 {
-                    client.DefaultRequestHeaders.Add("User-Agent", "Mozilla / 5.0 OverParse / 4.0.0");
+                    client.DefaultRequestHeaders.Add("User-Agent", "Mozilla / 5.0 OverParse / 4.0.1");
                     client.DefaultRequestHeaders.Add("Connection", "close");
                     client.Timeout = TimeSpan.FromSeconds(20.0);
                     content = await client.GetStringAsync("https://api.github.com/repos/remon-7l/overparse/releases/latest");
@@ -157,7 +157,7 @@ namespace OverParse
                 var m = Regex.Match(content, @"tag_name.........");
                 var v = Regex.Match(m.Value, @"\d.\d.\d");
                 var newVersion = Version.Parse(v.ToString());
-                var nowVersion = Version.Parse("4.0.0");
+                var nowVersion = Version.Parse("4.0.1");
                 if (newVersion <= nowVersion) { updatemsg = ""; }
                 if (nowVersion < newVersion)
                 {

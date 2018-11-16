@@ -125,7 +125,7 @@ namespace OverParse
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             damagelogs = new DirectoryInfo(Properties.Settings.Default.Path + "\\damagelogs");
-            if (damagelogs.GetFiles().Any())
+            if (Directory.Exists(Properties.Settings.Default.Path + "\\damagelogs") && damagelogs.GetFiles().Any())
             {
                 damagelogcsv = damagelogs.GetFiles().Where(f => Regex.IsMatch(f.Name, @"\d+\.")).OrderByDescending(f => f.Name).FirstOrDefault();
                 FileStream fileStream = File.Open(damagelogcsv.DirectoryName + "\\" + damagelogcsv.Name, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
@@ -186,7 +186,7 @@ namespace OverParse
 
         private void CheckNewCsv(object sender, EventArgs e)
         {
-            if (!damagelogs.GetFiles().Any()) { return; }
+            if (!Directory.Exists(Properties.Settings.Default.Path + "\\damagelogs") || !damagelogs.GetFiles().Any()) { return; }
             FileInfo curornewcsv = damagelogs.GetFiles().Where(f => Regex.IsMatch(f.Name, @"\d+\.")).OrderByDescending(f => f.Name).FirstOrDefault();
             if (damagelogcsv != null && curornewcsv.LastWriteTimeUtc < damagelogcsv.LastWriteTimeUtc) { return; }
             damagelogcsv = curornewcsv;

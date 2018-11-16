@@ -869,7 +869,7 @@
                     </ListView>
                 </TabItem>
                 <TabItem Header="Info" Width="{Binding ElementName=TabH, Path=ActualWidth}" Padding="0" Margin="0">
-                    <TextBox Text="OverParse v4.0.0&#xa;" x:Name="TabInfo" Background="Transparent" Foreground="White" FontSize="16" FontFamily="Noto Sans CJK JP DemiLight" IsHitTestVisible="False" BorderThickness="0" />
+                    <TextBox Text="OverParse v4.0.1&#xa;" x:Name="TabInfo" Background="Transparent" Foreground="White" FontSize="16" FontFamily="Noto Sans CJK JP DemiLight" IsHitTestVisible="False" BorderThickness="0" />
                 </TabItem>
             </TabControl>
 
